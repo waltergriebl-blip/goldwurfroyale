@@ -1,0 +1,149 @@
+﻿<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Walter Griebl präsentiert: Das Würfelduell</title>
+    <meta name="theme-color" content="#2f8f68" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Würfelduell" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game">
+      <section class="topbar" aria-label="Darstellung">
+        <div class="setting">
+          <span>Ansicht</span>
+          <div class="theme-switcher" role="group" aria-label="Hell oder dunkel waehlen">
+            <button class="theme-option active" id="lightModeButton" type="button" aria-pressed="true">
+              Hell
+            </button>
+            <button class="theme-option" id="darkModeButton" type="button" aria-pressed="false">
+              Dunkel
+            </button>
+          </div>
+        </div>
+
+        <div class="setting">
+          <label for="winningScoreInput">Zielpunkte</label>
+          <div class="score-setting">
+            <input id="winningScoreInput" type="number" min="10" max="999" step="5" value="50" />
+            <button id="applyScoreButton" type="button">Festlegen</button>
+          </div>
+        </div>
+
+        <div class="setting">
+          <span>Schwierigkeit</span>
+          <div class="theme-switcher" role="group" aria-label="Schwierigkeit waehlen">
+            <button class="theme-option active" id="normalModeButton" type="button" aria-pressed="true">
+              Normal
+            </button>
+            <button class="theme-option" id="hardModeButton" type="button" aria-pressed="false">
+              Schwer
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="scoreboard" aria-label="Spielstand">
+        <article class="player active" id="humanPanel">
+          <button class="label name-button" id="humanNameLabel" type="button">Du</button>
+          <div class="inline-name-editor" id="nameEditor" hidden>
+            <input id="playerNameInput" type="text" maxlength="18" value="Du" aria-label="Spielername" />
+            <button id="applyNameButton" type="button">OK</button>
+          </div>
+          <strong id="humanScore">0</strong>
+          <span>Gesamtpunkte</span>
+          <div class="wins">
+            <span>Siege</span>
+            <strong id="humanWins">0</strong>
+          </div>
+        </article>
+
+        <article class="player" id="computerPanel">
+          <div class="opponent-top">
+            <button class="label name-button" id="opponentNameLabel" type="button">Computer</button>
+            <div class="inline-name-editor" id="opponentNameEditor" hidden>
+              <input id="opponentNameInput" type="text" maxlength="18" value="Spieler 2" aria-label="Name Spieler 2" />
+              <button id="applyOpponentNameButton" type="button">OK</button>
+            </div>
+            <div class="mini-switcher" role="group" aria-label="Spielmodus waehlen">
+              <button class="theme-option active" id="singleModeButton" type="button" aria-pressed="true">
+                Single
+              </button>
+              <button class="theme-option" id="multiModeButton" type="button" aria-pressed="false">
+                Multiplayer
+              </button>
+            </div>
+          </div>
+          <strong id="computerScore">0</strong>
+          <span>Gesamtpunkte</span>
+          <div class="wins">
+            <span>Siege</span>
+            <strong id="computerWins">0</strong>
+          </div>
+        </article>
+      </section>
+
+      <section class="table" aria-label="Wuerfeltisch">
+        <div class="round">
+          <span>Letzter Wurf</span>
+          <strong id="roundScore">0</strong>
+        </div>
+
+        <button class="die" id="rollButton" type="button" aria-label="Wuerfeln" data-dice-count="1">
+          <span class="die-face primary" id="dieFace" data-value="1" aria-hidden="true">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+          <span class="die-face secondary" id="dieFaceTwo" data-value="1" aria-hidden="true">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+        </button>
+
+        <div class="dice-switcher" role="group" aria-label="Anzahl der Wuerfel waehlen">
+          <button class="theme-option active" id="oneDieButton" type="button" aria-pressed="true">
+            1 Würfel
+          </button>
+          <button class="theme-option" id="twoDiceButton" type="button" aria-pressed="false">
+            2 Würfel
+          </button>
+        </div>
+
+        <p class="message" id="message">Wuerfle einmal. Dann ist der Computer dran.</p>
+
+        <div class="controls">
+          <button id="newGameButton" type="button">Neues Spiel</button>
+          <button id="resetWinsButton" type="button">Siege zurücksetzen</button>
+        </div>
+      </section>
+
+      <section class="rules" aria-label="Regeln">
+        <h1>Walter Griebl präsentiert: Das Würfelduell</h1>
+        <p><span id="rulesDifficultyText">Erreiche zuerst</span> <strong id="rulesWinningScore">50</strong> Punkte. Im schweren Modus muss die Punktzahl genau getroffen werden.</p>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+

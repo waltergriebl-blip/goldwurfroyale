@@ -1,0 +1,423 @@
+let winningScore = 50;
+let difficulty = "normal";
+let playerName = "Du";
+let opponentName = "Spieler 2";
+let gameMode = "single";
+let diceCount = 1;
+
+const state = {
+  humanScore: 0,
+  computerScore: 0,
+  humanWins: 0,
+  computerWins: 0,
+  roundScore: 0,
+  currentPlayer: "human",
+  isComputerThinking: false,
+  isRolling: false,
+  isGameOver: false,
+};
+
+const humanScore = document.querySelector("#humanScore");
+const computerScore = document.querySelector("#computerScore");
+const humanWins = document.querySelector("#humanWins");
+const computerWins = document.querySelector("#computerWins");
+const roundScore = document.querySelector("#roundScore");
+const dieFace = document.querySelector("#dieFace");
+const dieFaceTwo = document.querySelector("#dieFaceTwo");
+const message = document.querySelector("#message");
+const rollButton = document.querySelector("#rollButton");
+const newGameButton = document.querySelector("#newGameButton");
+const resetWinsButton = document.querySelector("#resetWinsButton");
+const lightModeButton = document.querySelector("#lightModeButton");
+const darkModeButton = document.querySelector("#darkModeButton");
+const winningScoreInput = document.querySelector("#winningScoreInput");
+const applyScoreButton = document.querySelector("#applyScoreButton");
+const rulesWinningScore = document.querySelector("#rulesWinningScore");
+const rulesDifficultyText = document.querySelector("#rulesDifficultyText");
+const normalModeButton = document.querySelector("#normalModeButton");
+const hardModeButton = document.querySelector("#hardModeButton");
+const playerNameInput = document.querySelector("#playerNameInput");
+const applyNameButton = document.querySelector("#applyNameButton");
+const humanNameLabel = document.querySelector("#humanNameLabel");
+const nameEditor = document.querySelector("#nameEditor");
+const opponentNameLabel = document.querySelector("#opponentNameLabel");
+const opponentNameEditor = document.querySelector("#opponentNameEditor");
+const opponentNameInput = document.querySelector("#opponentNameInput");
+const applyOpponentNameButton = document.querySelector("#applyOpponentNameButton");
+const singleModeButton = document.querySelector("#singleModeButton");
+const multiModeButton = document.querySelector("#multiModeButton");
+const oneDieButton = document.querySelector("#oneDieButton");
+const twoDiceButton = document.querySelector("#twoDiceButton");
+const humanPanel = document.querySelector("#humanPanel");
+const computerPanel = document.querySelector("#computerPanel");
+
+const rollDie = () => Math.floor(Math.random() * 6) + 1;
+
+function render() {
+  humanScore.textContent = state.humanScore;
+  computerScore.textContent = state.computerScore;
+  humanWins.textContent = state.humanWins;
+  computerWins.textContent = state.computerWins;
+  roundScore.textContent = state.roundScore;
+  humanNameLabel.textContent = playerName;
+  opponentNameLabel.textContent = getOpponentName();
+  rulesWinningScore.textContent = winningScore;
+  rulesDifficultyText.textContent =
+    difficulty === "hard" ? "Erreiche genau" : "Erreiche zuerst";
+
+  humanPanel.classList.toggle("active", state.currentPlayer === "human" && !state.isGameOver);
+  computerPanel.classList.toggle("active", state.currentPlayer === "computer" && !state.isGameOver);
+  humanPanel.classList.toggle("winner", hasWinningScore(state.humanScore));
+  computerPanel.classList.toggle("winner", hasWinningScore(state.computerScore));
+  opponentNameLabel.disabled = gameMode === "single";
+  rollButton.dataset.diceCount = String(getEffectiveDiceCount());
+  oneDieButton.classList.toggle("active", diceCount === 1);
+  twoDiceButton.classList.toggle("active", diceCount === 2);
+  oneDieButton.setAttribute("aria-pressed", String(diceCount === 1));
+  twoDiceButton.setAttribute("aria-pressed", String(diceCount === 2));
+
+  rollButton.disabled =
+    state.isGameOver ||
+    (gameMode === "single" && state.currentPlayer !== "human") ||
+    state.isComputerThinking ||
+    state.isRolling;
+}
+
+function setMessage(text, isBadRoll = false) {
+  message.textContent = text;
+  message.classList.toggle("bad-roll", isBadRoll);
+}
+
+async function rollWithSuspense(finalValues) {
+  state.isRolling = true;
+  rollButton.classList.add("rolling");
+  render();
+
+  for (let step = 0; step < 12; step += 1) {
+    dieFace.dataset.value = String(rollDie());
+    dieFaceTwo.dataset.value = String(rollDie());
+    await wait(70 + step * 18);
+  }
+
+  dieFace.dataset.value = String(finalValues[0]);
+  dieFaceTwo.dataset.value = String(finalValues[1] ?? 1);
+  rollButton.setAttribute("aria-label", `${formatRoll(finalValues)} gewuerfelt`);
+  rollButton.classList.remove("rolling");
+  rollButton.classList.remove("shake");
+  void rollButton.offsetWidth;
+  rollButton.classList.add("shake");
+  state.isRolling = false;
+  render();
+}
+
+function switchTurn() {
+  state.currentPlayer = state.currentPlayer === "human" ? "computer" : "human";
+  render();
+
+  if (gameMode === "single" && state.currentPlayer === "computer" && !state.isGameOver) {
+    computerTurn();
+  }
+}
+
+function checkWinner() {
+  if (state.isGameOver) return;
+
+  if (hasWinningScore(state.humanScore)) {
+    state.isGameOver = true;
+    state.humanWins += 1;
+    setMessage("Gewonnen! Sehr sauber gesichert.");
+  }
+
+  if (hasWinningScore(state.computerScore)) {
+    state.isGameOver = true;
+    state.computerWins += 1;
+    setMessage(`${getOpponentName()} gewinnt diese Runde. Direkt Revanche?`);
+  }
+
+  render();
+}
+
+async function rollForCurrentPlayer() {
+  if (state.isGameOver || state.isRolling) return;
+
+  const values = Array.from({ length: getEffectiveDiceCount() }, rollDie);
+  const value = values.reduce((total, nextValue) => total + nextValue, 0);
+  setMessage(`${getCurrentPlayerName()} wuerfelt...`);
+  await rollWithSuspense(values);
+  state.roundScore = value;
+  const currentScore = state.currentPlayer === "human" ? state.humanScore : state.computerScore;
+  const nextScore = currentScore + value;
+
+  if (difficulty === "hard" && nextScore > winningScore) {
+    setMessage(
+      state.currentPlayer === "human"
+        ? `${playerName} hat ${formatRoll(values)} gewuerfelt. Zu viel fuer genau ${winningScore}, der Wurf zaehlt nicht.`
+        : `${getOpponentName()} wuerfelt ${formatRoll(values)}. Zu viel fuer genau ${winningScore}, der Wurf zaehlt nicht.`,
+    );
+  } else if (state.currentPlayer === "human") {
+    state.humanScore = nextScore;
+    setMessage(`${playerName} hat ${formatRoll(values)} gewuerfelt. ${getOpponentName()} ist dran.`);
+  } else {
+    state.computerScore = nextScore;
+    setMessage(`${getOpponentName()} wuerfelt ${formatRoll(values)}. ${playerName} ist dran.`);
+  }
+
+  checkWinner();
+
+  if (!state.isGameOver) {
+    switchTurn();
+  }
+}
+
+async function computerTurn() {
+  state.isComputerThinking = true;
+  setMessage("Computer denkt kurz nach...");
+  render();
+
+  if (!state.isGameOver && state.currentPlayer === "computer") {
+    await wait(850);
+    await rollForCurrentPlayer();
+  }
+
+  state.isComputerThinking = false;
+  render();
+}
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function newGame() {
+  state.humanScore = 0;
+  state.computerScore = 0;
+  state.roundScore = 0;
+  state.currentPlayer = "human";
+  state.isComputerThinking = false;
+  state.isRolling = false;
+  state.isGameOver = false;
+  dieFace.dataset.value = "1";
+  dieFaceTwo.dataset.value = "1";
+  rollButton.classList.remove("rolling", "shake");
+  rollButton.setAttribute("aria-label", "Wuerfeln");
+  setMessage(getStartMessage());
+  render();
+}
+
+function resetWins() {
+  state.humanWins = 0;
+  state.computerWins = 0;
+  render();
+}
+
+function getCurrentPlayerName() {
+  return state.currentPlayer === "human" ? playerName : getOpponentName();
+}
+
+function getOpponentName() {
+  return gameMode === "single" ? "Computer" : opponentName;
+}
+
+function getCurrentScore() {
+  return state.currentPlayer === "human" ? state.humanScore : state.computerScore;
+}
+
+function getEffectiveDiceCount() {
+  const pointsLeft = winningScore - getCurrentScore();
+  return difficulty === "hard" && diceCount === 2 && pointsLeft === 1 ? 1 : diceCount;
+}
+
+function formatRoll(values) {
+  if (values.length === 1) {
+    return `eine ${values[0]}`;
+  }
+
+  const total = values.reduce((sum, nextValue) => sum + nextValue, 0);
+  return `${values.join(" + ")} = ${total}`;
+}
+
+function applyWinningScore() {
+  const nextScore = Number(winningScoreInput.value);
+  winningScore = Math.min(999, Math.max(10, Number.isFinite(nextScore) ? nextScore : 50));
+  winningScoreInput.value = winningScore;
+  localStorage.setItem("wuerfelduell-winning-score", String(winningScore));
+  newGame();
+}
+
+function applyPlayerName() {
+  const cleanName = playerNameInput.value.trim().slice(0, 18);
+  playerName = cleanName || "Du";
+  playerNameInput.value = playerName;
+  localStorage.setItem("wuerfelduell-player-name", playerName);
+  closeNameEditor();
+  render();
+}
+
+function applyOpponentName() {
+  const cleanName = opponentNameInput.value.trim().slice(0, 18);
+  opponentName = cleanName || "Spieler 2";
+  opponentNameInput.value = opponentName;
+  localStorage.setItem("wuerfelduell-opponent-name", opponentName);
+  closeOpponentNameEditor();
+  render();
+}
+
+function openNameEditor() {
+  nameEditor.hidden = false;
+  humanNameLabel.hidden = true;
+  playerNameInput.value = playerName;
+  playerNameInput.focus();
+  playerNameInput.select();
+}
+
+function closeNameEditor() {
+  nameEditor.hidden = true;
+  humanNameLabel.hidden = false;
+}
+
+function openOpponentNameEditor() {
+  if (gameMode === "single") return;
+
+  opponentNameEditor.hidden = false;
+  opponentNameLabel.hidden = true;
+  opponentNameInput.value = opponentName;
+  opponentNameInput.focus();
+  opponentNameInput.select();
+}
+
+function closeOpponentNameEditor() {
+  opponentNameEditor.hidden = true;
+  opponentNameLabel.hidden = false;
+}
+
+function hasWinningScore(score) {
+  return difficulty === "hard" ? score === winningScore : score >= winningScore;
+}
+
+function getStartMessage() {
+  return difficulty === "hard"
+    ? `Wuerfle einmal. Wer genau ${winningScore} Punkte erreicht, gewinnt.`
+    : `Wuerfle einmal. Wer zuerst ${winningScore} Punkte erreicht, gewinnt.`;
+}
+
+function setDifficulty(nextDifficulty) {
+  difficulty = nextDifficulty === "hard" ? "hard" : "normal";
+  const isHard = difficulty === "hard";
+  normalModeButton.classList.toggle("active", !isHard);
+  hardModeButton.classList.toggle("active", isHard);
+  normalModeButton.setAttribute("aria-pressed", String(!isHard));
+  hardModeButton.setAttribute("aria-pressed", String(isHard));
+  localStorage.setItem("wuerfelduell-difficulty", difficulty);
+  newGame();
+}
+
+function setGameMode(nextMode) {
+  gameMode = nextMode === "multi" ? "multi" : "single";
+  const isMulti = gameMode === "multi";
+  singleModeButton.classList.toggle("active", !isMulti);
+  multiModeButton.classList.toggle("active", isMulti);
+  singleModeButton.setAttribute("aria-pressed", String(!isMulti));
+  multiModeButton.setAttribute("aria-pressed", String(isMulti));
+  localStorage.setItem("wuerfelduell-game-mode", gameMode);
+  closeOpponentNameEditor();
+  newGame();
+}
+
+function setDiceCount(nextCount) {
+  diceCount = nextCount === 2 ? 2 : 1;
+  localStorage.setItem("wuerfelduell-dice-count", String(diceCount));
+  newGame();
+}
+
+function setTheme(theme) {
+  const isDark = theme === "dark";
+  document.documentElement.classList.toggle("dark", isDark);
+  document.body.classList.toggle("dark", isDark);
+  lightModeButton.classList.toggle("active", !isDark);
+  darkModeButton.classList.toggle("active", isDark);
+  lightModeButton.setAttribute("aria-pressed", String(!isDark));
+  darkModeButton.setAttribute("aria-pressed", String(isDark));
+  localStorage.setItem("wuerfelduell-theme", theme);
+}
+
+const savedTheme = localStorage.getItem("wuerfelduell-theme");
+setTheme(savedTheme === "dark" ? "dark" : "light");
+
+const savedWinningScore = Number(localStorage.getItem("wuerfelduell-winning-score"));
+if (Number.isFinite(savedWinningScore) && savedWinningScore >= 10) {
+  winningScore = Math.min(999, savedWinningScore);
+}
+winningScoreInput.value = winningScore;
+rulesWinningScore.textContent = winningScore;
+
+const savedDifficulty = localStorage.getItem("wuerfelduell-difficulty");
+setDifficulty(savedDifficulty === "hard" ? "hard" : "normal");
+
+const savedPlayerName = localStorage.getItem("wuerfelduell-player-name");
+if (savedPlayerName) {
+  playerName = savedPlayerName.slice(0, 18);
+}
+playerNameInput.value = playerName;
+humanNameLabel.textContent = playerName;
+
+const savedOpponentName = localStorage.getItem("wuerfelduell-opponent-name");
+if (savedOpponentName) {
+  opponentName = savedOpponentName.slice(0, 18);
+}
+opponentNameInput.value = opponentName;
+
+const savedGameMode = localStorage.getItem("wuerfelduell-game-mode");
+setGameMode(savedGameMode === "multi" ? "multi" : "single");
+
+const savedDiceCount = Number(localStorage.getItem("wuerfelduell-dice-count"));
+if (savedDiceCount === 2) {
+  diceCount = 2;
+}
+render();
+
+rollButton.addEventListener("click", rollForCurrentPlayer);
+newGameButton.addEventListener("click", newGame);
+resetWinsButton.addEventListener("click", resetWins);
+applyScoreButton.addEventListener("click", applyWinningScore);
+applyNameButton.addEventListener("click", applyPlayerName);
+applyOpponentNameButton.addEventListener("click", applyOpponentName);
+humanNameLabel.addEventListener("click", openNameEditor);
+opponentNameLabel.addEventListener("click", openOpponentNameEditor);
+winningScoreInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    applyWinningScore();
+  }
+});
+playerNameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    applyPlayerName();
+  }
+
+  if (event.key === "Escape") {
+    closeNameEditor();
+  }
+});
+opponentNameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    applyOpponentName();
+  }
+
+  if (event.key === "Escape") {
+    closeOpponentNameEditor();
+  }
+});
+lightModeButton.addEventListener("click", () => setTheme("light"));
+darkModeButton.addEventListener("click", () => setTheme("dark"));
+normalModeButton.addEventListener("click", () => setDifficulty("normal"));
+hardModeButton.addEventListener("click", () => setDifficulty("hard"));
+singleModeButton.addEventListener("click", () => setGameMode("single"));
+multiModeButton.addEventListener("click", () => setGameMode("multi"));
+oneDieButton.addEventListener("click", () => setDiceCount(1));
+twoDiceButton.addEventListener("click", () => setDiceCount(2));
+
+render();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
