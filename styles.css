@@ -121,7 +121,7 @@ button {
 
 .menu-panel {
   position: absolute;
-  top: 100%;
+  top: calc(100% - 1px);
   left: 50%;
   width: min(420px, calc(100vw - 32px));
   max-height: 0;
@@ -135,7 +135,7 @@ button {
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
-  transform: translate(-50%, -8px);
+  transform: translateX(-50%);
   transition:
     max-height 220ms ease,
     opacity 160ms ease,
@@ -146,7 +146,7 @@ button {
   max-height: 360px;
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, 8px);
+  transform: translateX(-50%);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -154,7 +154,7 @@ button {
     max-height: 360px;
     opacity: 1;
     pointer-events: auto;
-    transform: translate(-50%, 8px);
+    transform: translateX(-50%);
   }
 }
 

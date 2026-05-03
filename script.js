@@ -76,15 +76,17 @@ function render() {
   humanPanel.classList.toggle("winner", hasWinningScore(state.humanScore));
   computerPanel.classList.toggle("winner", hasWinningScore(state.computerScore));
   opponentNameLabel.disabled = gameMode === "single";
-  const canChooseStarter = canChooseStartPlayer();
-  humanStarterButton.hidden = gameMode !== "multi";
-  computerStarterButton.hidden = gameMode !== "multi";
-  humanStarterButton.disabled = !canChooseStarter;
-  computerStarterButton.disabled = !canChooseStarter;
-  humanStarterButton.classList.toggle("active", state.currentPlayer === "human");
-  computerStarterButton.classList.toggle("active", state.currentPlayer === "computer");
-  humanStarterButton.textContent = state.currentPlayer === "human" ? "Startet" : "Start";
-  computerStarterButton.textContent = state.currentPlayer === "computer" ? "Startet" : "Start";
+  if (humanStarterButton && computerStarterButton) {
+    const canChooseStarter = canChooseStartPlayer();
+    humanStarterButton.hidden = gameMode !== "multi";
+    computerStarterButton.hidden = gameMode !== "multi";
+    humanStarterButton.disabled = !canChooseStarter;
+    computerStarterButton.disabled = !canChooseStarter;
+    humanStarterButton.classList.toggle("active", state.currentPlayer === "human");
+    computerStarterButton.classList.toggle("active", state.currentPlayer === "computer");
+    humanStarterButton.textContent = state.currentPlayer === "human" ? "Startet" : "Start";
+    computerStarterButton.textContent = state.currentPlayer === "computer" ? "Startet" : "Start";
+  }
   rollButton.dataset.diceCount = String(getEffectiveDiceCount());
   oneDieButton.classList.toggle("active", diceCount === 1);
   twoDiceButton.classList.toggle("active", diceCount === 2);
@@ -377,11 +379,15 @@ function setTheme(theme) {
 }
 
 function setMenuOpen(isOpen) {
+  if (!menuShell || !menuTrigger) return;
+
   menuShell.classList.toggle("menu-open", isOpen);
   menuTrigger.setAttribute("aria-expanded", String(isOpen));
 }
 
 function toggleMenu() {
+  if (!menuShell) return;
+
   setMenuOpen(!menuShell.classList.contains("menu-open"));
 }
 
@@ -459,16 +465,20 @@ singleModeButton.addEventListener("click", () => setGameMode("single"));
 multiModeButton.addEventListener("click", () => setGameMode("multi"));
 oneDieButton.addEventListener("click", () => setDiceCount(1));
 twoDiceButton.addEventListener("click", () => setDiceCount(2));
-humanStarterButton.addEventListener("click", () => setStartPlayer("human"));
-computerStarterButton.addEventListener("click", () => setStartPlayer("computer"));
-menuTrigger.addEventListener("click", (event) => {
+humanStarterButton?.addEventListener("click", () => setStartPlayer("human"));
+computerStarterButton?.addEventListener("click", () => setStartPlayer("computer"));
+menuTrigger?.addEventListener("click", (event) => {
   event.stopPropagation();
   toggleMenu();
 });
-menuShell.addEventListener("click", (event) => {
+menuShell?.addEventListener("click", (event) => {
   event.stopPropagation();
 });
-document.addEventListener("click", () => setMenuOpen(false));
+document.addEventListener("click", (event) => {
+  if (!menuShell?.contains(event.target)) {
+    setMenuOpen(false);
+  }
+});
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     setMenuOpen(false);
@@ -479,6 +489,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=13").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=15").then((registration) => registration.update()).catch(() => {});
   });
 }
