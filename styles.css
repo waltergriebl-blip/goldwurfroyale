@@ -124,6 +124,7 @@ button {
   top: 100%;
   left: 50%;
   width: min(420px, calc(100vw - 32px));
+  max-height: 0;
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
@@ -132,16 +133,29 @@ button {
   background: var(--panel);
   box-shadow: 0 20px 60px var(--shadow);
   opacity: 0;
+  overflow: hidden;
   pointer-events: none;
-  transform: translateX(-50%);
-  transition: opacity 160ms ease;
+  transform: translate(-50%, -8px);
+  transition:
+    max-height 220ms ease,
+    opacity 160ms ease,
+    transform 180ms ease;
 }
 
-.menu-shell:hover .menu-panel,
-.menu-shell:focus-within .menu-panel {
+.menu-shell.menu-open .menu-panel {
+  max-height: 360px;
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%);
+  transform: translate(-50%, 8px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .menu-shell:hover .menu-panel {
+    max-height: 360px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, 8px);
+  }
 }
 
 .setting {

@@ -50,6 +50,8 @@ const oneDieButton = document.querySelector("#oneDieButton");
 const twoDiceButton = document.querySelector("#twoDiceButton");
 const humanPanel = document.querySelector("#humanPanel");
 const computerPanel = document.querySelector("#computerPanel");
+const menuShell = document.querySelector(".menu-shell");
+const menuTrigger = document.querySelector("#menuTrigger");
 
 const rollDie = () => Math.floor(Math.random() * 6) + 1;
 
@@ -339,6 +341,15 @@ function setTheme(theme) {
   localStorage.setItem("wuerfelduell-theme", theme);
 }
 
+function setMenuOpen(isOpen) {
+  menuShell.classList.toggle("menu-open", isOpen);
+  menuTrigger.setAttribute("aria-expanded", String(isOpen));
+}
+
+function toggleMenu() {
+  setMenuOpen(!menuShell.classList.contains("menu-open"));
+}
+
 const savedTheme = localStorage.getItem("wuerfelduell-theme");
 setTheme(savedTheme === "dark" ? "dark" : "light");
 
@@ -413,11 +424,24 @@ singleModeButton.addEventListener("click", () => setGameMode("single"));
 multiModeButton.addEventListener("click", () => setGameMode("multi"));
 oneDieButton.addEventListener("click", () => setDiceCount(1));
 twoDiceButton.addEventListener("click", () => setDiceCount(2));
+menuTrigger.addEventListener("click", (event) => {
+  event.stopPropagation();
+  toggleMenu();
+});
+menuShell.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+document.addEventListener("click", () => setMenuOpen(false));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    setMenuOpen(false);
+  }
+});
 
 render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=11").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=12").then((registration) => registration.update()).catch(() => {});
   });
 }
