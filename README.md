@@ -2,6 +2,8 @@
 
 Ein kleines Wuerfelspiel fuer Browser und iPhone-Home-Bildschirm. Zwei Spieler treten gegeneinander an und versuchen, zuerst die festgelegte Punktzahl zu erreichen.
 
+![Screenshot vom Wuerfelduell](screenshot.png)
+
 ## Funktionen
 
 - Spiel gegen den Computer im Singleplayer
