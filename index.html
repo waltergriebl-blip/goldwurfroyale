@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Würfelduell" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="manifest" href="manifest.webmanifest?v=12" />
+    <link rel="manifest" href="manifest.webmanifest?v=13" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link rel="stylesheet" href="styles.css?v=13" />
   </head>
   <body>
     <main class="game">
@@ -76,6 +76,7 @@
             <input id="playerNameInput" type="text" maxlength="18" value="Du" aria-label="Spielername" />
             <button id="applyNameButton" type="button">OK</button>
           </div>
+          <button class="starter-button" id="humanStarterButton" type="button" hidden>Startspieler</button>
           <strong id="humanScore">0</strong>
           <span>Gesamtpunkte</span>
           <div class="wins">
@@ -91,6 +92,7 @@
               <input id="opponentNameInput" type="text" maxlength="18" value="Spieler 2" aria-label="Name Spieler 2" />
               <button id="applyOpponentNameButton" type="button">OK</button>
             </div>
+            <button class="starter-button" id="computerStarterButton" type="button" hidden>Startspieler</button>
           </div>
           <strong id="computerScore">0</strong>
           <span>Gesamtpunkte</span>
@@ -159,7 +161,7 @@
       </footer>
     </main>
 
-    <script src="script.js?v=12"></script>
+    <script src="script.js?v=13"></script>
   </body>
 </html>
 

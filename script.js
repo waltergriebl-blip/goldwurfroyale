@@ -4,6 +4,7 @@ let playerName = "Du";
 let opponentName = "Spieler 2";
 let gameMode = "single";
 let diceCount = 1;
+let startPlayer = "human";
 
 const state = {
   humanScore: 0,
@@ -15,6 +16,7 @@ const state = {
   isComputerThinking: false,
   isRolling: false,
   isGameOver: false,
+  hasRolled: false,
 };
 
 const humanScore = document.querySelector("#humanScore");
@@ -50,6 +52,8 @@ const oneDieButton = document.querySelector("#oneDieButton");
 const twoDiceButton = document.querySelector("#twoDiceButton");
 const humanPanel = document.querySelector("#humanPanel");
 const computerPanel = document.querySelector("#computerPanel");
+const humanStarterButton = document.querySelector("#humanStarterButton");
+const computerStarterButton = document.querySelector("#computerStarterButton");
 const menuShell = document.querySelector(".menu-shell");
 const menuTrigger = document.querySelector("#menuTrigger");
 
@@ -72,6 +76,15 @@ function render() {
   humanPanel.classList.toggle("winner", hasWinningScore(state.humanScore));
   computerPanel.classList.toggle("winner", hasWinningScore(state.computerScore));
   opponentNameLabel.disabled = gameMode === "single";
+  const canChooseStarter = canChooseStartPlayer();
+  humanStarterButton.hidden = gameMode !== "multi";
+  computerStarterButton.hidden = gameMode !== "multi";
+  humanStarterButton.disabled = !canChooseStarter;
+  computerStarterButton.disabled = !canChooseStarter;
+  humanStarterButton.classList.toggle("active", state.currentPlayer === "human");
+  computerStarterButton.classList.toggle("active", state.currentPlayer === "computer");
+  humanStarterButton.textContent = state.currentPlayer === "human" ? "Startet" : "Start";
+  computerStarterButton.textContent = state.currentPlayer === "computer" ? "Startet" : "Start";
   rollButton.dataset.diceCount = String(getEffectiveDiceCount());
   oneDieButton.classList.toggle("active", diceCount === 1);
   twoDiceButton.classList.toggle("active", diceCount === 2);
@@ -142,6 +155,7 @@ function checkWinner() {
 async function rollForCurrentPlayer() {
   if (state.isGameOver || state.isRolling) return;
 
+  state.hasRolled = true;
   const values = Array.from({ length: getEffectiveDiceCount() }, rollDie);
   const value = values.reduce((total, nextValue) => total + nextValue, 0);
   setMessage(`${getCurrentPlayerName()} wuerfelt...`);
@@ -193,10 +207,11 @@ function newGame() {
   state.humanScore = 0;
   state.computerScore = 0;
   state.roundScore = 0;
-  state.currentPlayer = "human";
+  state.currentPlayer = gameMode === "multi" ? startPlayer : "human";
   state.isComputerThinking = false;
   state.isRolling = false;
   state.isGameOver = false;
+  state.hasRolled = false;
   dieFace.dataset.value = "1";
   dieFaceTwo.dataset.value = "1";
   rollButton.classList.remove("rolling", "shake");
@@ -296,9 +311,26 @@ function hasWinningScore(score) {
 }
 
 function getStartMessage() {
+  if (gameMode === "multi") {
+    return `Startspieler: ${getCurrentPlayerName()}. Vor dem ersten Wurf kannst du wechseln.`;
+  }
+
   return difficulty === "hard"
     ? `Wuerfle einmal. Wer genau ${winningScore} Punkte erreicht, gewinnt.`
     : `Wuerfle einmal. Wer zuerst ${winningScore} Punkte erreicht, gewinnt.`;
+}
+
+function canChooseStartPlayer() {
+  return gameMode === "multi" && !state.hasRolled && !state.isRolling && !state.isGameOver;
+}
+
+function setStartPlayer(player) {
+  if (!canChooseStartPlayer()) return;
+
+  startPlayer = player === "computer" ? "computer" : "human";
+  state.currentPlayer = startPlayer;
+  setMessage(`Startspieler: ${getCurrentPlayerName()}.`);
+  render();
 }
 
 function setDifficulty(nextDifficulty) {
@@ -314,6 +346,9 @@ function setDifficulty(nextDifficulty) {
 
 function setGameMode(nextMode) {
   gameMode = nextMode === "multi" ? "multi" : "single";
+  if (gameMode === "single") {
+    startPlayer = "human";
+  }
   const isMulti = gameMode === "multi";
   singleModeButton.classList.toggle("active", !isMulti);
   multiModeButton.classList.toggle("active", isMulti);
@@ -424,6 +459,8 @@ singleModeButton.addEventListener("click", () => setGameMode("single"));
 multiModeButton.addEventListener("click", () => setGameMode("multi"));
 oneDieButton.addEventListener("click", () => setDiceCount(1));
 twoDiceButton.addEventListener("click", () => setDiceCount(2));
+humanStarterButton.addEventListener("click", () => setStartPlayer("human"));
+computerStarterButton.addEventListener("click", () => setStartPlayer("computer"));
 menuTrigger.addEventListener("click", (event) => {
   event.stopPropagation();
   toggleMenu();
@@ -442,6 +479,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=12").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=13").then((registration) => registration.update()).catch(() => {});
   });
 }

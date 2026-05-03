@@ -310,6 +310,33 @@ button {
   color: var(--muted);
 }
 
+.starter-button {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  text-transform: uppercase;
+}
+
+.starter-button:hover:not(:disabled),
+.starter-button.active {
+  border-color: var(--green);
+  background: var(--green);
+  color: #ffffff;
+}
+
+.starter-button:disabled {
+  cursor: default;
+}
+
 .opponent-top {
   display: grid;
   gap: 8px;
@@ -752,6 +779,12 @@ body.dark #newGameButton {
     min-height: 118px;
     padding: 12px;
     gap: 6px;
+  }
+
+  .starter-button {
+    min-height: 28px;
+    font-size: 0.62rem;
+    padding: 3px 8px;
   }
 
   .player strong {
