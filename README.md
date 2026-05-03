@@ -1,4 +1,4 @@
-# Walter Griebl praesentiert: Das Wuerfelduell
+# Walter Griebls Wuerfelduell
 
 Ein kleines Wuerfelspiel fuer Web und Mobile. Zwei Spieler treten gegeneinander an und versuchen, zuerst die festgelegte Punktzahl zu erreichen.
 
