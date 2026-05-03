@@ -83,20 +83,73 @@ button {
 
 .topbar {
   grid-column: 1 / -1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+  position: relative;
+  z-index: 20;
+  display: grid;
+  place-items: center;
   padding: 10px 12px;
   border: 1px solid var(--line);
   background: var(--panel);
   box-shadow: 0 20px 60px var(--shadow);
 }
 
+.menu-shell {
+  position: relative;
+  width: min(100%, 420px);
+  display: grid;
+  place-items: center;
+}
+
+.menu-trigger {
+  min-width: 160px;
+  min-height: 42px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.menu-trigger:hover,
+.menu-trigger:focus-visible {
+  background: var(--green);
+  color: #ffffff;
+}
+
+.menu-panel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: min(420px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: 0 20px 60px var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 160ms ease;
+}
+
+.menu-shell:hover .menu-panel,
+.menu-shell:focus-within .menu-panel {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%);
+}
+
 .setting {
-  display: flex;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .topbar span,
@@ -249,7 +302,7 @@ button {
 }
 
 .mini-switcher {
-  width: min(100%, 260px);
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4px;
@@ -629,6 +682,15 @@ body.dark #newGameButton {
   }
 
   .topbar {
+    padding: 8px 10px;
+  }
+
+  .menu-trigger {
+    width: min(100%, 220px);
+  }
+
+  .menu-panel {
+    width: min(100vw - 16px, 520px);
     display: grid;
     grid-template-columns: 1fr;
     gap: 8px;
@@ -757,6 +819,10 @@ body.dark #newGameButton {
 }
 
 @media (max-width: 460px) {
+  .menu-panel {
+    width: min(100vw - 16px, 420px);
+  }
+
   .setting {
     grid-template-columns: 112px minmax(0, 1fr);
   }

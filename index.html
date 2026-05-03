@@ -15,36 +15,56 @@
   </head>
   <body>
     <main class="game">
-      <section class="topbar" aria-label="Darstellung">
-        <div class="setting">
-          <span>Ansicht</span>
-          <div class="theme-switcher" role="group" aria-label="Hell oder dunkel waehlen">
-            <button class="theme-option active" id="lightModeButton" type="button" aria-pressed="true">
-              Hell
-            </button>
-            <button class="theme-option" id="darkModeButton" type="button" aria-pressed="false">
-              Dunkel
-            </button>
-          </div>
-        </div>
+      <section class="topbar" aria-label="Spielmenue">
+        <div class="menu-shell">
+          <button class="menu-trigger" type="button" aria-haspopup="true">
+            Menü
+          </button>
 
-        <div class="setting">
-          <label for="winningScoreInput">Zielpunkte</label>
-          <div class="score-setting">
-            <input id="winningScoreInput" type="number" min="10" max="999" step="5" value="50" />
-            <button id="applyScoreButton" type="button">Festlegen</button>
-          </div>
-        </div>
+          <div class="menu-panel">
+            <div class="setting">
+              <span>Ansicht</span>
+              <div class="theme-switcher" role="group" aria-label="Hell oder dunkel waehlen">
+                <button class="theme-option active" id="lightModeButton" type="button" aria-pressed="true">
+                  Hell
+                </button>
+                <button class="theme-option" id="darkModeButton" type="button" aria-pressed="false">
+                  Dunkel
+                </button>
+              </div>
+            </div>
 
-        <div class="setting">
-          <span>Schwierigkeit</span>
-          <div class="theme-switcher" role="group" aria-label="Schwierigkeit waehlen">
-            <button class="theme-option active" id="normalModeButton" type="button" aria-pressed="true">
-              Normal
-            </button>
-            <button class="theme-option" id="hardModeButton" type="button" aria-pressed="false">
-              Schwer
-            </button>
+            <div class="setting">
+              <span>Spieler</span>
+              <div class="mini-switcher" role="group" aria-label="Spielmodus waehlen">
+                <button class="theme-option active" id="singleModeButton" type="button" aria-pressed="true">
+                  Single
+                </button>
+                <button class="theme-option" id="multiModeButton" type="button" aria-pressed="false">
+                  Multiplayer
+                </button>
+              </div>
+            </div>
+
+            <div class="setting">
+              <label for="winningScoreInput">Zielpunkte</label>
+              <div class="score-setting">
+                <input id="winningScoreInput" type="number" min="10" max="999" step="5" value="50" />
+                <button id="applyScoreButton" type="button">Festlegen</button>
+              </div>
+            </div>
+
+            <div class="setting">
+              <span>Schwierigkeit</span>
+              <div class="theme-switcher" role="group" aria-label="Schwierigkeit waehlen">
+                <button class="theme-option active" id="normalModeButton" type="button" aria-pressed="true">
+                  Normal
+                </button>
+                <button class="theme-option" id="hardModeButton" type="button" aria-pressed="false">
+                  Schwer
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -70,14 +90,6 @@
             <div class="inline-name-editor" id="opponentNameEditor" hidden>
               <input id="opponentNameInput" type="text" maxlength="18" value="Spieler 2" aria-label="Name Spieler 2" />
               <button id="applyOpponentNameButton" type="button">OK</button>
-            </div>
-            <div class="mini-switcher" role="group" aria-label="Spielmodus waehlen">
-              <button class="theme-option active" id="singleModeButton" type="button" aria-pressed="true">
-                Single
-              </button>
-              <button class="theme-option" id="multiModeButton" type="button" aria-pressed="false">
-                Multiplayer
-              </button>
             </div>
           </div>
           <strong id="computerScore">0</strong>
