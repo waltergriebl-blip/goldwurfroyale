@@ -1,6 +1,8 @@
 # Walter Griebl praesentiert: Das Wuerfelduell
 
-Ein kleines Wuerfelspiel fuer Browser und iPhone-Home-Bildschirm. Zwei Spieler treten gegeneinander an und versuchen, zuerst die festgelegte Punktzahl zu erreichen.
+Ein kleines Wuerfelspiel fuer Web und Mobile. Zwei Spieler treten gegeneinander an und versuchen, zuerst die festgelegte Punktzahl zu erreichen.
+
+Fuer ein besseres Spielerlebnis am Smartphone kann die Webseite auf dem Home-Bildschirm gespeichert und wie eine App genutzt werden.
 
 ![Screenshot vom Wuerfelduell](screenshot.png)
 
@@ -17,8 +19,8 @@ Ein kleines Wuerfelspiel fuer Browser und iPhone-Home-Bildschirm. Zwei Spieler t
 - Wuerfelanimation fuer mehr Spannung
 - Siegzaehler fuer beide Spieler
 - Hell- und Dunkelansicht
-- Optimierte mobile Ansicht fuer iPhone und Browser
-- Als Web-App auf dem iPhone nutzbar
+- Fuer Web und Mobile optimiert
+- Als Web-App auf dem Smartphone nutzbar
 
 ## Online Spielen
 
