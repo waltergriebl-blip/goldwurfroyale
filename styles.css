@@ -539,6 +539,13 @@ body.dark #newGameButton {
   padding: 20px 24px;
 }
 
+.copyright {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
 .rules h1 {
   margin: 0 0 8px;
   font-size: clamp(1.35rem, 2.7vw, 2.25rem);
@@ -733,6 +740,10 @@ body.dark #newGameButton {
 
   .rules {
     padding: 14px;
+  }
+
+  .copyright {
+    font-size: 0.76rem;
   }
 
   .rules h1 {

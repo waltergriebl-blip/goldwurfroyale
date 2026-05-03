@@ -27,3 +27,9 @@ Fuer ein besseres Spielerlebnis am Smartphone kann die Webseite auf dem Home-Bil
 Die Webseite laeuft ueber GitHub Pages:
 
 https://waltergriebl-blip.github.io/wuerfelduell/
+
+## Rechte
+
+Copyright © 2026 Walter Griebl. Alle Rechte vorbehalten.
+
+Dieses Projekt darf ohne ausdrueckliche Erlaubnis nicht kopiert, veraendert, veroeffentlicht oder kommerziell genutzt werden.
