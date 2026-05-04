@@ -23,5 +23,3 @@ https://waltergriebl-blip.github.io/wuerfelduell/
 ## Rechte
 
 Copyright © 2026 Walter Griebl. Alle Rechte vorbehalten.
-
-Dieses Projekt darf ohne ausdrückliche Erlaubnis nicht kopiert, verändert, veröffentlicht oder kommerziell genutzt werden.
