@@ -485,6 +485,17 @@ function playInvalidSound() {
   playTone(120, now + 0.13, 0.18, 0.045, "sawtooth");
 }
 
+function playClickSound() {
+  if (!soundEnabled) return;
+
+  const context = ensureAudioContext();
+  if (!context) return;
+
+  const now = context.currentTime;
+  playTone(420, now, 0.045, 0.035, "sine");
+  playTone(620, now + 0.035, 0.055, 0.03, "sine");
+}
+
 function setMenuOpen(shell, trigger, isOpen) {
   if (!shell || !trigger) return;
 
@@ -583,20 +594,45 @@ opponentNameInput.addEventListener("keydown", (event) => {
     closeOpponentNameEditor();
   }
 });
-lightModeButton.addEventListener("click", () => setTheme("light"));
-darkModeButton.addEventListener("click", () => setTheme("dark"));
-soundOnButton?.addEventListener("click", () => setSound(true));
-soundOffButton?.addEventListener("click", () => setSound(false));
-normalModeButton.addEventListener("click", () => setDifficulty("normal"));
-hardModeButton.addEventListener("click", () => setDifficulty("hard"));
-singleModeButton.addEventListener("click", () => setGameMode("single"));
-multiModeButton.addEventListener("click", () => setGameMode("multi"));
+lightModeButton.addEventListener("click", () => {
+  playClickSound();
+  setTheme("light");
+});
+darkModeButton.addEventListener("click", () => {
+  playClickSound();
+  setTheme("dark");
+});
+soundOnButton?.addEventListener("click", () => {
+  setSound(true);
+  playClickSound();
+});
+soundOffButton?.addEventListener("click", () => {
+  playClickSound();
+  setSound(false);
+});
+normalModeButton.addEventListener("click", () => {
+  playClickSound();
+  setDifficulty("normal");
+});
+hardModeButton.addEventListener("click", () => {
+  playClickSound();
+  setDifficulty("hard");
+});
+singleModeButton.addEventListener("click", () => {
+  playClickSound();
+  setGameMode("single");
+});
+multiModeButton.addEventListener("click", () => {
+  playClickSound();
+  setGameMode("multi");
+});
 oneDieButton.addEventListener("click", () => setDiceCount(1));
 twoDiceButton.addEventListener("click", () => setDiceCount(2));
 humanStarterButton?.addEventListener("click", () => setStartPlayer("human"));
 computerStarterButton?.addEventListener("click", () => setStartPlayer("computer"));
 menuTrigger?.addEventListener("click", (event) => {
   event.stopPropagation();
+  playClickSound();
   togglePanel(menuShell, menuTrigger);
 });
 menuShell?.addEventListener("click", (event) => {
@@ -604,6 +640,7 @@ menuShell?.addEventListener("click", (event) => {
 });
 infoTrigger?.addEventListener("click", (event) => {
   event.stopPropagation();
+  playClickSound();
   togglePanel(infoShell, infoTrigger);
 });
 infoShell?.addEventListener("click", (event) => {
@@ -624,6 +661,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=32").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=34").then((registration) => registration.update()).catch(() => {});
   });
 }
