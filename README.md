@@ -20,6 +20,13 @@ Spiele alleine gegen den Computer oder lokal zu zweit am selben Gerät.
 
 https://waltergriebl-blip.github.io/wuerfelduell/
 
+## Als App nutzen
+
+Die Webseite kann auf dem Smartphone zum Home-Bildschirm hinzugefügt werden.
+
+**iPhone:** Teilen → Zum Home-Bildschirm  
+**Android:** Browser-Menü → Zum Startbildschirm
+
 ## Rechte
 
 Copyright © 2026 Walter Griebl. Alle Rechte vorbehalten.
