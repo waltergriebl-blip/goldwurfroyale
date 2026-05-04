@@ -8,61 +8,93 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Würfelduell" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="manifest" href="manifest.webmanifest?v=15" />
+    <link rel="manifest" href="manifest.webmanifest?v=26" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="stylesheet" href="styles.css?v=15" />
+    <link rel="stylesheet" href="styles.css?v=26" />
   </head>
   <body>
     <main class="game">
       <section class="topbar" aria-label="Spielmenue">
-        <div class="menu-shell">
-          <button class="menu-trigger" id="menuTrigger" type="button" aria-haspopup="true" aria-expanded="false">
-            Menü
-          </button>
+        <div class="top-actions">
+          <div class="menu-shell" id="settingsShell">
+            <button class="menu-trigger" id="menuTrigger" type="button" aria-haspopup="true" aria-expanded="false">
+              Menü
+            </button>
 
-          <div class="menu-panel">
-            <div class="setting">
-              <span>Ansicht</span>
-              <div class="theme-switcher" role="group" aria-label="Hell oder dunkel waehlen">
-                <button class="theme-option active" id="lightModeButton" type="button" aria-pressed="true">
-                  Hell
-                </button>
-                <button class="theme-option" id="darkModeButton" type="button" aria-pressed="false">
-                  Dunkel
-                </button>
+            <div class="menu-panel">
+              <div class="menu-options">
+                <div class="setting">
+                  <span>Ansicht</span>
+                  <div class="theme-switcher" role="group" aria-label="Hell oder dunkel waehlen">
+                    <button class="theme-option active" id="lightModeButton" type="button" aria-pressed="true">
+                      Hell
+                    </button>
+                    <button class="theme-option" id="darkModeButton" type="button" aria-pressed="false">
+                      Dunkel
+                    </button>
+                  </div>
+                </div>
+
+                <div class="setting">
+                  <span>Spieler</span>
+                  <div class="mini-switcher" role="group" aria-label="Spielmodus waehlen">
+                    <button class="theme-option active" id="singleModeButton" type="button" aria-pressed="true">
+                      Single
+                    </button>
+                    <button class="theme-option" id="multiModeButton" type="button" aria-pressed="false">
+                      Multiplayer
+                    </button>
+                  </div>
+                </div>
+
+                <div class="setting">
+                  <label for="winningScoreInput">Zielpunkte</label>
+                  <div class="score-setting">
+                    <input id="winningScoreInput" type="number" min="10" max="999" step="5" value="50" />
+                    <button id="applyScoreButton" type="button">Festlegen</button>
+                  </div>
+                </div>
+
+                <div class="setting">
+                  <span>Schwierigkeit</span>
+                  <div class="theme-switcher" role="group" aria-label="Schwierigkeit waehlen">
+                    <button class="theme-option active" id="normalModeButton" type="button" aria-pressed="true">
+                      Normal
+                    </button>
+                    <button class="theme-option" id="hardModeButton" type="button" aria-pressed="false">
+                      Schwer
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div class="setting">
-              <span>Spieler</span>
-              <div class="mini-switcher" role="group" aria-label="Spielmodus waehlen">
-                <button class="theme-option active" id="singleModeButton" type="button" aria-pressed="true">
-                  Single
-                </button>
-                <button class="theme-option" id="multiModeButton" type="button" aria-pressed="false">
-                  Multiplayer
-                </button>
-              </div>
-            </div>
+          <div class="menu-shell info-shell" id="infoShell">
+            <button class="menu-trigger" id="infoTrigger" type="button" aria-haspopup="true" aria-expanded="false">
+              Info
+            </button>
 
-            <div class="setting">
-              <label for="winningScoreInput">Zielpunkte</label>
-              <div class="score-setting">
-                <input id="winningScoreInput" type="number" min="10" max="999" step="5" value="50" />
-                <button id="applyScoreButton" type="button">Festlegen</button>
-              </div>
-            </div>
-
-            <div class="setting">
-              <span>Schwierigkeit</span>
-              <div class="theme-switcher" role="group" aria-label="Schwierigkeit waehlen">
-                <button class="theme-option active" id="normalModeButton" type="button" aria-pressed="true">
-                  Normal
-                </button>
-                <button class="theme-option" id="hardModeButton" type="button" aria-pressed="false">
-                  Schwer
-                </button>
+            <div class="menu-panel info-panel">
+              <div class="info-rollup">
+                <div class="info-heading">
+                  <span>Info</span>
+                  <strong>V.1.0</strong>
+                </div>
+                <div class="info-content">
+                  <p>Würfle einmal pro Zug. Wer die Zielpunkte erreicht, gewinnt die Runde.</p>
+                  <ul>
+                    <li><strong>Ansicht:</strong> Hell oder Dunkel.</li>
+                    <li><strong>Spieler:</strong> Single gegen Computer oder Multiplayer am selben Gerät.</li>
+                    <li><strong>Name ändern:</strong> Tippe auf den Spielernamen und bestätige mit OK.</li>
+                    <li><strong>Zielpunkte:</strong> Legt fest, bis wie viele Punkte gespielt wird.</li>
+                    <li><strong>Schwer:</strong> Die Zielpunkte müssen genau getroffen werden.</li>
+                    <li><strong>Würfel:</strong> Wähle 1 oder 2 Würfel.</li>
+                    <li><strong>Startspieler:</strong> Im Multiplayer vor dem ersten Wurf auswählbar.</li>
+                    <li><strong>Siege:</strong> Zählen gewonnene Runden bis zum Zurücksetzen.</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -103,13 +135,13 @@
         </article>
       </section>
 
-      <section class="table" aria-label="Wuerfeltisch">
+      <section class="table" aria-label="Würfeltisch">
         <div class="round">
           <span>Letzter Wurf</span>
           <strong id="roundScore">0</strong>
         </div>
 
-        <button class="die" id="rollButton" type="button" aria-label="Wuerfeln" data-dice-count="1">
+        <button class="die" id="rollButton" type="button" aria-label="Würfeln" data-dice-count="1">
           <span class="die-face primary" id="dieFace" data-value="1" aria-hidden="true">
             <i></i>
             <i></i>
@@ -134,7 +166,7 @@
           </span>
         </button>
 
-        <div class="dice-switcher" role="group" aria-label="Anzahl der Wuerfel waehlen">
+        <div class="dice-switcher" role="group" aria-label="Anzahl der Würfel wählen">
           <button class="theme-option active" id="oneDieButton" type="button" aria-pressed="true">
             1 Würfel
           </button>
@@ -161,7 +193,7 @@
       </footer>
     </main>
 
-    <script src="script.js?v=15"></script>
+    <script src="script.js?v=26"></script>
   </body>
 </html>
 

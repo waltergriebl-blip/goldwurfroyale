@@ -85,23 +85,29 @@ button {
   grid-column: 1 / -1;
   position: relative;
   z-index: 20;
-  display: grid;
-  place-items: center;
+  display: block;
   padding: 10px 12px;
   border: 1px solid var(--line);
   background: var(--panel);
   box-shadow: 0 20px 60px var(--shadow);
 }
 
+.top-actions {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
 .menu-shell {
   position: relative;
-  width: min(100%, 420px);
+  width: 100%;
   display: grid;
   place-items: center;
 }
 
 .menu-trigger {
-  min-width: 160px;
+  width: 100%;
   min-height: 42px;
   border: 0;
   border-radius: 6px;
@@ -123,7 +129,7 @@ button {
   position: absolute;
   top: calc(100% - 1px);
   left: 50%;
-  width: min(420px, calc(100vw - 32px));
+  width: min(420px, calc(50vw - 28px));
   max-height: 0;
   display: grid;
   grid-template-columns: 1fr;
@@ -143,19 +149,91 @@ button {
 }
 
 .menu-shell.menu-open .menu-panel {
-  max-height: 360px;
+  max-height: 560px;
   opacity: 1;
   pointer-events: auto;
   transform: translateX(-50%);
 }
 
+.info-panel {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.info-shell.menu-open .info-panel {
+  transform: none;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .menu-shell:hover .menu-panel {
-    max-height: 360px;
+    max-height: 560px;
     opacity: 1;
     pointer-events: auto;
     transform: translateX(-50%);
   }
+
+  .info-shell:hover .info-panel {
+    transform: none;
+  }
+}
+
+.menu-options {
+  display: grid;
+  gap: 8px;
+}
+
+.info-rollup {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--muted);
+}
+
+.info-heading {
+  min-height: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+}
+
+.info-heading span,
+.info-heading strong {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.info-content {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.info-content p,
+.info-content ul {
+  margin: 0;
+}
+
+.info-content p,
+.info-content li {
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.info-content ul {
+  display: grid;
+  gap: 5px;
+  padding-left: 18px;
+}
+
+.info-content strong {
+  color: var(--ink);
 }
 
 .setting {
@@ -736,6 +814,15 @@ body.dark #newGameButton {
     grid-template-columns: 1fr;
     gap: 8px;
     padding: 10px;
+    overflow-y: auto;
+  }
+
+  .top-actions {
+    width: 100%;
+  }
+
+  .info-panel {
+    right: 0;
   }
 
   .setting {

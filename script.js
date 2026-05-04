@@ -54,8 +54,10 @@ const humanPanel = document.querySelector("#humanPanel");
 const computerPanel = document.querySelector("#computerPanel");
 const humanStarterButton = document.querySelector("#humanStarterButton");
 const computerStarterButton = document.querySelector("#computerStarterButton");
-const menuShell = document.querySelector(".menu-shell");
+const menuShell = document.querySelector("#settingsShell");
 const menuTrigger = document.querySelector("#menuTrigger");
+const infoShell = document.querySelector("#infoShell");
+const infoTrigger = document.querySelector("#infoTrigger");
 
 const rollDie = () => Math.floor(Math.random() * 6) + 1;
 
@@ -118,7 +120,7 @@ async function rollWithSuspense(finalValues) {
 
   dieFace.dataset.value = String(finalValues[0]);
   dieFaceTwo.dataset.value = String(finalValues[1] ?? 1);
-  rollButton.setAttribute("aria-label", `${formatRoll(finalValues)} gewuerfelt`);
+  rollButton.setAttribute("aria-label", `${formatRoll(finalValues)} gewürfelt`);
   rollButton.classList.remove("rolling");
   rollButton.classList.remove("shake");
   void rollButton.offsetWidth;
@@ -160,7 +162,7 @@ async function rollForCurrentPlayer() {
   state.hasRolled = true;
   const values = Array.from({ length: getEffectiveDiceCount() }, rollDie);
   const value = values.reduce((total, nextValue) => total + nextValue, 0);
-  setMessage(`${getCurrentPlayerName()} wuerfelt...`);
+  setMessage(`${getCurrentPlayerName()} würfelt...`);
   await rollWithSuspense(values);
   state.roundScore = value;
   const currentScore = state.currentPlayer === "human" ? state.humanScore : state.computerScore;
@@ -169,15 +171,15 @@ async function rollForCurrentPlayer() {
   if (difficulty === "hard" && nextScore > winningScore) {
     setMessage(
       state.currentPlayer === "human"
-        ? `${playerName} hat ${formatRoll(values)} gewuerfelt. Zu viel fuer genau ${winningScore}, der Wurf zaehlt nicht.`
-        : `${getOpponentName()} wuerfelt ${formatRoll(values)}. Zu viel fuer genau ${winningScore}, der Wurf zaehlt nicht.`,
+        ? `${playerName} hat ${formatRoll(values)} gewürfelt. Zu viel fuer genau ${winningScore}, der Wurf zaehlt nicht.`
+        : `${getOpponentName()} würfelt ${formatRoll(values)}. Zu viel fuer genau ${winningScore}, der Wurf zaehlt nicht.`,
     );
   } else if (state.currentPlayer === "human") {
     state.humanScore = nextScore;
-    setMessage(`${playerName} hat ${formatRoll(values)} gewuerfelt. ${getOpponentName()} ist dran.`);
+    setMessage(`${playerName} hat ${formatRoll(values)} gewürfelt. ${getOpponentName()} ist dran.`);
   } else {
     state.computerScore = nextScore;
-    setMessage(`${getOpponentName()} wuerfelt ${formatRoll(values)}. ${playerName} ist dran.`);
+    setMessage(`${getOpponentName()} würfelt ${formatRoll(values)}. ${playerName} ist dran.`);
   }
 
   checkWinner();
@@ -217,7 +219,7 @@ function newGame() {
   dieFace.dataset.value = "1";
   dieFaceTwo.dataset.value = "1";
   rollButton.classList.remove("rolling", "shake");
-  rollButton.setAttribute("aria-label", "Wuerfeln");
+  rollButton.setAttribute("aria-label", "Würfeln");
   setMessage(getStartMessage());
   render();
 }
@@ -378,17 +380,24 @@ function setTheme(theme) {
   localStorage.setItem("wuerfelduell-theme", theme);
 }
 
-function setMenuOpen(isOpen) {
-  if (!menuShell || !menuTrigger) return;
+function setMenuOpen(shell, trigger, isOpen) {
+  if (!shell || !trigger) return;
 
-  menuShell.classList.toggle("menu-open", isOpen);
-  menuTrigger.setAttribute("aria-expanded", String(isOpen));
+  shell.classList.toggle("menu-open", isOpen);
+  trigger.setAttribute("aria-expanded", String(isOpen));
 }
 
-function toggleMenu() {
-  if (!menuShell) return;
+function closePanels() {
+  setMenuOpen(menuShell, menuTrigger, false);
+  setMenuOpen(infoShell, infoTrigger, false);
+}
 
-  setMenuOpen(!menuShell.classList.contains("menu-open"));
+function togglePanel(shell, trigger) {
+  if (!shell) return;
+
+  const shouldOpen = !shell.classList.contains("menu-open");
+  closePanels();
+  setMenuOpen(shell, trigger, shouldOpen);
 }
 
 const savedTheme = localStorage.getItem("wuerfelduell-theme");
@@ -469,19 +478,26 @@ humanStarterButton?.addEventListener("click", () => setStartPlayer("human"));
 computerStarterButton?.addEventListener("click", () => setStartPlayer("computer"));
 menuTrigger?.addEventListener("click", (event) => {
   event.stopPropagation();
-  toggleMenu();
+  togglePanel(menuShell, menuTrigger);
 });
 menuShell?.addEventListener("click", (event) => {
   event.stopPropagation();
 });
+infoTrigger?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  togglePanel(infoShell, infoTrigger);
+});
+infoShell?.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
 document.addEventListener("click", (event) => {
-  if (!menuShell?.contains(event.target)) {
-    setMenuOpen(false);
+  if (!menuShell?.contains(event.target) && !infoShell?.contains(event.target)) {
+    closePanels();
   }
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    setMenuOpen(false);
+    closePanels();
   }
 });
 
@@ -489,6 +505,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=15").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=26").then((registration) => registration.update()).catch(() => {});
   });
 }
