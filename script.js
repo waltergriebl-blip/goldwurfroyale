@@ -145,9 +145,12 @@ function switchTurn() {
 function checkWinner() {
   if (state.isGameOver) return;
 
+  let hasNewWinner = false;
+
   if (hasWinningScore(state.humanScore)) {
     state.isGameOver = true;
     state.humanWins += 1;
+    hasNewWinner = true;
     playWinSound();
     setMessage("Gewonnen! Sehr sauber gesichert.");
   }
@@ -155,8 +158,13 @@ function checkWinner() {
   if (hasWinningScore(state.computerScore)) {
     state.isGameOver = true;
     state.computerWins += 1;
+    hasNewWinner = true;
     playWinSound();
     setMessage(`${getOpponentName()} gewinnt diese Runde. Direkt Revanche?`);
+  }
+
+  if (hasNewWinner) {
+    saveWins();
   }
 
   render();
@@ -235,7 +243,13 @@ function newGame() {
 function resetWins() {
   state.humanWins = 0;
   state.computerWins = 0;
+  saveWins();
   render();
+}
+
+function saveWins() {
+  localStorage.setItem("wuerfelduell-human-wins", String(state.humanWins));
+  localStorage.setItem("wuerfelduell-computer-wins", String(state.computerWins));
 }
 
 function getCurrentPlayerName() {
@@ -497,6 +511,15 @@ setTheme(savedTheme === "dark" ? "dark" : "light");
 const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
 
+const savedHumanWins = Number(localStorage.getItem("wuerfelduell-human-wins"));
+const savedComputerWins = Number(localStorage.getItem("wuerfelduell-computer-wins"));
+if (Number.isFinite(savedHumanWins) && savedHumanWins >= 0) {
+  state.humanWins = savedHumanWins;
+}
+if (Number.isFinite(savedComputerWins) && savedComputerWins >= 0) {
+  state.computerWins = savedComputerWins;
+}
+
 const savedWinningScore = Number(localStorage.getItem("wuerfelduell-winning-score"));
 if (Number.isFinite(savedWinningScore) && savedWinningScore >= 10) {
   winningScore = Math.min(999, savedWinningScore);
@@ -601,6 +624,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=31").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=32").then((registration) => registration.update()).catch(() => {});
   });
 }
