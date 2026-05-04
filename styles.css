@@ -801,28 +801,42 @@ body.dark #newGameButton {
   }
 
   .topbar {
+    position: static;
     padding: 8px 10px;
   }
 
   .menu-trigger {
-    width: min(100%, 220px);
+    width: 100%;
   }
 
   .menu-panel {
-    width: min(100vw - 16px, 520px);
+    position: absolute;
+    top: calc(100% - 1px);
+    left: 50vw;
+    right: auto;
+    width: min(100vw - 32px, 420px);
     display: grid;
     grid-template-columns: 1fr;
     gap: 8px;
     padding: 10px;
     overflow-y: auto;
+    transform: translateX(-50%);
   }
 
   .top-actions {
     width: 100%;
+    position: relative;
   }
 
   .info-panel {
-    right: 0;
+    left: 50vw;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .menu-shell.menu-open .menu-panel,
+  .info-shell.menu-open .info-panel {
+    transform: translateX(-50%);
   }
 
   .setting {
@@ -954,7 +968,7 @@ body.dark #newGameButton {
 
 @media (max-width: 460px) {
   .menu-panel {
-    width: min(100vw - 16px, 420px);
+    width: min(100vw - 24px, 390px);
   }
 
   .setting {
