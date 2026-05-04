@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Würfelduell" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="manifest" href="manifest.webmanifest?v=30" />
+    <link rel="manifest" href="manifest.webmanifest?v=31" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="stylesheet" href="styles.css?v=30" />
+    <link rel="stylesheet" href="styles.css?v=31" />
   </head>
   <body>
     <main class="game">
@@ -32,6 +32,18 @@
                     </button>
                     <button class="theme-option" id="darkModeButton" type="button" aria-pressed="false">
                       Dunkel
+                    </button>
+                  </div>
+                </div>
+
+                <div class="setting">
+                  <span>Sound</span>
+                  <div class="theme-switcher" role="group" aria-label="Sound ein oder aus">
+                    <button class="theme-option active" id="soundOnButton" type="button" aria-pressed="true">
+                      An
+                    </button>
+                    <button class="theme-option" id="soundOffButton" type="button" aria-pressed="false">
+                      Aus
                     </button>
                   </div>
                 </div>
@@ -86,6 +98,7 @@
                   <p>Würfle einmal pro Zug. Wer die Zielpunkte erreicht, gewinnt die Runde.</p>
                   <ul>
                     <li><strong>Ansicht:</strong> Hell oder Dunkel.</li>
+                    <li><strong>Sound:</strong> Effekte für Würfeln, Gewinnen und ungültige Würfe.</li>
                     <li><strong>Spieler:</strong> Single gegen Computer oder Multiplayer am selben Gerät.</li>
                     <li><strong>Name ändern:</strong> Tippe auf den Spielernamen und bestätige mit OK.</li>
                     <li><strong>Zielpunkte:</strong> Legt fest, bis wie viele Punkte gespielt wird.</li>
@@ -194,7 +207,7 @@
       </footer>
     </main>
 
-    <script src="script.js?v=30"></script>
+    <script src="script.js?v=31"></script>
   </body>
 </html>
 

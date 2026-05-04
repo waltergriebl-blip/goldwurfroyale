@@ -5,6 +5,8 @@ let opponentName = "Spieler 2";
 let gameMode = "single";
 let diceCount = 1;
 let startPlayer = "human";
+let soundEnabled = true;
+let audioContext;
 
 const state = {
   humanScore: 0,
@@ -32,6 +34,8 @@ const newGameButton = document.querySelector("#newGameButton");
 const resetWinsButton = document.querySelector("#resetWinsButton");
 const lightModeButton = document.querySelector("#lightModeButton");
 const darkModeButton = document.querySelector("#darkModeButton");
+const soundOnButton = document.querySelector("#soundOnButton");
+const soundOffButton = document.querySelector("#soundOffButton");
 const winningScoreInput = document.querySelector("#winningScoreInput");
 const applyScoreButton = document.querySelector("#applyScoreButton");
 const rulesWinningScore = document.querySelector("#rulesWinningScore");
@@ -144,12 +148,14 @@ function checkWinner() {
   if (hasWinningScore(state.humanScore)) {
     state.isGameOver = true;
     state.humanWins += 1;
+    playWinSound();
     setMessage("Gewonnen! Sehr sauber gesichert.");
   }
 
   if (hasWinningScore(state.computerScore)) {
     state.isGameOver = true;
     state.computerWins += 1;
+    playWinSound();
     setMessage(`${getOpponentName()} gewinnt diese Runde. Direkt Revanche?`);
   }
 
@@ -162,6 +168,7 @@ async function rollForCurrentPlayer() {
   state.hasRolled = true;
   const values = Array.from({ length: getEffectiveDiceCount() }, rollDie);
   const value = values.reduce((total, nextValue) => total + nextValue, 0);
+  playRollSound();
   setMessage(`${getCurrentPlayerName()} würfelt...`);
   await rollWithSuspense(values);
   state.roundScore = value;
@@ -169,6 +176,7 @@ async function rollForCurrentPlayer() {
   const nextScore = currentScore + value;
 
   if (difficulty === "hard" && nextScore > winningScore) {
+    playInvalidSound();
     setMessage(
       state.currentPlayer === "human"
         ? `${playerName} hat ${formatRoll(values)} gewürfelt. Zu viel fuer genau ${winningScore}, der Wurf zaehlt nicht.`
@@ -380,6 +388,89 @@ function setTheme(theme) {
   localStorage.setItem("wuerfelduell-theme", theme);
 }
 
+function setSound(isEnabled) {
+  soundEnabled = isEnabled;
+  if (!soundOnButton || !soundOffButton) return;
+
+  soundOnButton.classList.toggle("active", soundEnabled);
+  soundOffButton.classList.toggle("active", !soundEnabled);
+  soundOnButton.setAttribute("aria-pressed", String(soundEnabled));
+  soundOffButton.setAttribute("aria-pressed", String(!soundEnabled));
+  localStorage.setItem("wuerfelduell-sound", soundEnabled ? "on" : "off");
+
+  if (soundEnabled) {
+    ensureAudioContext();
+  }
+}
+
+function ensureAudioContext() {
+  if (!audioContext) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    audioContext = new AudioContextClass();
+  }
+
+  if (audioContext.state === "suspended") {
+    audioContext.resume().catch(() => {});
+  }
+
+  return audioContext;
+}
+
+function playTone(frequency, startTime, duration, volume = 0.05, type = "sine") {
+  if (!soundEnabled) return;
+
+  const context = ensureAudioContext();
+  if (!context) return;
+
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, startTime);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(startTime);
+  oscillator.stop(startTime + duration + 0.03);
+}
+
+function playRollSound() {
+  if (!soundEnabled) return;
+
+  const context = ensureAudioContext();
+  if (!context) return;
+
+  const now = context.currentTime;
+  [180, 240, 210, 280, 230].forEach((frequency, index) => {
+    playTone(frequency, now + index * 0.055, 0.05, 0.035, "square");
+  });
+}
+
+function playWinSound() {
+  if (!soundEnabled) return;
+
+  const context = ensureAudioContext();
+  if (!context) return;
+
+  const now = context.currentTime;
+  [392, 523.25, 659.25, 783.99].forEach((frequency, index) => {
+    playTone(frequency, now + index * 0.09, 0.12, 0.055, "sine");
+  });
+}
+
+function playInvalidSound() {
+  if (!soundEnabled) return;
+
+  const context = ensureAudioContext();
+  if (!context) return;
+
+  const now = context.currentTime;
+  playTone(180, now, 0.14, 0.055, "sawtooth");
+  playTone(120, now + 0.13, 0.18, 0.045, "sawtooth");
+}
+
 function setMenuOpen(shell, trigger, isOpen) {
   if (!shell || !trigger) return;
 
@@ -402,6 +493,9 @@ function togglePanel(shell, trigger) {
 
 const savedTheme = localStorage.getItem("wuerfelduell-theme");
 setTheme(savedTheme === "dark" ? "dark" : "light");
+
+const savedSound = localStorage.getItem("wuerfelduell-sound");
+setSound(savedSound === "off" ? false : true);
 
 const savedWinningScore = Number(localStorage.getItem("wuerfelduell-winning-score"));
 if (Number.isFinite(savedWinningScore) && savedWinningScore >= 10) {
@@ -468,6 +562,8 @@ opponentNameInput.addEventListener("keydown", (event) => {
 });
 lightModeButton.addEventListener("click", () => setTheme("light"));
 darkModeButton.addEventListener("click", () => setTheme("dark"));
+soundOnButton?.addEventListener("click", () => setSound(true));
+soundOffButton?.addEventListener("click", () => setSound(false));
 normalModeButton.addEventListener("click", () => setDifficulty("normal"));
 hardModeButton.addEventListener("click", () => setDifficulty("hard"));
 singleModeButton.addEventListener("click", () => setGameMode("single"));
@@ -505,6 +601,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=30").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=31").then((registration) => registration.update()).catch(() => {});
   });
 }
