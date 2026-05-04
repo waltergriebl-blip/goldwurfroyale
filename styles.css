@@ -646,6 +646,14 @@ button {
   opacity: 1;
 }
 
+.dice-hint {
+  max-width: 320px;
+  margin: -6px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
 .message {
   min-height: 52px;
   margin: 0;
