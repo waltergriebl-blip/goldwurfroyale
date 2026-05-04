@@ -1,30 +1,22 @@
-# Walter Griebl's Wuerfelduell
+# Walter Griebl's Würfelduell
 
-Ein kleines Wuerfelspiel fuer Web und Mobile. Zwei Spieler treten gegeneinander an und versuchen, zuerst die festgelegte Punktzahl zu erreichen.
+Ein kleines, mobiles Würfelspiel für Web und Smartphone.
+Spiele alleine gegen den Computer oder lokal zu zweit am selben Gerät.
 
-Fuer ein besseres Spielerlebnis am Smartphone kann die Webseite auf dem Home-Bildschirm gespeichert und wie eine App genutzt werden.
+![Screenshot von Walter Griebl's Würfelduell](screenshot.png)
 
-![Screenshot vom Wuerfelduell](screenshot.png)
+## Features
 
-## Funktionen
-
-- Spiel gegen den Computer im Singleplayer
-- Multiplayer-Modus fuer zwei Spieler am selben Geraet
-- Spielernamen direkt im Spielfeld aendern
-- Wahl zwischen 1 Wuerfel und 2 Wuerfeln
-- Zielpunkte frei festlegen
-- Schwierigkeitsgrad Normal oder Schwer
-- Im schweren Modus muss die Zielpunktzahl genau getroffen werden
-- Automatische Begrenzung auf 1 Wuerfel, wenn 2 Wuerfel im schweren Modus zu viel waeren
-- Wuerfelanimation fuer mehr Spannung
-- Siegzaehler fuer beide Spieler
-- Hell- und Dunkelansicht
-- Fuer Web und Mobile optimiert
-- Als Web-App auf dem Smartphone nutzbar
+- Singleplayer gegen Computer
+- Multiplayer am selben Gerät
+- 1 oder 2 Würfel
+- Normal- und Schwer-Modus
+- Soundeffekte
+- Hell-/Dunkelmodus
+- gespeicherte Siege
+- installierbar als Web-App
 
 ## Online Spielen
-
-Die Webseite laeuft ueber GitHub Pages:
 
 https://waltergriebl-blip.github.io/wuerfelduell/
 
@@ -32,4 +24,4 @@ https://waltergriebl-blip.github.io/wuerfelduell/
 
 Copyright © 2026 Walter Griebl. Alle Rechte vorbehalten.
 
-Dieses Projekt darf ohne ausdrueckliche Erlaubnis nicht kopiert, veraendert, veroeffentlicht oder kommerziell genutzt werden.
+Dieses Projekt darf ohne ausdrückliche Erlaubnis nicht kopiert, verändert, veröffentlicht oder kommerziell genutzt werden.
