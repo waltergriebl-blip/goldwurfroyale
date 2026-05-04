@@ -566,7 +566,10 @@ render();
 rollButton.addEventListener("click", rollForCurrentPlayer);
 newGameButton.addEventListener("click", newGame);
 resetWinsButton.addEventListener("click", resetWins);
-applyScoreButton.addEventListener("click", applyWinningScore);
+applyScoreButton.addEventListener("click", () => {
+  playClickSound();
+  applyWinningScore();
+});
 applyNameButton.addEventListener("click", applyPlayerName);
 applyOpponentNameButton.addEventListener("click", applyOpponentName);
 humanNameLabel.addEventListener("click", openNameEditor);
@@ -661,6 +664,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=34").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=35").then((registration) => registration.update()).catch(() => {});
   });
 }
