@@ -13,6 +13,8 @@ Spiele alleine gegen den Computer oder lokal zu zweit am selben Gerät.
 - Normal- und Schwer-Modus
 - Soundeffekte
 - Hell-/Dunkelmodus
+- gespeicherte Einstellungen
+- gespeicherte Spielernamen
 - gespeicherte Siege
 - installierbar als Web-App
 
