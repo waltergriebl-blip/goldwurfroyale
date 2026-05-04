@@ -809,10 +809,14 @@ body.dark #newGameButton {
     width: 100%;
   }
 
+  .menu-shell {
+    position: static;
+  }
+
   .menu-panel {
     position: absolute;
     top: calc(100% - 1px);
-    left: 50vw;
+    left: 50%;
     right: auto;
     width: min(100vw - 32px, 420px);
     display: grid;
@@ -829,7 +833,7 @@ body.dark #newGameButton {
   }
 
   .info-panel {
-    left: 50vw;
+    left: 50%;
     right: auto;
     transform: translateX(-50%);
   }
