@@ -1024,6 +1024,7 @@ body.dark #newGameButton {
 @media (orientation: landscape) and (max-height: 560px) {
   body {
     align-items: start;
+    overflow: hidden;
     padding:
       max(env(safe-area-inset-top, 0px), 8px)
       max(env(safe-area-inset-right, 0px), 10px)
@@ -1033,13 +1034,14 @@ body.dark #newGameButton {
 
   .game {
     width: min(100%, 1040px);
+    height: calc(100dvh - 16px);
     grid-template-columns: minmax(170px, 0.85fr) minmax(220px, 1fr) minmax(170px, 0.85fr);
+    grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
       "topbar topbar topbar"
-      "human table computer"
-      "rules rules rules"
-      "copyright copyright copyright";
+      "human table computer";
     gap: 10px;
+    align-items: stretch;
   }
 
   .topbar {
@@ -1056,8 +1058,39 @@ body.dark #newGameButton {
   }
 
   .menu-panel {
-    max-height: calc(100dvh - 62px);
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 52px);
+    left: 50%;
+    width: min(calc(100vw - 32px), 520px);
+    max-height: calc(100dvh - 68px);
+    padding: 8px;
     overflow-y: auto;
+    z-index: 60;
+    transform: translateX(-50%);
+  }
+
+  .menu-shell.menu-open .menu-panel,
+  .info-shell.menu-open .info-panel,
+  .menu-shell:hover .menu-panel,
+  .info-shell:hover .info-panel {
+    transform: translateX(-50%);
+  }
+
+  .setting {
+    grid-template-columns: 118px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .topbar span,
+  .topbar label {
+    font-size: 0.72rem;
+  }
+
+  .theme-option,
+  .score-setting input,
+  .score-setting button {
+    min-height: 34px;
+    font-size: 0.9rem;
   }
 
   .scoreboard {
@@ -1065,6 +1098,7 @@ body.dark #newGameButton {
   }
 
   .player {
+    min-width: 0;
     min-height: 118px;
     padding: 10px;
     gap: 6px;
@@ -1079,7 +1113,7 @@ body.dark #newGameButton {
   }
 
   .player strong {
-    font-size: clamp(2.7rem, 12vw, 4rem);
+    font-size: clamp(2.5rem, 9vw, 3.8rem);
   }
 
   .wins {
@@ -1090,6 +1124,8 @@ body.dark #newGameButton {
 
   .table {
     grid-area: table;
+    min-width: 0;
+    overflow: hidden;
     grid-template-columns: 1fr;
     grid-template-areas:
       "last"
@@ -1100,8 +1136,8 @@ body.dark #newGameButton {
       "controls";
     align-content: center;
     align-items: center;
-    gap: 8px;
-    padding: 12px;
+    gap: 6px;
+    padding: 8px;
   }
 
   .round {
@@ -1137,47 +1173,60 @@ body.dark #newGameButton {
   }
 
   .round strong {
-    font-size: 2.15rem;
+    font-size: 1.9rem;
   }
 
   .die {
-    min-height: 108px;
+    min-height: 82px;
   }
 
   .die[data-dice-count="1"] .primary {
-    width: min(20vw, 122px);
+    width: min(18vw, 96px);
   }
 
   .die[data-dice-count="2"] .primary,
   .die[data-dice-count="2"] .secondary {
-    width: min(15vw, 104px);
+    width: min(13vw, 82px);
   }
 
   .dice-hint,
   .message,
   .rules p {
-    font-size: 0.88rem;
+    font-size: 0.78rem;
+  }
+
+  .dice-hint,
+  .message {
+    width: 100%;
+    max-width: 100%;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
   }
 
   .message {
-    min-height: 34px;
+    min-height: 28px;
+  }
+
+  .dice-switcher .theme-option {
+    min-height: 32px;
+    font-size: 0.86rem;
+  }
+
+  .controls {
+    gap: 8px;
   }
 
   .controls button {
-    min-height: 40px;
+    min-height: 36px;
+    font-size: 0.86rem;
   }
 
   .rules {
-    grid-area: rules;
-    padding: 12px 14px;
+    display: none;
   }
 
   .copyright {
-    grid-area: copyright;
-  }
-
-  .rules h1 {
-    font-size: clamp(1rem, 3vw, 1.6rem);
+    display: none;
   }
 }
 
