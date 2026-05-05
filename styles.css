@@ -1166,6 +1166,7 @@ body.dark #newGameButton {
   .dice-hint {
     grid-area: hint;
     justify-self: center;
+    margin-top: 4px;
   }
 
   .dice-switcher,
@@ -1193,16 +1194,16 @@ body.dark #newGameButton {
 
   .die {
     width: min(100%, 260px);
-    min-height: 74px;
+    min-height: 88px;
   }
 
   .die[data-dice-count="1"] .primary {
-    width: min(18vw, 104px);
+    width: min(20vw, 116px);
   }
 
   .die[data-dice-count="2"] .primary,
   .die[data-dice-count="2"] .secondary {
-    width: min(14vw, 92px);
+    width: min(15vw, 104px);
   }
 
   .dice-hint,
