@@ -423,7 +423,7 @@ function getCurrentScreenMode() {
   return window.matchMedia("(orientation: landscape)").matches ? "landscape" : "portrait";
 }
 
-function setScreenMode(mode, shouldLock = false) {
+async function setScreenMode(mode, shouldLock = false) {
   const nextMode = mode === "landscape" ? "landscape" : "portrait";
 
   portraitModeButton?.classList.toggle("active", nextMode === "portrait");
@@ -432,11 +432,25 @@ function setScreenMode(mode, shouldLock = false) {
   landscapeModeButton?.setAttribute("aria-pressed", String(nextMode === "landscape"));
   localStorage.setItem("wuerfelduell-screen-mode", nextMode);
 
-  if (!shouldLock || !screen.orientation?.lock) return;
+  if (!shouldLock) return;
 
-  screen.orientation.lock(nextMode).catch(() => {
-    setMessage("Wenn dein Browser das Drehen nicht erlaubt, drehe dein Handy manuell.");
-  });
+  const wantedText = nextMode === "landscape" ? "Querformat" : "Hochformat";
+
+  if (!screen.orientation?.lock) {
+    setMessage(`${wantedText}: Bitte drehe dein Handy manuell. Dein Browser erlaubt kein automatisches Drehen.`);
+    return;
+  }
+
+  try {
+    if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+      await document.documentElement.requestFullscreen();
+    }
+
+    await screen.orientation.lock(nextMode);
+    setMessage(`${wantedText} ist aktiv.`);
+  } catch {
+    setMessage(`${wantedText}: Bitte drehe dein Handy manuell. Dein Browser blockiert das automatische Drehen.`);
+  }
 }
 
 function ensureAudioContext() {
@@ -697,6 +711,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=46").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=47").then((registration) => registration.update()).catch(() => {});
   });
 }
