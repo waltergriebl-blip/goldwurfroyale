@@ -1035,7 +1035,7 @@ body.dark #newGameButton {
   .game {
     width: min(100%, 1040px);
     height: calc(100dvh - 16px);
-    grid-template-columns: minmax(170px, 0.9fr) minmax(190px, 0.82fr) minmax(170px, 0.9fr);
+    grid-template-columns: minmax(128px, 0.68fr) minmax(260px, 1.25fr) minmax(128px, 0.68fr);
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
       "topbar topbar topbar"
@@ -1100,7 +1100,7 @@ body.dark #newGameButton {
   .player {
     min-width: 0;
     min-height: 118px;
-    padding: 10px;
+    padding: 10px 8px;
     gap: 6px;
   }
 
@@ -1113,13 +1113,25 @@ body.dark #newGameButton {
   }
 
   .player strong {
-    font-size: clamp(2.5rem, 9vw, 3.8rem);
+    font-size: clamp(2.35rem, 7vw, 3.4rem);
+  }
+
+  .player span {
+    font-size: 0.82rem;
   }
 
   .wins {
-    max-width: 150px;
+    max-width: 118px;
     min-height: 38px;
-    padding: 8px 10px;
+    padding: 7px 8px;
+  }
+
+  .wins span {
+    font-size: 0.66rem;
+  }
+
+  .wins strong {
+    font-size: 1.05rem;
   }
 
   .table {
@@ -1159,7 +1171,7 @@ body.dark #newGameButton {
   .dice-switcher,
   .message,
   .controls {
-    width: min(100%, 240px);
+    width: min(100%, 300px);
     justify-self: center;
   }
 
@@ -1180,17 +1192,17 @@ body.dark #newGameButton {
   }
 
   .die {
-    width: min(100%, 190px);
+    width: min(100%, 260px);
     min-height: 74px;
   }
 
   .die[data-dice-count="1"] .primary {
-    width: min(16vw, 84px);
+    width: min(18vw, 104px);
   }
 
   .die[data-dice-count="2"] .primary,
   .die[data-dice-count="2"] .secondary {
-    width: min(12vw, 72px);
+    width: min(14vw, 92px);
   }
 
   .dice-hint,
