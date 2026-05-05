@@ -1082,6 +1082,17 @@ body.dark #newGameButton {
     transform: translateX(-50%);
   }
 
+  .info-panel {
+    overflow: hidden;
+  }
+
+  .info-rollup {
+    max-height: calc(100dvh - 86px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .menu-shell.menu-open .menu-panel,
   .info-shell.menu-open .info-panel,
   .menu-shell:hover .menu-panel,
