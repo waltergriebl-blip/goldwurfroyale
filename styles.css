@@ -1033,7 +1033,17 @@ body.dark #newGameButton {
 
   .game {
     width: min(100%, 1040px);
+    grid-template-columns: minmax(190px, 0.8fr) minmax(210px, 1fr) minmax(210px, 0.95fr);
+    grid-template-areas:
+      "topbar topbar topbar"
+      "players table table"
+      "rules rules rules"
+      "copyright copyright copyright";
     gap: 10px;
+  }
+
+  .topbar {
+    grid-area: topbar;
   }
 
   .topbar {
@@ -1051,6 +1061,8 @@ body.dark #newGameButton {
   }
 
   .scoreboard {
+    grid-area: players;
+    grid-template-columns: 1fr;
     gap: 8px;
     padding: 8px;
   }
@@ -1072,8 +1084,49 @@ body.dark #newGameButton {
   }
 
   .table {
+    grid-area: table;
+    grid-template-columns: minmax(170px, 1fr) minmax(190px, 0.95fr);
+    grid-template-areas:
+      "last play"
+      "dice play"
+      "hint play";
+    align-content: center;
+    align-items: center;
     gap: 8px;
     padding: 12px;
+  }
+
+  .round {
+    grid-area: last;
+  }
+
+  .die {
+    grid-area: dice;
+    justify-self: center;
+  }
+
+  .dice-hint {
+    grid-area: hint;
+    justify-self: center;
+  }
+
+  .dice-switcher,
+  .message,
+  .controls {
+    grid-column: 2;
+    justify-self: stretch;
+  }
+
+  .dice-switcher {
+    align-self: end;
+  }
+
+  .message {
+    align-self: center;
+  }
+
+  .controls {
+    align-self: start;
   }
 
   .round strong {
@@ -1108,7 +1161,12 @@ body.dark #newGameButton {
   }
 
   .rules {
+    grid-area: rules;
     padding: 12px 14px;
+  }
+
+  .copyright {
+    grid-area: copyright;
   }
 
   .rules h1 {
