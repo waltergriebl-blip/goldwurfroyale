@@ -1035,7 +1035,7 @@ body.dark #newGameButton {
   .game {
     width: min(100%, 1040px);
     height: calc(100dvh - 16px);
-    grid-template-columns: minmax(170px, 0.85fr) minmax(220px, 1fr) minmax(170px, 0.85fr);
+    grid-template-columns: minmax(170px, 0.9fr) minmax(190px, 0.82fr) minmax(170px, 0.9fr);
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
       "topbar topbar topbar"
@@ -1125,6 +1125,7 @@ body.dark #newGameButton {
   .table {
     grid-area: table;
     min-width: 0;
+    max-width: 100%;
     overflow: hidden;
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -1136,8 +1137,9 @@ body.dark #newGameButton {
       "controls";
     align-content: center;
     align-items: center;
-    gap: 6px;
-    padding: 8px;
+    justify-items: center;
+    gap: 5px;
+    padding: 8px 6px;
   }
 
   .round {
@@ -1157,7 +1159,8 @@ body.dark #newGameButton {
   .dice-switcher,
   .message,
   .controls {
-    justify-self: stretch;
+    width: min(100%, 240px);
+    justify-self: center;
   }
 
   .dice-switcher {
@@ -1173,26 +1176,27 @@ body.dark #newGameButton {
   }
 
   .round strong {
-    font-size: 1.9rem;
+    font-size: 1.65rem;
   }
 
   .die {
-    min-height: 82px;
+    width: min(100%, 190px);
+    min-height: 74px;
   }
 
   .die[data-dice-count="1"] .primary {
-    width: min(18vw, 96px);
+    width: min(16vw, 84px);
   }
 
   .die[data-dice-count="2"] .primary,
   .die[data-dice-count="2"] .secondary {
-    width: min(13vw, 82px);
+    width: min(12vw, 72px);
   }
 
   .dice-hint,
   .message,
   .rules p {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
   }
 
   .dice-hint,
@@ -1204,21 +1208,28 @@ body.dark #newGameButton {
   }
 
   .message {
-    min-height: 28px;
+    min-height: 24px;
+  }
+
+  .dice-switcher {
+    padding: 3px;
+    gap: 3px;
   }
 
   .dice-switcher .theme-option {
-    min-height: 32px;
-    font-size: 0.86rem;
+    min-height: 28px;
+    padding: 0 4px;
+    font-size: 0.76rem;
   }
 
   .controls {
-    gap: 8px;
+    gap: 6px;
   }
 
   .controls button {
-    min-height: 36px;
-    font-size: 0.86rem;
+    min-height: 32px;
+    padding: 0 6px;
+    font-size: 0.74rem;
   }
 
   .rules {
