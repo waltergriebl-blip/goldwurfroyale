@@ -36,6 +36,8 @@ const lightModeButton = document.querySelector("#lightModeButton");
 const darkModeButton = document.querySelector("#darkModeButton");
 const soundOnButton = document.querySelector("#soundOnButton");
 const soundOffButton = document.querySelector("#soundOffButton");
+const portraitModeButton = document.querySelector("#portraitModeButton");
+const landscapeModeButton = document.querySelector("#landscapeModeButton");
 const winningScoreInput = document.querySelector("#winningScoreInput");
 const applyScoreButton = document.querySelector("#applyScoreButton");
 const rulesWinningScore = document.querySelector("#rulesWinningScore");
@@ -417,6 +419,26 @@ function setSound(isEnabled) {
   }
 }
 
+function getCurrentScreenMode() {
+  return window.matchMedia("(orientation: landscape)").matches ? "landscape" : "portrait";
+}
+
+function setScreenMode(mode, shouldLock = false) {
+  const nextMode = mode === "landscape" ? "landscape" : "portrait";
+
+  portraitModeButton?.classList.toggle("active", nextMode === "portrait");
+  landscapeModeButton?.classList.toggle("active", nextMode === "landscape");
+  portraitModeButton?.setAttribute("aria-pressed", String(nextMode === "portrait"));
+  landscapeModeButton?.setAttribute("aria-pressed", String(nextMode === "landscape"));
+  localStorage.setItem("wuerfelduell-screen-mode", nextMode);
+
+  if (!shouldLock || !screen.orientation?.lock) return;
+
+  screen.orientation.lock(nextMode).catch(() => {
+    setMessage("Wenn dein Browser das Drehen nicht erlaubt, drehe dein Handy manuell.");
+  });
+}
+
 function ensureAudioContext() {
   if (!audioContext) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -522,6 +544,9 @@ setTheme(savedTheme === "dark" ? "dark" : "light");
 const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
 
+const savedScreenMode = localStorage.getItem("wuerfelduell-screen-mode");
+setScreenMode(savedScreenMode === "landscape" || savedScreenMode === "portrait" ? savedScreenMode : getCurrentScreenMode());
+
 const savedHumanWins = Number(localStorage.getItem("wuerfelduell-human-wins"));
 const savedComputerWins = Number(localStorage.getItem("wuerfelduell-computer-wins"));
 if (Number.isFinite(savedHumanWins) && savedHumanWins >= 0) {
@@ -613,6 +638,14 @@ soundOffButton?.addEventListener("click", () => {
   playClickSound();
   setSound(false);
 });
+portraitModeButton?.addEventListener("click", () => {
+  playClickSound();
+  setScreenMode("portrait", true);
+});
+landscapeModeButton?.addEventListener("click", () => {
+  playClickSound();
+  setScreenMode("landscape", true);
+});
 normalModeButton.addEventListener("click", () => {
   playClickSound();
   setDifficulty("normal");
@@ -664,6 +697,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=45").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=46").then((registration) => registration.update()).catch(() => {});
   });
 }
