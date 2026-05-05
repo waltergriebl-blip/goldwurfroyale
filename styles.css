@@ -1033,10 +1033,10 @@ body.dark #newGameButton {
 
   .game {
     width: min(100%, 1040px);
-    grid-template-columns: minmax(190px, 0.8fr) minmax(210px, 1fr) minmax(210px, 0.95fr);
+    grid-template-columns: minmax(170px, 0.85fr) minmax(220px, 1fr) minmax(170px, 0.85fr);
     grid-template-areas:
       "topbar topbar topbar"
-      "players table table"
+      "human table computer"
       "rules rules rules"
       "copyright copyright copyright";
     gap: 10px;
@@ -1061,16 +1061,21 @@ body.dark #newGameButton {
   }
 
   .scoreboard {
-    grid-area: players;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 8px;
+    display: contents;
   }
 
   .player {
     min-height: 118px;
     padding: 10px;
     gap: 6px;
+  }
+
+  #humanPanel {
+    grid-area: human;
+  }
+
+  #computerPanel {
+    grid-area: computer;
   }
 
   .player strong {
@@ -1085,11 +1090,14 @@ body.dark #newGameButton {
 
   .table {
     grid-area: table;
-    grid-template-columns: minmax(170px, 1fr) minmax(190px, 0.95fr);
+    grid-template-columns: 1fr;
     grid-template-areas:
-      "last play"
-      "dice play"
-      "hint play";
+      "last"
+      "dice"
+      "hint"
+      "switcher"
+      "message"
+      "controls";
     align-content: center;
     align-items: center;
     gap: 8px;
@@ -1113,20 +1121,19 @@ body.dark #newGameButton {
   .dice-switcher,
   .message,
   .controls {
-    grid-column: 2;
     justify-self: stretch;
   }
 
   .dice-switcher {
-    align-self: end;
+    grid-area: switcher;
   }
 
   .message {
-    align-self: center;
+    grid-area: message;
   }
 
   .controls {
-    align-self: start;
+    grid-area: controls;
   }
 
   .round strong {
@@ -1138,12 +1145,12 @@ body.dark #newGameButton {
   }
 
   .die[data-dice-count="1"] .primary {
-    width: min(24vw, 128px);
+    width: min(20vw, 122px);
   }
 
   .die[data-dice-count="2"] .primary,
   .die[data-dice-count="2"] .secondary {
-    width: min(18vw, 116px);
+    width: min(15vw, 104px);
   }
 
   .dice-hint,

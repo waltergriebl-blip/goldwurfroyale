@@ -664,6 +664,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=39").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=40").then((registration) => registration.update()).catch(() => {});
   });
 }
