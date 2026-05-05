@@ -36,8 +36,6 @@ const lightModeButton = document.querySelector("#lightModeButton");
 const darkModeButton = document.querySelector("#darkModeButton");
 const soundOnButton = document.querySelector("#soundOnButton");
 const soundOffButton = document.querySelector("#soundOffButton");
-const portraitModeButton = document.querySelector("#portraitModeButton");
-const landscapeModeButton = document.querySelector("#landscapeModeButton");
 const winningScoreInput = document.querySelector("#winningScoreInput");
 const applyScoreButton = document.querySelector("#applyScoreButton");
 const rulesWinningScore = document.querySelector("#rulesWinningScore");
@@ -419,40 +417,6 @@ function setSound(isEnabled) {
   }
 }
 
-function getCurrentScreenMode() {
-  return window.matchMedia("(orientation: landscape)").matches ? "landscape" : "portrait";
-}
-
-async function setScreenMode(mode, shouldLock = false) {
-  const nextMode = mode === "landscape" ? "landscape" : "portrait";
-
-  portraitModeButton?.classList.toggle("active", nextMode === "portrait");
-  landscapeModeButton?.classList.toggle("active", nextMode === "landscape");
-  portraitModeButton?.setAttribute("aria-pressed", String(nextMode === "portrait"));
-  landscapeModeButton?.setAttribute("aria-pressed", String(nextMode === "landscape"));
-  localStorage.setItem("wuerfelduell-screen-mode", nextMode);
-
-  if (!shouldLock) return;
-
-  const wantedText = nextMode === "landscape" ? "Querformat" : "Hochformat";
-
-  if (!screen.orientation?.lock) {
-    setMessage(`${wantedText}: Bitte drehe dein Handy manuell. Dein Browser erlaubt kein automatisches Drehen.`);
-    return;
-  }
-
-  try {
-    if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
-      await document.documentElement.requestFullscreen();
-    }
-
-    await screen.orientation.lock(nextMode);
-    setMessage(`${wantedText} ist aktiv.`);
-  } catch {
-    setMessage(`${wantedText}: Bitte drehe dein Handy manuell. Dein Browser blockiert das automatische Drehen.`);
-  }
-}
-
 function ensureAudioContext() {
   if (!audioContext) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -558,9 +522,6 @@ setTheme(savedTheme === "dark" ? "dark" : "light");
 const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
 
-const savedScreenMode = localStorage.getItem("wuerfelduell-screen-mode");
-setScreenMode(savedScreenMode === "landscape" || savedScreenMode === "portrait" ? savedScreenMode : getCurrentScreenMode());
-
 const savedHumanWins = Number(localStorage.getItem("wuerfelduell-human-wins"));
 const savedComputerWins = Number(localStorage.getItem("wuerfelduell-computer-wins"));
 if (Number.isFinite(savedHumanWins) && savedHumanWins >= 0) {
@@ -652,14 +613,6 @@ soundOffButton?.addEventListener("click", () => {
   playClickSound();
   setSound(false);
 });
-portraitModeButton?.addEventListener("click", () => {
-  playClickSound();
-  setScreenMode("portrait", true);
-});
-landscapeModeButton?.addEventListener("click", () => {
-  playClickSound();
-  setScreenMode("landscape", true);
-});
 normalModeButton.addEventListener("click", () => {
   playClickSound();
   setDifficulty("normal");
@@ -711,6 +664,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=47").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=48").then((registration) => registration.update()).catch(() => {});
   });
 }

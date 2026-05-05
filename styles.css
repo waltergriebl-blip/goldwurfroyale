@@ -246,10 +246,6 @@ button {
   gap: 10px;
 }
 
-.mobile-only {
-  display: none;
-}
-
 .topbar span,
 .topbar label {
   color: var(--muted);
@@ -862,10 +858,6 @@ body.dark #newGameButton {
     display: grid;
     grid-template-columns: 112px minmax(0, 1fr);
     gap: 8px;
-  }
-
-  .mobile-only {
-    display: grid;
   }
 
   .topbar span,
