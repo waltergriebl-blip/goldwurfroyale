@@ -187,6 +187,10 @@ button {
 
 .info-rollup {
   min-width: 0;
+  max-height: min(520px, calc(100dvh - 92px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--card);
@@ -236,6 +240,17 @@ button {
 
 .info-content strong {
   color: var(--ink);
+}
+
+.info-content a {
+  color: var(--green);
+  font-weight: 900;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.info-content a:hover {
+  color: var(--green-dark);
 }
 
 .setting {
@@ -1090,13 +1105,6 @@ body.dark #newGameButton {
 
   .info-panel {
     overflow: hidden;
-  }
-
-  .info-rollup {
-    max-height: calc(100dvh - 86px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
   }
 
   .menu-shell.menu-open .menu-panel,
