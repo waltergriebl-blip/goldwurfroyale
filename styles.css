@@ -151,8 +151,11 @@ button {
 }
 
 .menu-shell.menu-open .menu-panel {
-  max-height: 560px;
+  max-height: min(560px, calc(100dvh - 92px));
   opacity: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   pointer-events: auto;
   transform: translateX(-50%);
 }
@@ -169,8 +172,11 @@ button {
 
 @media (hover: hover) and (pointer: fine) {
   .menu-shell:hover .menu-panel {
-    max-height: 560px;
+    max-height: min(560px, calc(100dvh - 92px));
     opacity: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     pointer-events: auto;
     transform: translateX(-50%);
   }
@@ -1041,12 +1047,22 @@ body.dark #newGameButton {
     padding: 16px 10px;
   }
 
+  body.gamble-mode .table {
+    gap: 9px;
+    padding: 12px 10px;
+  }
+
   .round strong {
     font-size: 2.4rem;
   }
 
   .turn-score strong {
     font-size: 1.55rem;
+  }
+
+  body.gamble-mode .turn-score {
+    min-width: 112px;
+    padding: 6px 12px;
   }
 
   .message {
@@ -1076,6 +1092,11 @@ body.dark #newGameButton {
 
   .controls button {
     min-height: 44px;
+  }
+
+  body.gamble-mode .controls {
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+    gap: 8px;
   }
 
   .rules {
@@ -1275,6 +1296,7 @@ body.dark #newGameButton {
     grid-template-columns: 1fr;
     grid-template-areas:
       "last"
+      "turn"
       "dice"
       "hint"
       "switcher"
@@ -1289,6 +1311,10 @@ body.dark #newGameButton {
 
   .round {
     grid-area: last;
+  }
+
+  .turn-score {
+    grid-area: turn;
   }
 
   .die {
@@ -1321,6 +1347,11 @@ body.dark #newGameButton {
     grid-area: controls;
   }
 
+  body.gamble-mode .table {
+    gap: 4px;
+    padding: 6px;
+  }
+
   .round strong {
     font-size: 1.65rem;
   }
@@ -1337,6 +1368,11 @@ body.dark #newGameButton {
   .die {
     width: min(100%, 260px);
     min-height: 88px;
+  }
+
+  body.gamble-mode .die {
+    width: min(100%, 240px);
+    min-height: 78px;
   }
 
   .die[data-dice-count="1"] .primary {
@@ -1381,10 +1417,22 @@ body.dark #newGameButton {
     gap: 6px;
   }
 
+  body.gamble-mode .controls {
+    width: min(100%, 340px);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
   .controls button {
     min-height: 32px;
     padding: 0 6px;
     font-size: 0.74rem;
+  }
+
+  body.gamble-mode .controls button {
+    min-height: 30px;
+    padding: 0 4px;
+    font-size: 0.68rem;
   }
 
   .rules {

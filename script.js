@@ -86,6 +86,7 @@ function render() {
   turnScorePanel.hidden = !gambleMode;
   humanNameLabel.textContent = playerName;
   opponentNameLabel.textContent = getOpponentName();
+  document.body.classList.toggle("gamble-mode", gambleMode);
   rulesWinningScore.textContent = winningScore;
   rulesDifficultyText.textContent =
     difficulty === "normal" ? "Erreiche zuerst" : "Erreiche genau";
@@ -873,6 +874,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=69").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=70").then((registration) => registration.update()).catch(() => {});
   });
 }
