@@ -512,7 +512,8 @@ button {
 }
 
 .player span,
-.round span {
+.round span,
+.turn-score span {
   color: var(--muted);
 }
 
@@ -553,8 +554,27 @@ button {
   gap: 4px;
 }
 
+.turn-score {
+  display: grid;
+  gap: 2px;
+  min-width: 130px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.turn-score[hidden] {
+  display: none;
+}
+
 .round strong {
   font-size: 2.4rem;
+  line-height: 1;
+}
+
+.turn-score strong {
+  font-size: 1.8rem;
   line-height: 1;
 }
 
@@ -721,7 +741,7 @@ button {
 .controls {
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
 }
 
@@ -741,6 +761,15 @@ button {
 
 #newGameButton {
   background: #26352e;
+}
+
+#bankButton {
+  background: var(--gold);
+  color: #17211c;
+}
+
+#bankButton:hover:not(:disabled) {
+  background: #f0b44b;
 }
 
 body.dark #newGameButton {
@@ -1014,6 +1043,10 @@ body.dark #newGameButton {
 
   .round strong {
     font-size: 2.4rem;
+  }
+
+  .turn-score strong {
+    font-size: 1.55rem;
   }
 
   .message {
@@ -1290,6 +1323,15 @@ body.dark #newGameButton {
 
   .round strong {
     font-size: 1.65rem;
+  }
+
+  .turn-score {
+    min-width: 0;
+    padding: 6px 10px;
+  }
+
+  .turn-score strong {
+    font-size: 1.25rem;
   }
 
   .die {

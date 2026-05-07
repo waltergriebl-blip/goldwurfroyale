@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Würfelduell" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="manifest" href="manifest.webmanifest?v=60" />
+    <link rel="manifest" href="manifest.webmanifest?v=69" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="stylesheet" href="styles.css?v=60" />
+    <link rel="stylesheet" href="styles.css?v=69" />
   </head>
   <body>
     <main class="game">
@@ -61,6 +61,30 @@
                 </div>
 
                 <div class="setting">
+                  <span>Risiko</span>
+                  <div class="theme-switcher" role="group" aria-label="Risiko-Modus ein oder aus">
+                    <button class="theme-option" id="riskOnButton" type="button" aria-pressed="false">
+                      An
+                    </button>
+                    <button class="theme-option active" id="riskOffButton" type="button" aria-pressed="true">
+                      Aus
+                    </button>
+                  </div>
+                </div>
+
+                <div class="setting">
+                  <span>Gamble</span>
+                  <div class="theme-switcher" role="group" aria-label="Gamble-Modus ein oder aus">
+                    <button class="theme-option" id="gambleOnButton" type="button" aria-pressed="false">
+                      An
+                    </button>
+                    <button class="theme-option active" id="gambleOffButton" type="button" aria-pressed="true">
+                      Aus
+                    </button>
+                  </div>
+                </div>
+
+                <div class="setting">
                   <label for="winningScoreInput">Zielpunkte</label>
                   <div class="score-setting">
                     <input id="winningScoreInput" type="number" min="10" max="999" step="5" value="50" />
@@ -104,6 +128,8 @@
                     <li><strong>Name ändern:</strong> Tippe auf den Spielernamen und bestätige mit OK.</li>
                     <li><strong>Zielpunkte:</strong> Legt fest, bis wie viele Punkte gespielt wird.</li>
                     <li><strong>Schwer:</strong> Die Zielpunkte müssen genau getroffen werden.</li>
+                    <li><strong>Risiko:</strong> Wenn eine 1 fällt, zählt der aktuelle Wurf nicht. Im schweren Modus endet das Spiel, wenn kein gültiger Siegwurf mehr möglich ist. Dann gewinnt die höhere Punktzahl.</li>
+                    <li><strong>Gamble:</strong> Würfle mehrfach und sammle Zugpunkte. Mit Sichern werden sie übernommen. Ist Risiko an, verfallen die Zugpunkte bei einer 1 und der Zug endet. Im schweren Modus muss die Zielpunktzahl genau getroffen werden.</li>
                     <li><strong>Würfel:</strong> Wähle 1 oder 2 Würfel.</li>
                     <li><strong>Startspieler:</strong> Im Multiplayer vor dem ersten Wurf auswählbar.</li>
                     <li><strong>Siege:</strong> Zählen gewonnene Runden bis zum Zurücksetzen.</li>
@@ -158,6 +184,11 @@
           <strong id="roundScore">0</strong>
         </div>
 
+        <div class="turn-score" id="turnScorePanel" hidden>
+          <span>Zugpunkte</span>
+          <strong id="turnScore">0</strong>
+        </div>
+
         <button class="die" id="rollButton" type="button" aria-label="Würfeln" data-dice-count="1">
           <span class="die-face primary" id="dieFace" data-value="1" aria-hidden="true">
             <i></i>
@@ -197,6 +228,7 @@
         <p class="message" id="message">Wuerfle einmal. Dann ist der Computer dran.</p>
 
         <div class="controls">
+          <button id="bankButton" type="button" hidden>Sichern</button>
           <button id="newGameButton" type="button">Neues Spiel</button>
           <button id="resetWinsButton" type="button">Siege zurücksetzen</button>
         </div>
@@ -212,7 +244,7 @@
       </footer>
     </main>
 
-    <script src="script.js?v=60"></script>
+    <script src="script.js?v=69"></script>
   </body>
 </html>
 

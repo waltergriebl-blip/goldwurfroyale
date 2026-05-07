@@ -6,6 +6,8 @@ let gameMode = "single";
 let diceCount = 1;
 let startPlayer = "human";
 let soundEnabled = true;
+let riskMode = false;
+let gambleMode = false;
 let audioContext;
 
 const state = {
@@ -14,6 +16,7 @@ const state = {
   humanWins: 0,
   computerWins: 0,
   roundScore: 0,
+  turnScore: 0,
   currentPlayer: "human",
   isComputerThinking: false,
   isRolling: false,
@@ -26,6 +29,8 @@ const computerScore = document.querySelector("#computerScore");
 const humanWins = document.querySelector("#humanWins");
 const computerWins = document.querySelector("#computerWins");
 const roundScore = document.querySelector("#roundScore");
+const turnScore = document.querySelector("#turnScore");
+const turnScorePanel = document.querySelector("#turnScorePanel");
 const dieFace = document.querySelector("#dieFace");
 const dieFaceTwo = document.querySelector("#dieFaceTwo");
 const message = document.querySelector("#message");
@@ -33,10 +38,15 @@ const rollButton = document.querySelector("#rollButton");
 const tablePanel = document.querySelector("#tablePanel");
 const newGameButton = document.querySelector("#newGameButton");
 const resetWinsButton = document.querySelector("#resetWinsButton");
+const bankButton = document.querySelector("#bankButton");
 const lightModeButton = document.querySelector("#lightModeButton");
 const darkModeButton = document.querySelector("#darkModeButton");
 const soundOnButton = document.querySelector("#soundOnButton");
 const soundOffButton = document.querySelector("#soundOffButton");
+const riskOnButton = document.querySelector("#riskOnButton");
+const riskOffButton = document.querySelector("#riskOffButton");
+const gambleOnButton = document.querySelector("#gambleOnButton");
+const gambleOffButton = document.querySelector("#gambleOffButton");
 const winningScoreInput = document.querySelector("#winningScoreInput");
 const applyScoreButton = document.querySelector("#applyScoreButton");
 const rulesWinningScore = document.querySelector("#rulesWinningScore");
@@ -72,11 +82,13 @@ function render() {
   humanWins.textContent = state.humanWins;
   computerWins.textContent = state.computerWins;
   roundScore.textContent = state.roundScore;
+  turnScore.textContent = state.turnScore;
+  turnScorePanel.hidden = !gambleMode;
   humanNameLabel.textContent = playerName;
   opponentNameLabel.textContent = getOpponentName();
   rulesWinningScore.textContent = winningScore;
   rulesDifficultyText.textContent =
-    difficulty === "hard" ? "Erreiche genau" : "Erreiche zuerst";
+    difficulty === "normal" ? "Erreiche zuerst" : "Erreiche genau";
 
   humanPanel.classList.toggle("active", state.currentPlayer === "human" && !state.isGameOver);
   computerPanel.classList.toggle("active", state.currentPlayer === "computer" && !state.isGameOver);
@@ -99,6 +111,22 @@ function render() {
   twoDiceButton.classList.toggle("active", diceCount === 2);
   oneDieButton.setAttribute("aria-pressed", String(diceCount === 1));
   twoDiceButton.setAttribute("aria-pressed", String(diceCount === 2));
+  riskOnButton?.classList.toggle("active", riskMode);
+  riskOffButton?.classList.toggle("active", !riskMode);
+  riskOnButton?.setAttribute("aria-pressed", String(riskMode));
+  riskOffButton?.setAttribute("aria-pressed", String(!riskMode));
+  gambleOnButton?.classList.toggle("active", gambleMode);
+  gambleOffButton?.classList.toggle("active", !gambleMode);
+  gambleOnButton?.setAttribute("aria-pressed", String(gambleMode));
+  gambleOffButton?.setAttribute("aria-pressed", String(!gambleMode));
+  bankButton.hidden = !gambleMode;
+  bankButton.disabled =
+    !gambleMode ||
+    state.turnScore <= 0 ||
+    state.isGameOver ||
+    (gameMode === "single" && state.currentPlayer !== "human") ||
+    state.isComputerThinking ||
+    state.isRolling;
 
   rollButton.disabled =
     state.isGameOver ||
@@ -156,6 +184,7 @@ async function rollWithSuspense(finalValues) {
 
 function switchTurn() {
   state.currentPlayer = state.currentPlayer === "human" ? "computer" : "human";
+  state.turnScore = 0;
   render();
 
   if (gameMode === "single" && state.currentPlayer === "computer" && !state.isGameOver) {
@@ -193,8 +222,29 @@ function checkWinner() {
   render();
 }
 
+function bankTurn() {
+  if (!gambleMode || state.isGameOver || state.isRolling || state.turnScore <= 0) return;
+  if (gameMode === "single" && state.currentPlayer === "computer" && !state.isComputerThinking) return;
+
+  const securedPoints = state.turnScore;
+  if (state.currentPlayer === "human") {
+    state.humanScore += securedPoints;
+  } else {
+    state.computerScore += securedPoints;
+  }
+
+  state.turnScore = 0;
+  setMessage(`${getCurrentPlayerName()} sichert ${securedPoints} Punkte.`);
+  checkWinner();
+
+  if (!state.isGameOver) {
+    switchTurn();
+  }
+}
+
 async function rollForCurrentPlayer() {
   if (state.isGameOver || state.isRolling) return;
+  if (checkCurrentPlayerRiskDeadEnd()) return;
 
   state.hasRolled = true;
   const values = Array.from({ length: getEffectiveDiceCount() }, rollDie);
@@ -205,8 +255,28 @@ async function rollForCurrentPlayer() {
   state.roundScore = value;
   const currentScore = state.currentPlayer === "human" ? state.humanScore : state.computerScore;
   const nextScore = currentScore + value;
+  let gambleTurnLost = false;
 
-  if (difficulty === "hard" && nextScore > winningScore) {
+  if (gambleMode && riskMode && values.includes(1)) {
+    playInvalidSound();
+    state.turnScore = 0;
+    gambleTurnLost = true;
+    setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Risiko! Die Zugpunkte verfallen.`, true);
+  } else if (gambleMode) {
+    const nextTurnScore = state.turnScore + value;
+    if (difficulty === "hard" && currentScore + nextTurnScore > winningScore) {
+      playInvalidSound();
+      state.turnScore = 0;
+      gambleTurnLost = true;
+      setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Zu viel für genau ${winningScore}, die Zugpunkte verfallen.`, true);
+    } else {
+      state.turnScore = nextTurnScore;
+      setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Zugpunkte: ${state.turnScore}.`);
+    }
+  } else if (riskMode && values.includes(1)) {
+    playInvalidSound();
+    setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Risiko! Eine 1 macht den Wurf ungültig.`, true);
+  } else if (difficulty === "hard" && nextScore > winningScore) {
     playInvalidSound();
     setMessage(
       state.currentPlayer === "human"
@@ -223,7 +293,15 @@ async function rollForCurrentPlayer() {
 
   checkWinner();
 
-  if (!state.isGameOver) {
+  if (gambleTurnLost && !state.isGameOver) {
+    switchTurn();
+  } else if (gambleMode && !state.isGameOver) {
+    render();
+    if (gameMode === "single" && state.currentPlayer === "computer") {
+      await wait(650);
+      await runComputerGambleDecision();
+    }
+  } else if (!state.isGameOver) {
     switchTurn();
   }
 }
@@ -233,13 +311,35 @@ async function computerTurn() {
   setMessage("Computer denkt kurz nach...");
   render();
 
-  if (!state.isGameOver && state.currentPlayer === "computer") {
+  if (checkCurrentPlayerRiskDeadEnd()) {
+    state.isComputerThinking = false;
+    render();
+    return;
+  }
+
+  if (!state.isGameOver && state.currentPlayer === "computer" && gambleMode) {
+    await runComputerGambleDecision();
+  } else if (!state.isGameOver && state.currentPlayer === "computer") {
     await wait(850);
     await rollForCurrentPlayer();
   }
 
   state.isComputerThinking = false;
   render();
+}
+
+async function runComputerGambleDecision() {
+  if (!gambleMode || state.isGameOver || state.currentPlayer !== "computer") return;
+
+  const canWinByBanking = hasWinningScore(state.computerScore + state.turnScore);
+  if (state.turnScore > 0 && (canWinByBanking || state.turnScore >= 10)) {
+    await wait(550);
+    bankTurn();
+    return;
+  }
+
+  await wait(850);
+  await rollForCurrentPlayer();
 }
 
 function wait(ms) {
@@ -250,6 +350,7 @@ function newGame() {
   state.humanScore = 0;
   state.computerScore = 0;
   state.roundScore = 0;
+  state.turnScore = 0;
   state.currentPlayer = gameMode === "multi" ? startPlayer : "human";
   state.isComputerThinking = false;
   state.isRolling = false;
@@ -288,7 +389,12 @@ function getCurrentScore() {
 }
 
 function getEffectiveDiceCount() {
-  const pointsLeft = winningScore - getCurrentScore();
+  const activePoints = getCurrentScore() + (gambleMode ? state.turnScore : 0);
+  const pointsLeft = winningScore - activePoints;
+  return getEffectiveDiceCountForPointsLeft(pointsLeft);
+}
+
+function getEffectiveDiceCountForPointsLeft(pointsLeft) {
   return difficulty === "hard" && diceCount === 2 && pointsLeft === 1 ? 1 : diceCount;
 }
 
@@ -356,10 +462,52 @@ function closeOpponentNameEditor() {
 }
 
 function hasWinningScore(score) {
-  return difficulty === "hard" ? score === winningScore : score >= winningScore;
+  return difficulty === "normal" ? score >= winningScore : score === winningScore;
+}
+
+function hasRiskDeadEnd(score) {
+  if (!riskMode || difficulty !== "hard") return false;
+
+  const pointsLeft = winningScore - score;
+  const effectiveDiceCount = getEffectiveDiceCountForPointsLeft(pointsLeft);
+  const minimumValidRoll = effectiveDiceCount * 2;
+  return pointsLeft > 0 && pointsLeft < minimumValidRoll;
+}
+
+function checkCurrentPlayerRiskDeadEnd() {
+  const currentScore = getCurrentScore() + (gambleMode ? state.turnScore : 0);
+  if (!hasRiskDeadEnd(currentScore)) return false;
+
+  const pointsLeft = winningScore - currentScore;
+  const humanFinalScore = state.currentPlayer === "human" ? currentScore : state.humanScore;
+  const computerFinalScore = state.currentPlayer === "computer" ? currentScore : state.computerScore;
+  state.isGameOver = true;
+  playWinSound();
+
+  if (humanFinalScore > computerFinalScore) {
+    state.humanWins += 1;
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. ${playerName} gewinnt mit ${humanFinalScore} zu ${computerFinalScore}.`);
+    playWinAnimation("human");
+  } else if (computerFinalScore > humanFinalScore) {
+    state.computerWins += 1;
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. ${getOpponentName()} gewinnt mit ${computerFinalScore} zu ${humanFinalScore}.`);
+    playWinAnimation("computer");
+  } else {
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. Gleichstand mit ${humanFinalScore} zu ${computerFinalScore}.`);
+  }
+
+  saveWins();
+  render();
+  return true;
 }
 
 function getStartMessage() {
+  if (gambleMode) {
+    return difficulty === "hard"
+      ? `Gamble: Würfle weiter oder sichere genau bei ${winningScore} Punkten.`
+      : "Gamble: Würfle weiter oder sichere deine Zugpunkte.";
+  }
+
   if (gameMode === "multi") {
     return `Startspieler: ${getCurrentPlayerName()}. Vor dem ersten Wurf kannst du wechseln.`;
   }
@@ -411,6 +559,18 @@ function setGameMode(nextMode) {
 function setDiceCount(nextCount) {
   diceCount = nextCount === 2 ? 2 : 1;
   localStorage.setItem("wuerfelduell-dice-count", String(diceCount));
+  newGame();
+}
+
+function setRiskMode(isEnabled) {
+  riskMode = isEnabled;
+  localStorage.setItem("wuerfelduell-risk-mode", riskMode ? "on" : "off");
+  newGame();
+}
+
+function setGambleMode(isEnabled) {
+  gambleMode = isEnabled;
+  localStorage.setItem("wuerfelduell-gamble-mode", gambleMode ? "on" : "off");
   newGame();
 }
 
@@ -545,6 +705,12 @@ setTheme(savedTheme === "dark" ? "dark" : "light");
 const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
 
+const savedRiskMode = localStorage.getItem("wuerfelduell-risk-mode");
+riskMode = savedRiskMode === "on";
+
+const savedGambleMode = localStorage.getItem("wuerfelduell-gamble-mode");
+gambleMode = savedGambleMode === "on";
+
 const savedHumanWins = Number(localStorage.getItem("wuerfelduell-human-wins"));
 const savedComputerWins = Number(localStorage.getItem("wuerfelduell-computer-wins"));
 if (Number.isFinite(savedHumanWins) && savedHumanWins >= 0) {
@@ -589,6 +755,10 @@ render();
 rollButton.addEventListener("click", rollForCurrentPlayer);
 newGameButton.addEventListener("click", newGame);
 resetWinsButton.addEventListener("click", resetWins);
+bankButton?.addEventListener("click", () => {
+  playClickSound();
+  bankTurn();
+});
 applyScoreButton.addEventListener("click", () => {
   playClickSound();
   applyWinningScore();
@@ -652,6 +822,22 @@ multiModeButton.addEventListener("click", () => {
   playClickSound();
   setGameMode("multi");
 });
+riskOnButton?.addEventListener("click", () => {
+  playClickSound();
+  setRiskMode(true);
+});
+riskOffButton?.addEventListener("click", () => {
+  playClickSound();
+  setRiskMode(false);
+});
+gambleOnButton?.addEventListener("click", () => {
+  playClickSound();
+  setGambleMode(true);
+});
+gambleOffButton?.addEventListener("click", () => {
+  playClickSound();
+  setGambleMode(false);
+});
 oneDieButton.addEventListener("click", () => setDiceCount(1));
 twoDiceButton.addEventListener("click", () => setDiceCount(2));
 humanStarterButton?.addEventListener("click", () => setStartPlayer("human"));
@@ -687,6 +873,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=60").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=69").then((registration) => registration.update()).catch(() => {});
   });
 }
