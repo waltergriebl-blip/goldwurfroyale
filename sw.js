@@ -1,4 +1,4 @@
-const CACHE_NAME = "wuerfelduell-v71";
+const CACHE_NAME = "wuerfelduell-v72";
 const APP_FILES = [
   "./",
   "./index.html",

@@ -1354,8 +1354,24 @@ body.dark #newGameButton {
   }
 
   body.gamble-mode .table {
-    gap: 6px;
-    padding: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "last turn"
+      "dice dice"
+      "switcher switcher"
+      "message message"
+      "controls controls";
+    align-content: center;
+    gap: 4px 10px;
+    padding: 5px 8px;
+  }
+
+  body.gamble-mode .round {
+    justify-self: end;
+  }
+
+  body.gamble-mode .turn-score {
+    justify-self: start;
   }
 
   .round strong {
@@ -1367,8 +1383,18 @@ body.dark #newGameButton {
     padding: 6px 10px;
   }
 
+  body.gamble-mode .round span,
+  body.gamble-mode .turn-score span {
+    font-size: 0.7rem;
+  }
+
   .turn-score strong {
     font-size: 1.25rem;
+  }
+
+  body.gamble-mode .round strong,
+  body.gamble-mode .turn-score strong {
+    font-size: 1.22rem;
   }
 
   .die {
@@ -1378,7 +1404,7 @@ body.dark #newGameButton {
 
   body.gamble-mode .die {
     width: min(100%, 250px);
-    min-height: 82px;
+    min-height: 76px;
   }
 
   .die[data-dice-count="1"] .primary {
@@ -1388,6 +1414,15 @@ body.dark #newGameButton {
   .die[data-dice-count="2"] .primary,
   .die[data-dice-count="2"] .secondary {
     width: min(15vw, 104px);
+  }
+
+  body.gamble-mode .die[data-dice-count="1"] .primary {
+    width: min(18vw, 104px);
+  }
+
+  body.gamble-mode .die[data-dice-count="2"] .primary,
+  body.gamble-mode .die[data-dice-count="2"] .secondary {
+    width: min(13vw, 92px);
   }
 
   .dice-hint,
@@ -1404,8 +1439,19 @@ body.dark #newGameButton {
     overflow-wrap: anywhere;
   }
 
+  body.gamble-mode .dice-hint {
+    display: none;
+  }
+
   .message {
     min-height: 24px;
+  }
+
+  body.gamble-mode .message {
+    width: min(100%, 430px);
+    min-height: 18px;
+    font-size: 0.68rem;
+    line-height: 1.15;
   }
 
   .dice-switcher {
@@ -1419,6 +1465,15 @@ body.dark #newGameButton {
     font-size: 0.76rem;
   }
 
+  body.gamble-mode .dice-switcher {
+    width: min(100%, 360px);
+  }
+
+  body.gamble-mode .dice-switcher .theme-option {
+    min-height: 26px;
+    font-size: 0.72rem;
+  }
+
   .controls {
     gap: 6px;
   }
@@ -1426,7 +1481,7 @@ body.dark #newGameButton {
   body.gamble-mode .controls {
     width: min(100%, 380px);
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 5px;
+    gap: 6px;
   }
 
   body.gamble-mode #newGameButton {
@@ -1451,7 +1506,7 @@ body.dark #newGameButton {
   }
 
   body.gamble-mode .controls button {
-    min-height: 30px;
+    min-height: 28px;
     padding: 0 4px;
     font-size: 0.68rem;
   }
