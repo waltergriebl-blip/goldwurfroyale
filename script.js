@@ -30,6 +30,7 @@ const dieFace = document.querySelector("#dieFace");
 const dieFaceTwo = document.querySelector("#dieFaceTwo");
 const message = document.querySelector("#message");
 const rollButton = document.querySelector("#rollButton");
+const tablePanel = document.querySelector("#tablePanel");
 const newGameButton = document.querySelector("#newGameButton");
 const resetWinsButton = document.querySelector("#resetWinsButton");
 const lightModeButton = document.querySelector("#lightModeButton");
@@ -111,6 +112,26 @@ function setMessage(text, isBadRoll = false) {
   message.classList.toggle("bad-roll", isBadRoll);
 }
 
+function playWinAnimation(winner) {
+  const winnerPanel = winner === "human" ? humanPanel : computerPanel;
+
+  winnerPanel.classList.remove("win-pop");
+  tablePanel?.classList.remove("win-flash");
+  message.classList.remove("win-message");
+
+  requestAnimationFrame(() => {
+    winnerPanel.classList.add("win-pop");
+    tablePanel?.classList.add("win-flash");
+    message.classList.add("win-message");
+  });
+
+  window.setTimeout(() => {
+    winnerPanel.classList.remove("win-pop");
+    tablePanel?.classList.remove("win-flash");
+    message.classList.remove("win-message");
+  }, 1000);
+}
+
 async function rollWithSuspense(finalValues) {
   state.isRolling = true;
   rollButton.classList.add("rolling");
@@ -153,6 +174,7 @@ function checkWinner() {
     hasNewWinner = true;
     playWinSound();
     setMessage("Gewonnen! Sehr sauber gesichert.");
+    playWinAnimation("human");
   }
 
   if (hasWinningScore(state.computerScore)) {
@@ -161,6 +183,7 @@ function checkWinner() {
     hasNewWinner = true;
     playWinSound();
     setMessage(`${getOpponentName()} gewinnt diese Runde. Direkt Revanche?`);
+    playWinAnimation("computer");
   }
 
   if (hasNewWinner) {
@@ -664,6 +687,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=59").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=60").then((registration) => registration.update()).catch(() => {});
   });
 }
