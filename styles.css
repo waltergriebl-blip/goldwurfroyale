@@ -1095,8 +1095,14 @@ body.dark #newGameButton {
   }
 
   body.gamble-mode .controls {
-    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
+  }
+
+  body.gamble-mode #bankButton {
+    width: min(100%, 280px);
+    grid-column: 1 / -1;
+    justify-self: center;
   }
 
   .rules {
@@ -1185,7 +1191,7 @@ body.dark #newGameButton {
     width: min(100%, 1040px);
     height: 100%;
     min-height: 0;
-    grid-template-columns: minmax(128px, 0.68fr) minmax(260px, 1.25fr) minmax(128px, 0.68fr);
+    grid-template-columns: minmax(118px, 0.56fr) minmax(320px, 1.55fr) minmax(118px, 0.56fr);
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
       "topbar topbar topbar"
@@ -1254,7 +1260,7 @@ body.dark #newGameButton {
   .player {
     min-width: 0;
     min-height: 118px;
-    padding: 10px 8px;
+    padding: 10px 7px;
     gap: 6px;
   }
 
@@ -1348,7 +1354,7 @@ body.dark #newGameButton {
   }
 
   body.gamble-mode .table {
-    gap: 4px;
+    gap: 6px;
     padding: 6px;
   }
 
@@ -1371,8 +1377,8 @@ body.dark #newGameButton {
   }
 
   body.gamble-mode .die {
-    width: min(100%, 240px);
-    min-height: 78px;
+    width: min(100%, 250px);
+    min-height: 82px;
   }
 
   .die[data-dice-count="1"] .primary {
@@ -1418,9 +1424,24 @@ body.dark #newGameButton {
   }
 
   body.gamble-mode .controls {
-    width: min(100%, 340px);
+    width: min(100%, 380px);
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 5px;
+  }
+
+  body.gamble-mode #newGameButton {
+    grid-column: 1;
+  }
+
+  body.gamble-mode #bankButton {
+    width: 100%;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: stretch;
+  }
+
+  body.gamble-mode #resetWinsButton {
+    grid-column: 3;
   }
 
   .controls button {
