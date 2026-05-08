@@ -1,5 +1,7 @@
 # Walter Griebl's Würfelduell
 
+**Version 1.10**
+
 Ein kleines, mobiles Würfelspiel für Web und Smartphone.
 Spiele alleine gegen den Computer oder lokal zu zweit am selben Gerät.
 
@@ -9,25 +11,29 @@ Spiele alleine gegen den Computer oder lokal zu zweit am selben Gerät.
 
 - Singleplayer gegen Computer
 - Multiplayer am selben Gerät
+- Startspieler auswählbar
 - 1 oder 2 Würfel
 - Normal- und Schwer-Modus
+- Risiko-Modus
+- Gamble-Modus mit Zugpunkten und Sichern
 - Soundeffekte
 - Hell-/Dunkelmodus
 - gespeicherte Einstellungen
 - gespeicherte Spielernamen
 - gespeicherte Siege
+- optimiert für Web und Mobile
 - installierbar als Web-App
 
 ## Online Spielen
 
 https://waltergriebl-blip.github.io/wuerfelduell/
 
-## Als App nutzen
+## Als App Nutzen
 
 Die Webseite kann auf dem Smartphone zum Home-Bildschirm hinzugefügt werden.
 
-**iPhone:** Teilen → Zum Home-Bildschirm  
-**Android:** Browser-Menü → Zum Startbildschirm
+**iPhone:** Teilen -> Zum Home-Bildschirm  
+**Android:** Browser-Menü -> Zum Startbildschirm
 
 ## Rechte
 
