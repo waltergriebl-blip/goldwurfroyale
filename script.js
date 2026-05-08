@@ -9,6 +9,7 @@ let soundEnabled = true;
 let riskMode = false;
 let gambleMode = false;
 let audioContext;
+let computerStartTimer;
 
 const state = {
   humanScore: 0,
@@ -98,8 +99,8 @@ function render() {
   opponentNameLabel.disabled = gameMode === "single";
   if (humanStarterButton && computerStarterButton) {
     const canChooseStarter = canChooseStartPlayer();
-    humanStarterButton.hidden = gameMode !== "multi";
-    computerStarterButton.hidden = gameMode !== "multi";
+    humanStarterButton.hidden = false;
+    computerStarterButton.hidden = false;
     humanStarterButton.disabled = !canChooseStarter;
     computerStarterButton.disabled = !canChooseStarter;
     humanStarterButton.classList.toggle("active", state.currentPlayer === "human");
@@ -258,11 +259,11 @@ async function rollForCurrentPlayer() {
   const nextScore = currentScore + value;
   let gambleTurnLost = false;
 
-  if (gambleMode && riskMode && values.includes(1)) {
+  if (gambleMode && values.includes(1)) {
     playInvalidSound();
     state.turnScore = 0;
     gambleTurnLost = true;
-    setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Risiko! Die Zugpunkte verfallen.`, true);
+    setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Gamble verloren, die Zugpunkte verfallen.`, true);
   } else if (gambleMode) {
     const nextTurnScore = state.turnScore + value;
     if (difficulty === "hard" && currentScore + nextTurnScore > winningScore) {
@@ -308,6 +309,8 @@ async function rollForCurrentPlayer() {
 }
 
 async function computerTurn() {
+  if (state.isComputerThinking || state.isGameOver || state.currentPlayer !== "computer") return;
+
   state.isComputerThinking = true;
   setMessage("Computer denkt kurz nach...");
   render();
@@ -347,12 +350,30 @@ function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function clearComputerStartTimer() {
+  if (!computerStartTimer) return;
+
+  window.clearTimeout(computerStartTimer);
+  computerStartTimer = undefined;
+}
+
+function scheduleComputerStart(delay = 2200) {
+  clearComputerStartTimer();
+  computerStartTimer = window.setTimeout(() => {
+    computerStartTimer = undefined;
+    if (!state.hasRolled && !state.isGameOver && state.currentPlayer === "computer") {
+      computerTurn();
+    }
+  }, delay);
+}
+
 function newGame() {
+  clearComputerStartTimer();
   state.humanScore = 0;
   state.computerScore = 0;
   state.roundScore = 0;
   state.turnScore = 0;
-  state.currentPlayer = gameMode === "multi" ? startPlayer : "human";
+  state.currentPlayer = startPlayer;
   state.isComputerThinking = false;
   state.isRolling = false;
   state.isGameOver = false;
@@ -363,6 +384,10 @@ function newGame() {
   rollButton.setAttribute("aria-label", "Würfeln");
   setMessage(getStartMessage());
   render();
+
+  if (gameMode === "single" && state.currentPlayer === "computer") {
+    scheduleComputerStart();
+  }
 }
 
 function resetWins() {
@@ -467,7 +492,7 @@ function hasWinningScore(score) {
 }
 
 function hasRiskDeadEnd(score) {
-  if (!riskMode || difficulty !== "hard") return false;
+  if (gambleMode || !riskMode || difficulty !== "hard") return false;
 
   const pointsLeft = winningScore - score;
   const effectiveDiceCount = getEffectiveDiceCountForPointsLeft(pointsLeft);
@@ -519,16 +544,21 @@ function getStartMessage() {
 }
 
 function canChooseStartPlayer() {
-  return gameMode === "multi" && !state.hasRolled && !state.isRolling && !state.isGameOver;
+  return !state.hasRolled && !state.isRolling && !state.isGameOver && !state.isComputerThinking;
 }
 
 function setStartPlayer(player) {
   if (!canChooseStartPlayer()) return;
 
+  clearComputerStartTimer();
   startPlayer = player === "computer" ? "computer" : "human";
   state.currentPlayer = startPlayer;
   setMessage(`Startspieler: ${getCurrentPlayerName()}.`);
   render();
+
+  if (gameMode === "single" && state.currentPlayer === "computer") {
+    scheduleComputerStart();
+  }
 }
 
 function setDifficulty(nextDifficulty) {
@@ -874,6 +904,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=72").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=79").then((registration) => registration.update()).catch(() => {});
   });
 }

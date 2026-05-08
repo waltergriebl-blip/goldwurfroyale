@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Würfelduell" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="manifest" href="manifest.webmanifest?v=72" />
+    <link rel="manifest" href="manifest.webmanifest?v=79" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="stylesheet" href="styles.css?v=72" />
+    <link rel="stylesheet" href="styles.css?v=79" />
   </head>
   <body>
     <main class="game">
@@ -60,7 +60,7 @@
                   </div>
                 </div>
 
-                <div class="setting">
+                <div class="setting risk-setting">
                   <span>Risiko</span>
                   <div class="theme-switcher" role="group" aria-label="Risiko-Modus ein oder aus">
                     <button class="theme-option" id="riskOnButton" type="button" aria-pressed="false">
@@ -129,9 +129,9 @@
                     <li><strong>Zielpunkte:</strong> Legt fest, bis wie viele Punkte gespielt wird.</li>
                     <li><strong>Schwer:</strong> Die Zielpunkte müssen genau getroffen werden.</li>
                     <li><strong>Risiko:</strong> Wenn eine 1 fällt, zählt der aktuelle Wurf nicht. Im schweren Modus endet das Spiel, wenn kein gültiger Siegwurf mehr möglich ist. Dann gewinnt die höhere Punktzahl.</li>
-                    <li><strong>Gamble:</strong> Würfle mehrfach und sammle Zugpunkte. Mit Sichern werden sie übernommen. Ist Risiko an, verfallen die Zugpunkte bei einer 1 und der Zug endet. Im schweren Modus muss die Zielpunktzahl genau getroffen werden.</li>
+                    <li><strong>Gamble:</strong> Würfle mehrfach und sammle Zugpunkte. Mit Sichern werden sie übernommen. Bei einer 1 verfallen die Zugpunkte und der Zug endet. Im schweren Modus muss die Zielpunktzahl genau getroffen werden.</li>
                     <li><strong>Würfel:</strong> Wähle 1 oder 2 Würfel.</li>
-                    <li><strong>Startspieler:</strong> Im Multiplayer vor dem ersten Wurf auswählbar.</li>
+                    <li><strong>Startspieler:</strong> Vor dem ersten Wurf auswählbar. Im Singleplayer kann auch der Computer beginnen.</li>
                     <li><strong>Siege:</strong> Zählen gewonnene Runden bis zum Zurücksetzen.</li>
                     <li><strong>Home-Bildschirm:</strong> Für ein optimales Spielerlebnis speichern. iOS: Teilen und „Zum Home-Bildschirm“. Android: Browser-Menü und „Zum Startbildschirm“.</li>
                     <li><strong>Breitbild:</strong> Drehe dein Handy ins Querformat, um die optimierte breite Ansicht zu nutzen.</li>
@@ -244,7 +244,7 @@
       </footer>
     </main>
 
-    <script src="script.js?v=72"></script>
+    <script src="script.js?v=79"></script>
   </body>
 </html>
 

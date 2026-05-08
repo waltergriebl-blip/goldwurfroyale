@@ -271,6 +271,10 @@ button {
   gap: 10px;
 }
 
+body.gamble-mode .risk-setting {
+  display: none;
+}
+
 .topbar span,
 .topbar label {
   color: var(--muted);
@@ -751,6 +755,25 @@ button {
   gap: 12px;
 }
 
+body.gamble-mode .controls {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body.gamble-mode #newGameButton {
+  grid-column: 1;
+}
+
+body.gamble-mode #bankButton {
+  width: 100%;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: stretch;
+}
+
+body.gamble-mode #resetWinsButton {
+  grid-column: 3;
+}
+
 .controls button {
   min-height: 42px;
   border: 0;
@@ -1095,14 +1118,15 @@ body.dark #newGameButton {
   }
 
   body.gamble-mode .controls {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
 
   body.gamble-mode #bankButton {
-    width: min(100%, 280px);
-    grid-column: 1 / -1;
-    justify-self: center;
+    width: 100%;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: stretch;
   }
 
   .rules {
@@ -1337,7 +1361,7 @@ body.dark #newGameButton {
   .dice-switcher,
   .message,
   .controls {
-    width: min(100%, 300px);
+    width: min(100%, 360px);
     justify-self: center;
   }
 
@@ -1361,9 +1385,9 @@ body.dark #newGameButton {
       "switcher switcher"
       "message message"
       "controls controls";
-    align-content: center;
-    gap: 4px 10px;
-    padding: 5px 8px;
+    align-content: start;
+    gap: 7px 12px;
+    padding: clamp(12px, 3.2vh, 22px) 8px 6px;
   }
 
   body.gamble-mode .round {
@@ -1405,6 +1429,7 @@ body.dark #newGameButton {
   body.gamble-mode .die {
     width: min(100%, 250px);
     min-height: 76px;
+    margin-top: 4px;
   }
 
   .die[data-dice-count="1"] .primary {
@@ -1476,6 +1501,15 @@ body.dark #newGameButton {
 
   .controls {
     gap: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #newGameButton {
+    grid-column: 1;
+  }
+
+  #resetWinsButton {
+    grid-column: 2;
   }
 
   body.gamble-mode .controls {
