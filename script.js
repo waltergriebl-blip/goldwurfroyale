@@ -421,6 +421,10 @@ function getEffectiveDiceCount() {
 }
 
 function getEffectiveDiceCountForPointsLeft(pointsLeft) {
+  if (gambleMode && difficulty === "hard" && diceCount === 2 && pointsLeft > 0 && pointsLeft <= 6) {
+    return 1;
+  }
+
   return difficulty === "hard" && diceCount === 2 && pointsLeft === 1 ? 1 : diceCount;
 }
 
@@ -502,6 +506,7 @@ function hasRiskDeadEnd(score) {
 
 function checkCurrentPlayerRiskDeadEnd() {
   const currentScore = getCurrentScore() + (gambleMode ? state.turnScore : 0);
+  if (checkCurrentPlayerGambleDeadEnd(currentScore)) return true;
   if (!hasRiskDeadEnd(currentScore)) return false;
 
   const pointsLeft = winningScore - currentScore;
@@ -524,6 +529,48 @@ function checkCurrentPlayerRiskDeadEnd() {
 
   saveWins();
   render();
+  return true;
+}
+
+function hasGambleHardDeadEnd(score) {
+  return gambleMode && difficulty === "hard" && winningScore - score === 1;
+}
+
+function finishDeadEndByScore(reason) {
+  state.isGameOver = true;
+
+  if (state.humanScore > state.computerScore) {
+    state.humanWins += 1;
+    playWinSound();
+    setMessage(`${reason} ${playerName} gewinnt mit ${state.humanScore} zu ${state.computerScore}.`);
+    playWinAnimation("human");
+  } else if (state.computerScore > state.humanScore) {
+    state.computerWins += 1;
+    playWinSound();
+    setMessage(`${reason} ${getOpponentName()} gewinnt mit ${state.computerScore} zu ${state.humanScore}.`);
+    playWinAnimation("computer");
+  } else {
+    setMessage(`${reason} Gleichstand mit ${state.humanScore} zu ${state.computerScore}.`);
+  }
+
+  saveWins();
+  render();
+}
+
+function checkCurrentPlayerGambleDeadEnd(currentScore) {
+  if (!hasGambleHardDeadEnd(currentScore)) return false;
+
+  const opponentScore = state.currentPlayer === "human" ? state.computerScore : state.humanScore;
+  const opponentCanStillWin = !hasGambleHardDeadEnd(opponentScore);
+
+  if (opponentCanStillWin) {
+    const blockedName = getCurrentPlayerName();
+    switchTurn();
+    setMessage(`${blockedName} braucht noch 1 Punkt. Im Gamble-Modus ist das nicht gültig möglich. ${getCurrentPlayerName()} bekommt noch die Chance.`);
+    return true;
+  }
+
+  finishDeadEndByScore("Gamble-Ende: Beide können keinen gültigen Siegwurf mehr schaffen.");
   return true;
 }
 
@@ -904,6 +951,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=81").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=83").then((registration) => registration.update()).catch(() => {});
   });
 }
