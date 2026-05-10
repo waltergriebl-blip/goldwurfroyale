@@ -690,10 +690,10 @@ function setSound(isEnabled) {
 
 function getBackgroundMusic() {
   if (!backgroundMusic) {
-    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=95");
+    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=96");
     backgroundMusic.loop = true;
     backgroundMusic.autoplay = true;
-    backgroundMusic.volume = 0.055;
+    backgroundMusic.volume = getMusicVolume();
     backgroundMusic.preload = "auto";
     backgroundMusic.addEventListener("ended", () => {
       if (!musicEnabled) return;
@@ -705,13 +705,18 @@ function getBackgroundMusic() {
   return backgroundMusic;
 }
 
+function getMusicVolume() {
+  const isMobileView = window.matchMedia("(max-width: 720px), (pointer: coarse)").matches;
+  return isMobileView ? 0.028 : 0.055;
+}
+
 function startBackgroundMusic(showBlockedMessage = false) {
   if (!musicEnabled) return;
 
   const music = getBackgroundMusic();
   music.loop = true;
   music.autoplay = true;
-  music.volume = 0.055;
+  music.volume = getMusicVolume();
   musicStartPending = false;
   music.load();
 
@@ -1049,6 +1054,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=95").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=96").then((registration) => registration.update()).catch(() => {});
   });
 }
