@@ -690,7 +690,7 @@ function setSound(isEnabled) {
 
 function getBackgroundMusic() {
   if (!backgroundMusic) {
-    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=91");
+    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=95");
     backgroundMusic.loop = true;
     backgroundMusic.autoplay = true;
     backgroundMusic.volume = 0.055;
@@ -845,7 +845,7 @@ function togglePanel(shell, trigger) {
 }
 
 const savedTheme = localStorage.getItem("wuerfelduell-theme");
-setTheme(savedTheme === "dark" ? "dark" : "light");
+setTheme(savedTheme === "light" ? "light" : "dark");
 
 const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
@@ -1049,6 +1049,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=91").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=95").then((registration) => registration.update()).catch(() => {});
   });
 }

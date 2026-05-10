@@ -1,6 +1,6 @@
 # Walter Griebl's Würfelduell
 
-**Version 1.10**
+**Version 1.15**
 
 Ein kleines, mobiles Würfelspiel für Web und Smartphone.
 Spiele alleine gegen den Computer oder lokal zu zweit am selben Gerät.

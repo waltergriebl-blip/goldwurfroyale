@@ -1,19 +1,19 @@
 ﻿<!doctype html>
-<html lang="de">
+<html lang="de" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Walter Griebl's Würfelduell</title>
-    <meta name="theme-color" content="#2f8f68" />
+    <meta name="theme-color" content="#080604" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Würfelduell" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="manifest" href="manifest.webmanifest?v=91" />
+    <link rel="manifest" href="manifest.webmanifest?v=95" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="stylesheet" href="styles.css?v=91" />
+    <link rel="stylesheet" href="styles.css?v=95" />
   </head>
-  <body>
+  <body class="dark">
     <main class="game">
       <section class="topbar" aria-label="Spielmenue">
         <div class="top-actions">
@@ -27,10 +27,10 @@
                 <div class="setting">
                   <span>Ansicht</span>
                   <div class="theme-switcher" role="group" aria-label="Hell oder dunkel waehlen">
-                    <button class="theme-option active" id="lightModeButton" type="button" aria-pressed="true">
+                    <button class="theme-option" id="lightModeButton" type="button" aria-pressed="false">
                       Hell
                     </button>
-                    <button class="theme-option" id="darkModeButton" type="button" aria-pressed="false">
+                    <button class="theme-option active" id="darkModeButton" type="button" aria-pressed="true">
                       Dunkel
                     </button>
                   </div>
@@ -128,7 +128,7 @@
               <div class="info-rollup">
                 <div class="info-heading">
                   <span>Info</span>
-                  <strong>V.1.10</strong>
+                  <strong>V.1.15</strong>
                 </div>
                 <div class="info-content">
                   <p>Würfle einmal pro Zug. Wer die Zielpunkte erreicht, gewinnt die Runde.</p>
@@ -136,7 +136,7 @@
                     <li><strong>Würfeln:</strong> Klicke oder tippe auf den Würfel, um zu würfeln.</li>
                     <li><strong>Ansicht:</strong> Hell oder Dunkel.</li>
                     <li><strong>Sound:</strong> Effekte für Würfeln, Gewinnen und ungültige Würfe.</li>
-                    <li><strong>Musik:</strong> Optionale Hintergrundmusik. Die Spielsounds bleiben lauter als die Musik.</li>
+                    <li><strong>Musik:</strong> Optionale Hintergrundmusik.</li>
                     <li><strong>Spieler:</strong> Single gegen Computer oder Multiplayer am selben Gerät.</li>
                     <li><strong>Name ändern:</strong> Tippe auf den Spielernamen und bestätige mit OK.</li>
                     <li><strong>Zielpunkte:</strong> Legt fest, bis wie viele Punkte gespielt wird.</li>
@@ -257,8 +257,8 @@
       </footer>
     </main>
 
-    <audio id="backgroundMusic" src="background-music.wav?v=91" loop preload="auto" autoplay playsinline></audio>
-    <script src="script.js?v=91"></script>
+    <audio id="backgroundMusic" src="background-music.wav?v=95" loop preload="auto" autoplay playsinline></audio>
+    <script src="script.js?v=95"></script>
   </body>
 </html>
 

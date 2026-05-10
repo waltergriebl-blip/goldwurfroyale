@@ -3,43 +3,49 @@
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  --ink: #17211c;
-  --muted: #5e6b63;
-  --paper: #fbfaf4;
-  --panel: rgba(251, 250, 244, 0.88);
-  --card: #fffdf7;
-  --line: #d7d1c3;
-  --green: #2f7d59;
-  --green-dark: #205f43;
-  --gold: #d89a2b;
-  --red: #c8524c;
-  --shadow: rgba(23, 33, 28, 0.12);
-  --die-shadow: rgba(23, 33, 28, 0.16);
-  --sun-glow: rgba(216, 154, 43, 0.18);
-  --bg-start: #ecf1e9;
-  --bg-mid: #f8efe1;
-  --bg-end: #eaf0ee;
+  --ink: #22170a;
+  --muted: #6d6049;
+  --paper: #fff7df;
+  --panel: rgba(255, 248, 224, 0.9);
+  --card: rgba(255, 252, 241, 0.96);
+  --line: rgba(166, 115, 34, 0.34);
+  --green: #b87a21;
+  --green-dark: #835717;
+  --gold: #d9a844;
+  --red: #b84d3e;
+  --shadow: rgba(45, 29, 8, 0.16);
+  --die-shadow: rgba(48, 28, 5, 0.22);
+  --sun-glow: rgba(217, 168, 68, 0.2);
+  --bg-start: #f7eed8;
+  --bg-mid: #fffaf0;
+  --bg-end: #e8dcc2;
+  --gold-soft: rgba(240, 196, 98, 0.18);
+  --gold-line: rgba(226, 170, 58, 0.56);
+  --button-ink: #140d04;
 }
 
 html.dark,
 body.dark {
   color-scheme: dark;
-  --ink: #f4f0e6;
-  --muted: #b8c2bb;
-  --paper: #141a17;
-  --panel: rgba(25, 33, 29, 0.92);
-  --card: #202a25;
-  --line: #405047;
-  --green: #58b987;
-  --green-dark: #3f986d;
-  --gold: #f0b44b;
-  --red: #ff817b;
-  --shadow: rgba(0, 0, 0, 0.3);
-  --die-shadow: rgba(0, 0, 0, 0.38);
-  --sun-glow: rgba(88, 185, 135, 0.14);
-  --bg-start: #101613;
-  --bg-mid: #20221b;
-  --bg-end: #111a1e;
+  --ink: #fff3d0;
+  --muted: #c8b893;
+  --paper: #070604;
+  --panel: rgba(14, 11, 7, 0.92);
+  --card: rgba(23, 18, 11, 0.92);
+  --line: rgba(211, 157, 53, 0.42);
+  --green: #d3a247;
+  --green-dark: #9a681c;
+  --gold: #f1c86a;
+  --red: #ff806d;
+  --shadow: rgba(0, 0, 0, 0.46);
+  --die-shadow: rgba(0, 0, 0, 0.5);
+  --sun-glow: rgba(241, 200, 106, 0.16);
+  --bg-start: #030302;
+  --bg-mid: #11100b;
+  --bg-end: #050404;
+  --gold-soft: rgba(241, 200, 106, 0.16);
+  --gold-line: rgba(241, 200, 106, 0.62);
+  --button-ink: #120b02;
 }
 
 * {
@@ -62,8 +68,8 @@ body {
   overflow-x: hidden;
   overscroll-behavior: none;
   background:
-    radial-gradient(circle at 20% 10%, var(--sun-glow), transparent 28rem),
-    linear-gradient(135deg, var(--bg-start), var(--bg-mid) 55%, var(--bg-end));
+    linear-gradient(120deg, transparent 0 22%, var(--sun-glow) 48%, transparent 74%),
+    linear-gradient(135deg, var(--bg-start), var(--bg-mid) 48%, var(--bg-end));
   color: var(--ink);
   transition:
     background 180ms ease,
@@ -92,6 +98,30 @@ button {
   border: 1px solid var(--line);
   background: var(--panel);
   box-shadow: 0 20px 60px var(--shadow);
+}
+
+.game {
+  isolation: isolate;
+}
+
+.topbar,
+.scoreboard,
+.table,
+.rules {
+  border-color: var(--gold-line);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 180, 0.05),
+    0 20px 60px var(--shadow);
+}
+
+.topbar,
+.scoreboard,
+.table,
+.rules,
+.player,
+.info-rollup,
+.menu-panel {
+  backdrop-filter: blur(8px);
 }
 
 .top-actions {
@@ -123,8 +153,10 @@ button {
 
 .menu-trigger:hover,
 .menu-trigger:focus-visible {
-  background: var(--green);
-  color: #ffffff;
+  background:
+    linear-gradient(180deg, #f6d982, var(--green) 58%, #8c5d19);
+  color: var(--button-ink);
+  text-shadow: 0 1px 0 rgba(255, 247, 213, 0.38);
 }
 
 .menu-panel {
@@ -201,6 +233,9 @@ button {
   border-radius: 8px;
   background: var(--card);
   color: var(--muted);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 180, 0.05),
+    0 16px 42px var(--shadow);
 }
 
 .info-heading {
@@ -291,7 +326,9 @@ body.gamble-mode .risk-setting {
   padding: 4px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--card);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    var(--card);
 }
 
 .theme-option {
@@ -307,8 +344,13 @@ body.gamble-mode .risk-setting {
 }
 
 .theme-option.active {
-  background: var(--green);
-  color: #ffffff;
+  background:
+    linear-gradient(180deg, #ffe08d, var(--green) 58%, #8c5d19);
+  color: var(--button-ink);
+  text-shadow: 0 1px 0 rgba(255, 247, 213, 0.38);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 210, 0.45),
+    0 8px 18px rgba(77, 46, 8, 0.18);
 }
 
 .score-setting {
@@ -333,23 +375,30 @@ body.gamble-mode .risk-setting {
   min-height: 42px;
   border: 0;
   border-radius: 8px;
-  background: var(--green);
-  color: #ffffff;
+  background:
+    linear-gradient(180deg, #ffe08d, var(--green) 58%, #8c5d19);
+  color: var(--button-ink);
+  box-shadow: inset 0 1px 0 rgba(255, 248, 210, 0.34);
   cursor: pointer;
   font-weight: 800;
   padding: 0 14px;
 }
 
 .score-setting button:hover {
-  background: var(--green-dark);
+  background:
+    linear-gradient(180deg, #f3cf74, var(--green-dark) 62%, #603c0e);
 }
 
 .scoreboard,
 .table,
 .rules {
-  border: 1px solid var(--line);
-  background: var(--panel);
-  box-shadow: 0 20px 60px var(--shadow);
+  border: 1px solid var(--gold-line);
+  background:
+    linear-gradient(145deg, rgba(255, 230, 150, 0.06), transparent 44%),
+    var(--panel);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 180, 0.05),
+    0 20px 60px var(--shadow);
 }
 
 .scoreboard {
@@ -372,7 +421,9 @@ body.gamble-mode .risk-setting {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--card);
+  background:
+    linear-gradient(145deg, rgba(255, 241, 174, 0.08), transparent 42%),
+    var(--card);
   transition:
     background 180ms ease,
     border-color 160ms ease,
@@ -381,14 +432,18 @@ body.gamble-mode .risk-setting {
 }
 
 .player.active {
-  border-color: var(--green);
-  box-shadow: inset 0 0 0 2px rgba(47, 125, 89, 0.12);
+  border-color: var(--gold);
+  box-shadow:
+    inset 0 0 0 2px var(--gold-soft),
+    0 0 24px rgba(217, 168, 68, 0.14);
   transform: translateY(-2px);
 }
 
 .player.winner {
   border-color: var(--gold);
-  box-shadow: inset 0 0 0 2px rgba(216, 154, 43, 0.22);
+  box-shadow:
+    inset 0 0 0 2px rgba(216, 154, 43, 0.24),
+    0 0 30px rgba(217, 168, 68, 0.2);
 }
 
 .player.win-pop {
@@ -415,7 +470,7 @@ body.gamble-mode .risk-setting {
 }
 
 .name-button:hover {
-  background: rgba(47, 125, 89, 0.1);
+  background: var(--gold-soft);
   color: var(--green);
 }
 
@@ -448,8 +503,9 @@ body.gamble-mode .risk-setting {
 .starter-button:hover:not(:disabled),
 .starter-button.active {
   border-color: var(--green);
-  background: var(--green);
-  color: #ffffff;
+  background:
+    linear-gradient(180deg, #ffe08d, var(--green) 58%, #8c5d19);
+  color: var(--button-ink);
 }
 
 .starter-button:disabled {
@@ -506,7 +562,7 @@ body.gamble-mode .risk-setting {
   border: 0;
   border-radius: 8px;
   background: var(--green);
-  color: #ffffff;
+  color: var(--button-ink);
   cursor: pointer;
   font-weight: 800;
   padding: 0 14px;
@@ -535,7 +591,9 @@ body.gamble-mode .risk-setting {
   padding: 6px 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--panel);
+  background:
+    linear-gradient(180deg, rgba(255, 235, 168, 0.08), transparent),
+    var(--panel);
 }
 
 .wins span {
@@ -640,10 +698,14 @@ body.gamble-mode .risk-setting {
   flex: 0 0 auto;
   padding: 14%;
   border-radius: 22px;
-  background: var(--card);
+  background:
+    linear-gradient(145deg, #fff7df 0%, #f4d083 42%, #b97922 72%, #5b3610 100%);
+  color: #070604;
   box-shadow:
-    inset 0 -10px 0 rgba(23, 33, 28, 0.08),
-    0 18px 30px var(--die-shadow);
+    inset 10px 10px 16px rgba(255, 255, 255, 0.45),
+    inset -10px -14px 16px rgba(61, 36, 7, 0.26),
+    0 18px 34px var(--die-shadow),
+    0 0 24px rgba(217, 168, 68, 0.13);
   transition:
     opacity 180ms ease,
     transform 180ms ease;
@@ -680,6 +742,9 @@ body.gamble-mode .risk-setting {
   justify-self: center;
   border-radius: 999px;
   background: currentColor;
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.18),
+    0 1px 2px rgba(255, 239, 190, 0.22);
   opacity: 0;
 }
 
@@ -727,6 +792,7 @@ body.gamble-mode .risk-setting {
   color: var(--gold);
   font-weight: 900;
   animation: win-message-pop 900ms ease;
+  text-shadow: 0 0 16px rgba(241, 200, 106, 0.3);
 }
 
 .table.win-flash {
@@ -778,10 +844,14 @@ body.gamble-mode #resetWinsButton {
   min-height: 42px;
   border: 0;
   border-radius: 8px;
-  background: var(--green);
-  color: white;
+  background:
+    linear-gradient(180deg, #e7c46f, var(--green) 58%, #8c5d19);
+  color: var(--button-ink);
   cursor: pointer;
   font-weight: 800;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 210, 0.35),
+    0 10px 22px rgba(34, 19, 4, 0.18);
 }
 
 .controls button:hover:not(:disabled) {
@@ -789,12 +859,16 @@ body.gamble-mode #resetWinsButton {
 }
 
 #newGameButton {
-  background: #26352e;
+  background:
+    linear-gradient(180deg, rgba(255, 235, 168, 0.12), rgba(255, 235, 168, 0.02)),
+    #2b261a;
+  color: var(--ink);
 }
 
 #bankButton {
-  background: var(--gold);
-  color: #17211c;
+  background:
+    linear-gradient(180deg, #f7df92, var(--gold) 58%, #96651b);
+  color: var(--button-ink);
 }
 
 #bankButton:hover:not(:disabled) {
@@ -802,11 +876,16 @@ body.gamble-mode #resetWinsButton {
 }
 
 body.dark #newGameButton {
-  background: #35423b;
+  background:
+    linear-gradient(180deg, rgba(255, 235, 168, 0.12), rgba(255, 235, 168, 0.02)),
+    #2b261a;
 }
 
 #resetWinsButton {
-  background: #6f786f;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 230, 0.16), rgba(255, 252, 230, 0.02)),
+    #6c6658;
+  color: #fff4d7;
 }
 
 #resetWinsButton:hover:not(:disabled) {
@@ -830,6 +909,8 @@ body.dark #newGameButton {
   font-size: clamp(1.25rem, 2.35vw, 1.9rem);
   line-height: 1.12;
   white-space: nowrap;
+  color: var(--ink);
+  text-shadow: 0 0 18px rgba(217, 168, 68, 0.16);
 }
 
 .rules p {
