@@ -1,10 +1,11 @@
-const CACHE_NAME = "wuerfelduell-v83";
+const CACHE_NAME = "wuerfelduell-v89";
 const APP_FILES = [
   "./",
   "./index.html",
   "./styles.css",
   "./script.js",
   "./manifest.webmanifest",
+  "./background-music.wav",
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png",

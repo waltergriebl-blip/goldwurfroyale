@@ -6,10 +6,13 @@ let gameMode = "single";
 let diceCount = 1;
 let startPlayer = "human";
 let soundEnabled = true;
+let musicEnabled = false;
 let riskMode = false;
 let gambleMode = false;
 let audioContext;
 let computerStartTimer;
+let backgroundMusic;
+let musicStartPending = false;
 
 const state = {
   humanScore: 0,
@@ -44,6 +47,8 @@ const lightModeButton = document.querySelector("#lightModeButton");
 const darkModeButton = document.querySelector("#darkModeButton");
 const soundOnButton = document.querySelector("#soundOnButton");
 const soundOffButton = document.querySelector("#soundOffButton");
+const musicOnButton = document.querySelector("#musicOnButton");
+const musicOffButton = document.querySelector("#musicOffButton");
 const riskOnButton = document.querySelector("#riskOnButton");
 const riskOffButton = document.querySelector("#riskOffButton");
 const gambleOnButton = document.querySelector("#gambleOnButton");
@@ -74,6 +79,7 @@ const menuShell = document.querySelector("#settingsShell");
 const menuTrigger = document.querySelector("#menuTrigger");
 const infoShell = document.querySelector("#infoShell");
 const infoTrigger = document.querySelector("#infoTrigger");
+const backgroundMusicElement = document.querySelector("#backgroundMusic");
 
 const rollDie = () => Math.floor(Math.random() * 6) + 1;
 
@@ -117,6 +123,10 @@ function render() {
   riskOffButton?.classList.toggle("active", !riskMode);
   riskOnButton?.setAttribute("aria-pressed", String(riskMode));
   riskOffButton?.setAttribute("aria-pressed", String(!riskMode));
+  musicOnButton?.classList.toggle("active", musicEnabled);
+  musicOffButton?.classList.toggle("active", !musicEnabled);
+  musicOnButton?.setAttribute("aria-pressed", String(musicEnabled));
+  musicOffButton?.setAttribute("aria-pressed", String(!musicEnabled));
   gambleOnButton?.classList.toggle("active", gambleMode);
   gambleOffButton?.classList.toggle("active", !gambleMode);
   gambleOnButton?.setAttribute("aria-pressed", String(gambleMode));
@@ -678,6 +688,60 @@ function setSound(isEnabled) {
   }
 }
 
+function getBackgroundMusic() {
+  if (!backgroundMusic) {
+    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=89");
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.12;
+    backgroundMusic.preload = "auto";
+    backgroundMusic.addEventListener("ended", () => {
+      if (!musicEnabled) return;
+      backgroundMusic.currentTime = 0;
+      backgroundMusic.play().catch(() => {});
+    });
+  }
+
+  return backgroundMusic;
+}
+
+function startBackgroundMusic(showBlockedMessage = false) {
+  if (!musicEnabled) return;
+
+  const music = getBackgroundMusic();
+  music.loop = true;
+  music.volume = 0.12;
+  musicStartPending = false;
+
+  music.play().catch(() => {
+    musicStartPending = true;
+    if (showBlockedMessage) {
+      setMessage("Musik ist bereit. Tippe einmal ins Spiel, dann startet sie.");
+    }
+  });
+}
+
+function setMusic(isEnabled) {
+  musicEnabled = isEnabled;
+  localStorage.setItem("wuerfelduell-music", musicEnabled ? "on" : "off");
+  musicOnButton?.classList.toggle("active", musicEnabled);
+  musicOffButton?.classList.toggle("active", !musicEnabled);
+  musicOnButton?.setAttribute("aria-pressed", String(musicEnabled));
+  musicOffButton?.setAttribute("aria-pressed", String(!musicEnabled));
+
+  const music = getBackgroundMusic();
+  if (musicEnabled) {
+    startBackgroundMusic(true);
+  } else {
+    musicStartPending = false;
+    music.pause();
+  }
+}
+
+function unlockMusicAfterGesture() {
+  if (!musicEnabled || (!musicStartPending && !getBackgroundMusic().paused)) return;
+  startBackgroundMusic(false);
+}
+
 function ensureAudioContext() {
   if (!audioContext) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -783,6 +847,14 @@ setTheme(savedTheme === "dark" ? "dark" : "light");
 const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
 
+const savedMusic = localStorage.getItem("wuerfelduell-music");
+setMusic(savedMusic === "on");
+window.addEventListener("load", () => {
+  if (musicEnabled) {
+    startBackgroundMusic(false);
+  }
+});
+
 const savedRiskMode = localStorage.getItem("wuerfelduell-risk-mode");
 riskMode = savedRiskMode === "on";
 
@@ -884,6 +956,14 @@ soundOffButton?.addEventListener("click", () => {
   playClickSound();
   setSound(false);
 });
+musicOnButton?.addEventListener("click", () => {
+  playClickSound();
+  setMusic(true);
+});
+musicOffButton?.addEventListener("click", () => {
+  playClickSound();
+  setMusic(false);
+});
 normalModeButton.addEventListener("click", () => {
   playClickSound();
   setDifficulty("normal");
@@ -946,11 +1026,13 @@ document.addEventListener("keydown", (event) => {
     closePanels();
   }
 });
+document.addEventListener("pointerdown", unlockMusicAfterGesture, { passive: true });
+document.addEventListener("touchstart", unlockMusicAfterGesture, { passive: true });
 
 render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=83").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=89").then((registration) => registration.update()).catch(() => {});
   });
 }
