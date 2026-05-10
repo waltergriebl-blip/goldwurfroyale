@@ -690,8 +690,9 @@ function setSound(isEnabled) {
 
 function getBackgroundMusic() {
   if (!backgroundMusic) {
-    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=90");
+    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=91");
     backgroundMusic.loop = true;
+    backgroundMusic.autoplay = true;
     backgroundMusic.volume = 0.055;
     backgroundMusic.preload = "auto";
     backgroundMusic.addEventListener("ended", () => {
@@ -709,8 +710,10 @@ function startBackgroundMusic(showBlockedMessage = false) {
 
   const music = getBackgroundMusic();
   music.loop = true;
+  music.autoplay = true;
   music.volume = 0.055;
   musicStartPending = false;
+  music.load();
 
   music.play().catch(() => {
     musicStartPending = true;
@@ -849,8 +852,21 @@ setSound(savedSound === "off" ? false : true);
 
 const savedMusic = localStorage.getItem("wuerfelduell-music");
 setMusic(savedMusic === null ? true : savedMusic === "on");
+if (musicEnabled) {
+  startBackgroundMusic(false);
+}
 window.addEventListener("load", () => {
   if (musicEnabled) {
+    startBackgroundMusic(false);
+  }
+});
+window.addEventListener("pageshow", () => {
+  if (musicEnabled) {
+    startBackgroundMusic(false);
+  }
+});
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && musicEnabled) {
     startBackgroundMusic(false);
   }
 });
@@ -1026,13 +1042,13 @@ document.addEventListener("keydown", (event) => {
     closePanels();
   }
 });
-document.addEventListener("pointerdown", unlockMusicAfterGesture, { passive: true });
-document.addEventListener("touchstart", unlockMusicAfterGesture, { passive: true });
+document.addEventListener("pointerdown", unlockMusicAfterGesture, { capture: true, passive: true });
+document.addEventListener("touchstart", unlockMusicAfterGesture, { capture: true, passive: true });
 
 render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=90").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=91").then((registration) => registration.update()).catch(() => {});
   });
 }
