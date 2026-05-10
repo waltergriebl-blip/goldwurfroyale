@@ -690,9 +690,9 @@ function setSound(isEnabled) {
 
 function getBackgroundMusic() {
   if (!backgroundMusic) {
-    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=89");
+    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=90");
     backgroundMusic.loop = true;
-    backgroundMusic.volume = 0.12;
+    backgroundMusic.volume = 0.055;
     backgroundMusic.preload = "auto";
     backgroundMusic.addEventListener("ended", () => {
       if (!musicEnabled) return;
@@ -709,7 +709,7 @@ function startBackgroundMusic(showBlockedMessage = false) {
 
   const music = getBackgroundMusic();
   music.loop = true;
-  music.volume = 0.12;
+  music.volume = 0.055;
   musicStartPending = false;
 
   music.play().catch(() => {
@@ -848,7 +848,7 @@ const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
 
 const savedMusic = localStorage.getItem("wuerfelduell-music");
-setMusic(savedMusic === "on");
+setMusic(savedMusic === null ? true : savedMusic === "on");
 window.addEventListener("load", () => {
   if (musicEnabled) {
     startBackgroundMusic(false);
@@ -1033,6 +1033,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=89").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=90").then((registration) => registration.update()).catch(() => {});
   });
 }
