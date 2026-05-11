@@ -45,6 +45,7 @@ const dieFaceTwo = document.querySelector("#dieFaceTwo");
 const message = document.querySelector("#message");
 const rollButton = document.querySelector("#rollButton");
 const tablePanel = document.querySelector("#tablePanel");
+const victoryBurst = document.querySelector("#victoryBurst");
 const newGameButton = document.querySelector("#newGameButton");
 const resetWinsButton = document.querySelector("#resetWinsButton");
 const bankButton = document.querySelector("#bankButton");
@@ -161,18 +162,21 @@ function playWinAnimation(winner) {
   winnerPanel.classList.remove("win-pop");
   tablePanel?.classList.remove("win-flash");
   message.classList.remove("win-message");
+  victoryBurst?.classList.remove("show");
 
   requestAnimationFrame(() => {
     winnerPanel.classList.add("win-pop");
     tablePanel?.classList.add("win-flash");
     message.classList.add("win-message");
+    victoryBurst?.classList.add("show");
   });
 
   window.setTimeout(() => {
     winnerPanel.classList.remove("win-pop");
     tablePanel?.classList.remove("win-flash");
     message.classList.remove("win-message");
-  }, 1000);
+    victoryBurst?.classList.remove("show");
+  }, 1500);
 }
 
 async function rollWithSuspense(finalValues) {
@@ -702,7 +706,7 @@ function shouldUseWebAudioMusic() {
 
 function getHtmlBackgroundMusic() {
   if (!htmlBackgroundMusic) {
-    htmlBackgroundMusic = new Audio("background-music.wav?v=105");
+    htmlBackgroundMusic = new Audio("background-music.wav?v=106");
     htmlBackgroundMusic.loop = true;
     htmlBackgroundMusic.preload = "auto";
   }
@@ -727,7 +731,7 @@ function loadBackgroundMusic() {
   }
 
   if (!backgroundMusicLoadingPromise) {
-    backgroundMusicLoadingPromise = fetch("background-music.wav?v=105")
+    backgroundMusicLoadingPromise = fetch("background-music.wav?v=106")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Musik konnte nicht geladen werden.");
@@ -1162,6 +1166,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=105").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=106").then((registration) => registration.update()).catch(() => {});
   });
 }

@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Goldwurf Royale" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="manifest" href="manifest.webmanifest?v=105" />
+    <link rel="manifest" href="manifest.webmanifest?v=106" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="stylesheet" href="styles.css?v=105" />
+    <link rel="stylesheet" href="styles.css?v=106" />
   </head>
   <body class="dark">
     <main class="game">
@@ -192,6 +192,10 @@
       </section>
 
       <section class="table" id="tablePanel" aria-label="Würfeltisch">
+        <div class="victory-burst" id="victoryBurst" aria-hidden="true">
+          <span>Gewonnen</span>
+        </div>
+
         <div class="round">
           <span>Letzter Wurf</span>
           <strong id="roundScore">0</strong>
@@ -257,7 +261,7 @@
       </footer>
     </main>
 
-    <script src="script.js?v=105"></script>
+    <script src="script.js?v=106"></script>
     <!-- Cloudflare Web Analytics -->
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"1603d1edbcff4645b15d8dd7f364bf60"}'></script>
     <!-- End Cloudflare Web Analytics -->
