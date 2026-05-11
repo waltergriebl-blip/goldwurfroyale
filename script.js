@@ -690,7 +690,7 @@ function setSound(isEnabled) {
 
 function getBackgroundMusic() {
   if (!backgroundMusic) {
-    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=97");
+    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=99");
     backgroundMusic.loop = true;
     backgroundMusic.autoplay = true;
     backgroundMusic.volume = getMusicVolume();
@@ -1054,6 +1054,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=97").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=99").then((registration) => registration.update()).catch(() => {});
   });
 }
