@@ -11,7 +11,12 @@ let riskMode = false;
 let gambleMode = false;
 let audioContext;
 let computerStartTimer;
-let backgroundMusic;
+let backgroundMusicBuffer;
+let backgroundMusicGain;
+let backgroundMusicSource;
+let backgroundMusicLoadingPromise;
+let htmlBackgroundMusic;
+let musicIsPlaying = false;
 let musicStartPending = false;
 
 const state = {
@@ -79,8 +84,6 @@ const menuShell = document.querySelector("#settingsShell");
 const menuTrigger = document.querySelector("#menuTrigger");
 const infoShell = document.querySelector("#infoShell");
 const infoTrigger = document.querySelector("#infoTrigger");
-const backgroundMusicElement = document.querySelector("#backgroundMusic");
-
 const rollDie = () => Math.floor(Math.random() * 6) + 1;
 
 function render() {
@@ -688,44 +691,149 @@ function setSound(isEnabled) {
   }
 }
 
-function getBackgroundMusic() {
-  if (!backgroundMusic) {
-    backgroundMusic = backgroundMusicElement || new Audio("background-music.wav?v=99");
-    backgroundMusic.loop = true;
-    backgroundMusic.autoplay = true;
-    backgroundMusic.volume = getMusicVolume();
-    backgroundMusic.preload = "auto";
-    backgroundMusic.addEventListener("ended", () => {
-      if (!musicEnabled) return;
-      backgroundMusic.currentTime = 0;
-      backgroundMusic.play().catch(() => {});
-    });
-  }
-
-  return backgroundMusic;
-}
-
 function getMusicVolume() {
   const isMobileView = window.matchMedia("(max-width: 720px), (pointer: coarse)").matches;
   return isMobileView ? 0.028 : 0.055;
 }
 
+function shouldUseWebAudioMusic() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+function getHtmlBackgroundMusic() {
+  if (!htmlBackgroundMusic) {
+    htmlBackgroundMusic = new Audio("background-music.wav?v=105");
+    htmlBackgroundMusic.loop = true;
+    htmlBackgroundMusic.preload = "auto";
+  }
+
+  htmlBackgroundMusic.volume = getMusicVolume();
+  return htmlBackgroundMusic;
+}
+
+function getBackgroundMusicGain(context) {
+  if (!backgroundMusicGain) {
+    backgroundMusicGain = context.createGain();
+    backgroundMusicGain.connect(context.destination);
+  }
+
+  backgroundMusicGain.gain.value = getMusicVolume();
+  return backgroundMusicGain;
+}
+
+function loadBackgroundMusic() {
+  if (backgroundMusicBuffer) {
+    return Promise.resolve(backgroundMusicBuffer);
+  }
+
+  if (!backgroundMusicLoadingPromise) {
+    backgroundMusicLoadingPromise = fetch("background-music.wav?v=105")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Musik konnte nicht geladen werden.");
+        }
+        return response.arrayBuffer();
+      })
+      .then((data) => {
+        const context = ensureAudioContext();
+        if (!context) {
+          throw new Error("Audio wird nicht unterstuetzt.");
+        }
+        return context.decodeAudioData(data);
+      })
+      .then((buffer) => {
+        backgroundMusicBuffer = buffer;
+        return buffer;
+      });
+  }
+
+  return backgroundMusicLoadingPromise;
+}
+
+function stopBackgroundMusic() {
+  if (htmlBackgroundMusic) {
+    htmlBackgroundMusic.pause();
+    htmlBackgroundMusic.currentTime = 0;
+  }
+
+  if (!backgroundMusicSource) {
+    musicIsPlaying = false;
+    return;
+  }
+
+  backgroundMusicSource.onended = null;
+  try {
+    backgroundMusicSource.stop();
+  } catch (error) {
+    // Quelle kann bereits beendet sein.
+  }
+  backgroundMusicSource.disconnect();
+  backgroundMusicSource = null;
+  musicIsPlaying = false;
+}
+
 function startBackgroundMusic(showBlockedMessage = false) {
   if (!musicEnabled) return;
 
-  const music = getBackgroundMusic();
-  music.loop = true;
-  music.autoplay = true;
-  music.volume = getMusicVolume();
-  musicStartPending = false;
-  music.load();
+  if (!shouldUseWebAudioMusic()) {
+    const music = getHtmlBackgroundMusic();
+    musicStartPending = false;
+    music.play()
+      .then(() => {
+        musicIsPlaying = true;
+      })
+      .catch(() => {
+        musicStartPending = true;
+        musicIsPlaying = false;
+        if (showBlockedMessage) {
+          setMessage("Musik ist bereit. Tippe einmal ins Spiel, dann startet sie.");
+        }
+      });
+    return;
+  }
 
-  music.play().catch(() => {
+  const context = ensureAudioContext();
+  if (!context) {
     musicStartPending = true;
-    if (showBlockedMessage) {
-      setMessage("Musik ist bereit. Tippe einmal ins Spiel, dann startet sie.");
-    }
-  });
+    return;
+  }
+
+  if (backgroundMusicGain) {
+    backgroundMusicGain.gain.value = getMusicVolume();
+  }
+
+  if (musicIsPlaying && backgroundMusicSource) {
+    context.resume().catch(() => {});
+    return;
+  }
+
+  musicStartPending = false;
+
+  context.resume()
+    .then(() => loadBackgroundMusic())
+    .then((buffer) => {
+      if (!musicEnabled || musicIsPlaying) return;
+
+      const source = context.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      source.connect(getBackgroundMusicGain(context));
+      source.onended = () => {
+        if (backgroundMusicSource === source) {
+          backgroundMusicSource = null;
+          musicIsPlaying = false;
+        }
+      };
+      source.start(0);
+      backgroundMusicSource = source;
+      musicIsPlaying = true;
+    })
+    .catch(() => {
+      musicStartPending = true;
+      if (showBlockedMessage) {
+        setMessage("Musik ist bereit. Tippe einmal ins Spiel, dann startet sie.");
+      }
+    });
 }
 
 function setMusic(isEnabled) {
@@ -736,17 +844,17 @@ function setMusic(isEnabled) {
   musicOnButton?.setAttribute("aria-pressed", String(musicEnabled));
   musicOffButton?.setAttribute("aria-pressed", String(!musicEnabled));
 
-  const music = getBackgroundMusic();
   if (musicEnabled) {
     startBackgroundMusic(true);
   } else {
     musicStartPending = false;
-    music.pause();
+    stopBackgroundMusic();
   }
 }
 
 function unlockMusicAfterGesture() {
-  if (!musicEnabled || (!musicStartPending && !getBackgroundMusic().paused)) return;
+  const htmlMusicIsPlaying = htmlBackgroundMusic && !htmlBackgroundMusic.paused;
+  if (!musicEnabled || (!musicStartPending && (musicIsPlaying || htmlMusicIsPlaying))) return;
   startBackgroundMusic(false);
 }
 
@@ -1054,6 +1162,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=99").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=105").then((registration) => registration.update()).catch(() => {});
   });
 }

@@ -1,7 +1,7 @@
 {
-  "name": "Walter Griebl's Würfelduell",
-  "short_name": "Würfelduell",
-  "description": "Ein Würfelduell mit Singleplayer, Multiplayer, Zielpunkten und Schwierigkeitsgrad.",
+  "name": "Goldwurf Royale",
+  "short_name": "Goldwurf",
+  "description": "Ein mobiles Würfelspiel mit Singleplayer, Multiplayer, Zielpunkten und Schwierigkeitsgrad.",
   "lang": "de",
   "start_url": ".",
   "scope": ".",

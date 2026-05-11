@@ -4,31 +4,31 @@
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
   --ink: #22170a;
-  --muted: #6d6049;
-  --paper: #fff7df;
-  --panel: rgba(255, 248, 224, 0.9);
-  --card: rgba(255, 252, 241, 0.96);
-  --line: rgba(166, 115, 34, 0.34);
-  --green: #b87a21;
-  --green-dark: #835717;
-  --gold: #d9a844;
+  --muted: #5f4e34;
+  --paper: #fff6df;
+  --panel: rgba(255, 247, 222, 0.94);
+  --card: rgba(255, 252, 242, 0.98);
+  --line: rgba(141, 92, 21, 0.36);
+  --green: #a86c17;
+  --green-dark: #70440d;
+  --gold: #b67819;
   --red: #b84d3e;
-  --shadow: rgba(45, 29, 8, 0.16);
-  --die-shadow: rgba(48, 28, 5, 0.22);
+  --shadow: rgba(45, 29, 8, 0.13);
+  --die-shadow: rgba(48, 28, 5, 0.18);
   --sun-glow: rgba(217, 168, 68, 0.2);
   --bg-start: #f7eed8;
   --bg-mid: #fffaf0;
   --bg-end: #e8dcc2;
-  --gold-soft: rgba(240, 196, 98, 0.18);
-  --gold-line: rgba(226, 170, 58, 0.56);
+  --gold-soft: rgba(168, 108, 23, 0.16);
+  --gold-line: rgba(174, 112, 22, 0.52);
   --button-ink: #140d04;
-  --felt: #2b2518;
-  --felt-deep: #18130b;
-  --felt-line: rgba(140, 97, 30, 0.34);
-  --felt-grain: rgba(255, 238, 178, 0.055);
-  --metal-top: #ffe19a;
-  --metal-mid: #c58c30;
-  --metal-low: #69400f;
+  --felt: #f2dfaa;
+  --felt-deep: #c09242;
+  --felt-line: rgba(119, 75, 12, 0.24);
+  --felt-grain: rgba(95, 61, 12, 0.045);
+  --metal-top: #fff0bd;
+  --metal-mid: #b67819;
+  --metal-low: #5f380c;
 }
 
 html.dark,
@@ -656,6 +656,13 @@ body.gamble-mode .risk-setting {
 .player strong {
   font-size: clamp(3.4rem, 8vw, 5.4rem);
   line-height: 0.95;
+  color: var(--ink);
+  text-shadow:
+    0 1px 0 rgba(255, 246, 210, 0.7),
+    0 0 12px rgba(168, 108, 23, 0.18);
+}
+
+body.dark .player strong {
   color: #fff7df;
   text-shadow:
     0 1px 0 #8c5d19,
@@ -666,6 +673,20 @@ body.gamble-mode .risk-setting {
 .round span,
 .turn-score span {
   color: var(--muted);
+}
+
+.round strong,
+.turn-score strong {
+  color: var(--ink);
+  text-shadow: 0 1px 0 rgba(255, 246, 210, 0.58);
+}
+
+body.dark .round strong,
+body.dark .turn-score strong {
+  color: #fff7df;
+  text-shadow:
+    0 1px 0 #8c5d19,
+    0 0 14px rgba(217, 168, 68, 0.2);
 }
 
 .wins {
@@ -704,9 +725,9 @@ body.gamble-mode .risk-setting {
   padding: 14px;
   text-align: center;
   background:
-    linear-gradient(145deg, rgba(255, 219, 128, 0.1), transparent 32%),
-    repeating-linear-gradient(45deg, transparent 0 10px, var(--felt-grain) 11px 12px),
-    repeating-linear-gradient(135deg, transparent 0 14px, rgba(0, 0, 0, 0.08) 15px 16px),
+    linear-gradient(145deg, rgba(255, 252, 230, 0.34), transparent 36%),
+    repeating-linear-gradient(45deg, transparent 0 18px, var(--felt-grain) 19px 20px),
+    repeating-linear-gradient(135deg, transparent 0 24px, rgba(80, 48, 8, 0.035) 25px 26px),
     linear-gradient(160deg, var(--felt), var(--felt-deep));
 }
 
@@ -718,8 +739,8 @@ body.gamble-mode .risk-setting {
   border-radius: 10px;
   pointer-events: none;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 236, 180, 0.035),
-    inset 0 0 40px rgba(0, 0, 0, 0.18);
+    inset 0 0 0 1px rgba(255, 248, 218, 0.22),
+    inset 0 0 36px rgba(91, 56, 11, 0.1);
 }
 
 .table::after {
@@ -727,6 +748,26 @@ body.gamble-mode .risk-setting {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 240, 0.14), transparent 18%, transparent 82%, rgba(255, 255, 240, 0.08)),
+    linear-gradient(180deg, rgba(255, 250, 222, 0.16), transparent 30%, rgba(91, 56, 11, 0.12));
+}
+
+body.dark .table {
+  background:
+    linear-gradient(145deg, rgba(255, 219, 128, 0.1), transparent 32%),
+    repeating-linear-gradient(45deg, transparent 0 10px, var(--felt-grain) 11px 12px),
+    repeating-linear-gradient(135deg, transparent 0 14px, rgba(0, 0, 0, 0.08) 15px 16px),
+    linear-gradient(160deg, var(--felt), var(--felt-deep));
+}
+
+body.dark .table::before {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 180, 0.035),
+    inset 0 0 40px rgba(0, 0, 0, 0.18);
+}
+
+body.dark .table::after {
   background:
     linear-gradient(90deg, rgba(255, 228, 145, 0.08), transparent 18%, transparent 82%, rgba(255, 228, 145, 0.06)),
     linear-gradient(180deg, rgba(255, 245, 204, 0.08), transparent 26%, rgba(0, 0, 0, 0.18));
@@ -824,8 +865,8 @@ body.gamble-mode .risk-setting {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.85), transparent 0 16%, transparent 28%),
-    linear-gradient(145deg, #fff9e8 0%, #f5d99a 33%, #c99033 67%, #59350e 100%);
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.9), transparent 0 16%, transparent 28%),
+    linear-gradient(145deg, #fffaf0 0%, #f6dda0 35%, #cf9938 70%, #6c4212 100%);
   color: #070604;
   box-shadow:
     inset 10px 10px 18px rgba(255, 255, 255, 0.5),
@@ -836,6 +877,15 @@ body.gamble-mode .risk-setting {
   transition:
     opacity 180ms ease,
     transform 180ms ease;
+}
+
+body:not(.dark) .die-face {
+  box-shadow:
+    inset 10px 10px 18px rgba(255, 255, 255, 0.58),
+    inset -10px -14px 16px rgba(95, 55, 8, 0.25),
+    inset 0 0 0 1px rgba(255, 248, 218, 0.45),
+    0 16px 28px rgba(68, 42, 8, 0.18),
+    0 0 18px rgba(176, 112, 22, 0.1);
 }
 
 .die-face::before {
@@ -930,17 +980,25 @@ body.gamble-mode .risk-setting {
 .dice-hint {
   max-width: 320px;
   margin: -6px 0 0;
-  color: var(--muted);
+  color: #4d3a1c;
   font-size: 0.92rem;
   line-height: 1.35;
+  text-shadow: 0 1px 0 rgba(255, 246, 210, 0.4);
 }
 
 .message {
   min-height: 42px;
   margin: 0;
-  color: var(--muted);
+  color: #4d3a1c;
   font-size: 1.05rem;
   line-height: 1.45;
+  text-shadow: 0 1px 0 rgba(255, 246, 210, 0.36);
+}
+
+body.dark .dice-hint,
+body.dark .message {
+  color: var(--muted);
+  text-shadow: none;
 }
 
 .message.win-message {
@@ -1026,6 +1084,12 @@ body.gamble-mode #resetWinsButton {
   color: var(--ink);
 }
 
+body:not(.dark) #newGameButton {
+  background:
+    linear-gradient(180deg, #8b6428, #4d3516);
+  color: #fff6df;
+}
+
 #bankButton {
   background:
     linear-gradient(180deg, #f7df92, var(--gold) 58%, #96651b);
@@ -1047,6 +1111,12 @@ body.dark #newGameButton {
     linear-gradient(180deg, rgba(255, 252, 230, 0.18), rgba(0, 0, 0, 0.08)),
     #756b56;
   color: #fff4d7;
+}
+
+body:not(.dark) #resetWinsButton {
+  background:
+    linear-gradient(180deg, #9b927d, #645b48);
+  color: #fff6df;
 }
 
 #resetWinsButton:hover:not(:disabled) {
