@@ -706,7 +706,7 @@ function shouldUseWebAudioMusic() {
 
 function getHtmlBackgroundMusic() {
   if (!htmlBackgroundMusic) {
-    htmlBackgroundMusic = new Audio("background-music.wav?v=106");
+    htmlBackgroundMusic = new Audio("background-music.wav?v=107");
     htmlBackgroundMusic.loop = true;
     htmlBackgroundMusic.preload = "auto";
   }
@@ -731,7 +731,7 @@ function loadBackgroundMusic() {
   }
 
   if (!backgroundMusicLoadingPromise) {
-    backgroundMusicLoadingPromise = fetch("background-music.wav?v=106")
+    backgroundMusicLoadingPromise = fetch("background-music.wav?v=107")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Musik konnte nicht geladen werden.");
@@ -1166,6 +1166,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=106").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register("sw.js?v=107").then((registration) => registration.update()).catch(() => {});
   });
 }
