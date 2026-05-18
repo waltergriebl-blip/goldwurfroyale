@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "108";
+const APP_VERSION = globalThis.APP_VERSION || "113";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -20,6 +20,7 @@ let backgroundMusicLoadingPromise;
 let htmlBackgroundMusic;
 let musicIsPlaying = false;
 let musicStartPending = false;
+let rulesLockedByRematch = false;
 
 const state = {
   humanScore: 0,
@@ -52,7 +53,7 @@ const winnerOverlay = document.querySelector("#winnerOverlay");
 const winnerTitle = document.querySelector("#winnerTitle");
 const winnerScoreLine = document.querySelector("#winnerScoreLine");
 const rematchButton = document.querySelector("#rematchButton");
-const overlayResetWinsButton = document.querySelector("#overlayResetWinsButton");
+const overlayNewGameButton = document.querySelector("#overlayNewGameButton");
 const newGameButton = document.querySelector("#newGameButton");
 const resetWinsButton = document.querySelector("#resetWinsButton");
 const bankButton = document.querySelector("#bankButton");
@@ -92,6 +93,20 @@ const menuShell = document.querySelector("#settingsShell");
 const menuTrigger = document.querySelector("#menuTrigger");
 const infoShell = document.querySelector("#infoShell");
 const infoTrigger = document.querySelector("#infoTrigger");
+const lockedRuleControls = [
+  singleModeButton,
+  multiModeButton,
+  riskOnButton,
+  riskOffButton,
+  gambleOnButton,
+  gambleOffButton,
+  winningScoreInput,
+  applyScoreButton,
+  normalModeButton,
+  hardModeButton,
+  oneDieButton,
+  twoDiceButton,
+].filter(Boolean);
 const rollDie = () => Math.floor(Math.random() * 6) + 1;
 
 function render() {
@@ -142,6 +157,7 @@ function render() {
   gambleOffButton?.classList.toggle("active", !gambleMode);
   gambleOnButton?.setAttribute("aria-pressed", String(gambleMode));
   gambleOffButton?.setAttribute("aria-pressed", String(!gambleMode));
+  updateRuleControlsLock();
   bankButton.hidden = !gambleMode;
   bankButton.disabled =
     !gambleMode ||
@@ -156,6 +172,19 @@ function render() {
     (gameMode === "single" && state.currentPlayer !== "human") ||
     state.isComputerThinking ||
     state.isRolling;
+}
+
+function areRuleControlsLocked() {
+  return rulesLockedByRematch || state.hasRolled || state.isRolling || state.isComputerThinking;
+}
+
+function updateRuleControlsLock() {
+  const isLocked = areRuleControlsLocked();
+  lockedRuleControls.forEach((control) => {
+    control.disabled = isLocked;
+    control.closest(".setting")?.classList.toggle("locked", isLocked);
+  });
+  oneDieButton?.closest(".dice-switcher")?.classList.toggle("locked", isLocked);
 }
 
 function setMessage(text, isBadRoll = false) {
@@ -465,9 +494,10 @@ function scheduleComputerStart(delay = 2200) {
   }, delay);
 }
 
-function newGame() {
+function newGame(keepRulesLocked = false) {
   clearComputerStartTimer();
   hideWinnerOverlay();
+  rulesLockedByRematch = keepRulesLocked;
   state.humanScore = 0;
   state.computerScore = 0;
   state.roundScore = 0;
@@ -537,6 +567,8 @@ function formatRoll(values) {
 }
 
 function applyWinningScore() {
+  if (areRuleControlsLocked()) return;
+
   const nextScore = Number(winningScoreInput.value);
   winningScore = Math.min(999, Math.max(10, Number.isFinite(nextScore) ? nextScore : 50));
   winningScoreInput.value = winningScore;
@@ -708,6 +740,8 @@ function setStartPlayer(player) {
 }
 
 function setDifficulty(nextDifficulty) {
+  if (areRuleControlsLocked()) return;
+
   difficulty = nextDifficulty === "hard" ? "hard" : "normal";
   const isHard = difficulty === "hard";
   normalModeButton.classList.toggle("active", !isHard);
@@ -719,6 +753,8 @@ function setDifficulty(nextDifficulty) {
 }
 
 function setGameMode(nextMode) {
+  if (areRuleControlsLocked()) return;
+
   gameMode = nextMode === "multi" ? "multi" : "single";
   if (gameMode === "single") {
     startPlayer = "human";
@@ -734,18 +770,24 @@ function setGameMode(nextMode) {
 }
 
 function setDiceCount(nextCount) {
+  if (areRuleControlsLocked()) return;
+
   diceCount = nextCount === 2 ? 2 : 1;
   localStorage.setItem("wuerfelduell-dice-count", String(diceCount));
   newGame();
 }
 
 function setRiskMode(isEnabled) {
+  if (areRuleControlsLocked()) return;
+
   riskMode = isEnabled;
   localStorage.setItem("wuerfelduell-risk-mode", riskMode ? "on" : "off");
   newGame();
 }
 
 function setGambleMode(isEnabled) {
+  if (areRuleControlsLocked()) return;
+
   gambleMode = isEnabled;
   localStorage.setItem("wuerfelduell-gamble-mode", gambleMode ? "on" : "off");
   newGame();
@@ -1118,7 +1160,7 @@ if (savedDiceCount === 2) {
 render();
 
 rollButton.addEventListener("click", rollForCurrentPlayer);
-newGameButton.addEventListener("click", newGame);
+newGameButton.addEventListener("click", () => newGame());
 resetWinsButton.addEventListener("click", resetWins);
 bankButton?.addEventListener("click", () => {
   playClickSound();
@@ -1126,12 +1168,11 @@ bankButton?.addEventListener("click", () => {
 });
 rematchButton?.addEventListener("click", () => {
   playClickSound();
-  newGame();
+  newGame(true);
 });
-overlayResetWinsButton?.addEventListener("click", () => {
+overlayNewGameButton?.addEventListener("click", () => {
   playClickSound();
-  resetWins();
-  hideWinnerOverlay();
+  newGame();
 });
 applyScoreButton.addEventListener("click", () => {
   playClickSound();

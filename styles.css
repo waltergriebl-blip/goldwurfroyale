@@ -346,6 +346,20 @@ button {
   gap: 10px;
 }
 
+.setting.locked,
+.dice-switcher.locked {
+  opacity: 0.42;
+  filter: grayscale(0.4);
+}
+
+.setting.locked {
+  pointer-events: none;
+}
+
+.dice-switcher.locked {
+  pointer-events: none;
+}
+
 body.gamble-mode .risk-setting {
   display: none;
 }
@@ -1013,7 +1027,10 @@ body.dark .table::after {
 }
 
 .die:disabled,
-.controls button:disabled {
+.controls button:disabled,
+.theme-option:disabled,
+.score-setting input:disabled,
+.score-setting button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
 }
