@@ -3573,3 +3573,24 @@ body:not(.dark) .wins {
   }
 }
 
+/* Premium table background */
+.table,
+body.dark .table,
+body:not(.dark) .table {
+  background:
+    linear-gradient(180deg, rgba(3, 2, 1, 0.42), rgba(3, 2, 1, 0.62)),
+    radial-gradient(circle at 50% 38%, rgba(255, 190, 52, 0.2), transparent 0 22%, transparent 48%),
+    url("./assets/table-bg.webp") center / cover no-repeat;
+}
+
+body:not(.dark) .table {
+  background:
+    linear-gradient(180deg, rgba(255, 238, 178, 0.18), rgba(60, 34, 4, 0.34)),
+    radial-gradient(circle at 50% 38%, rgba(255, 190, 52, 0.18), transparent 0 22%, transparent 48%),
+    url("./assets/table-bg.webp") center / cover no-repeat;
+}
+
+.table::after {
+  opacity: 0.48;
+}
+

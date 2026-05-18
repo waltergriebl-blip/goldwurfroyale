@@ -1,6 +1,6 @@
 importScripts("./version.js");
 
-const CACHE_NAME = `goldwurf-royale-v${self.APP_VERSION || "128"}`;
+const CACHE_NAME = `goldwurf-royale-v${self.APP_VERSION || "129"}`;
 const APP_FILES = [
   "./",
   "./index.html",
@@ -9,6 +9,7 @@ const APP_FILES = [
   "./script.js",
   "./manifest.webmanifest",
   "./background-music.wav",
+  "./assets/table-bg.webp",
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png",
