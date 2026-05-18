@@ -1,6 +1,6 @@
 # Goldwurf Royale
 
-**Version 1.18**
+**Version 1.20**
 
 Ein kleines, mobiles Würfelspiel für Web und Smartphone.
 Spiele alleine gegen den Computer oder lokal zu zweit am selben Gerät.
