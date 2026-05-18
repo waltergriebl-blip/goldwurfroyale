@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "114";
+const APP_VERSION = globalThis.APP_VERSION || "115";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -247,22 +247,32 @@ function playWinAnimation(winner) {
   }, 1500);
 }
 
-function detectSpecialMoment(details) {
+function detectSpecialMoment(values = [], context = {}) {
   const {
-    values = [],
     currentScore = 0,
     nextScore = 0,
     scoreApplied = false,
     riskInvalid = false,
     gambleSecured = 0,
-  } = details;
+  } = context;
+  const rolledValues = Array.isArray(values) ? values : [];
 
   if (riskInvalid) {
-    return { text: "RISIKO VERLOREN!", tone: "dark" };
+    return { text: "RISIKO VERLOREN!", type: "dark" };
   }
 
   if (gambleSecured >= 20) {
-    return { text: "GROSSER GAMBLE!", tone: "royal" };
+    return { text: "GROSSER GAMBLE!", type: "gold" };
+  }
+
+  if (
+    riskMode &&
+    difficulty === "hard" &&
+    scoreApplied &&
+    nextScore === winningScore &&
+    isLastChanceWin(currentScore)
+  ) {
+    return { text: "LETZTE CHANCE GENUTZT!", type: "gold" };
   }
 
   if (
@@ -271,22 +281,22 @@ function detectSpecialMoment(details) {
     currentScore < winningScore &&
     nextScore === winningScore
   ) {
-    return { text: "PERFEKTER SIEG!", tone: "royal" };
+    return { text: "PERFEKTER SIEG!", type: "gold" };
   }
 
-  if (values.length === 2 && values[0] === 6 && values[1] === 6) {
-    return { text: "ROYAL WURF!", tone: "royal" };
+  if (rolledValues.length === 2 && rolledValues[0] === 6 && rolledValues[1] === 6) {
+    return { text: "ROYAL WURF!", type: "gold" };
   }
 
   return null;
 }
 
-function showRoyalMoment(text, tone = "royal") {
+function showRoyalMoment(text, type = "gold") {
   if (!royalMoment || !royalMomentText || !text) return;
 
   window.clearTimeout(royalMomentTimer);
   royalMomentText.textContent = text;
-  royalMoment.dataset.tone = tone;
+  royalMoment.dataset.tone = type === "dark" ? "dark" : "gold";
   royalMoment.hidden = false;
   royalMoment.classList.remove("show");
 
@@ -294,20 +304,24 @@ function showRoyalMoment(text, tone = "royal") {
     royalMoment.classList.add("show");
   });
 
-  royalMomentTimer = window.setTimeout(() => {
-    royalMoment.classList.remove("show");
-    window.setTimeout(() => {
-      if (!royalMoment.classList.contains("show")) {
-        royalMoment.hidden = true;
-      }
-    }, 180);
-  }, 1500);
+  royalMomentTimer = window.setTimeout(hideRoyalMoment, 1500);
 }
 
-function playRoyalMomentSound(tone = "royal") {
+function hideRoyalMoment() {
+  if (!royalMoment) return;
+
+  royalMoment.classList.remove("show");
+  window.setTimeout(() => {
+    if (!royalMoment.classList.contains("show")) {
+      royalMoment.hidden = true;
+    }
+  }, 180);
+}
+
+function playRoyalMomentSound(type = "gold") {
   if (!soundEnabled) return;
 
-  if (tone === "dark") {
+  if (type === "dark") {
     playDarkMomentSound();
     return;
   }
@@ -334,12 +348,26 @@ function playDarkMomentSound() {
   playTone(70, now + 0.24, 0.22, 0.035, "triangle");
 }
 
-function triggerSpecialMoment(details) {
-  const moment = detectSpecialMoment(details);
+function triggerSpecialMoment(values = [], context = {}) {
+  const moment = detectSpecialMoment(values, context);
   if (!moment) return;
 
-  showRoyalMoment(moment.text, moment.tone);
-  playRoyalMomentSound(moment.tone);
+  showRoyalMoment(moment.text, moment.type);
+  playRoyalMomentSound(moment.type);
+  if (moment.type !== "dark") {
+    navigator.vibrate?.(60);
+  }
+}
+
+function isLastChanceWin(scoreBefore) {
+  if (!riskMode || difficulty !== "hard") return false;
+
+  const pointsLeft = winningScore - scoreBefore;
+  if (pointsLeft <= 0) return false;
+
+  const effectiveDiceCount = getEffectiveDiceCountForPointsLeft(pointsLeft);
+  const minimumValidRoll = effectiveDiceCount * 2;
+  return pointsLeft === minimumValidRoll;
 }
 
 async function rollWithSuspense(finalValues) {
@@ -409,15 +437,22 @@ function bankTurn() {
   if (gameMode === "single" && state.currentPlayer === "computer" && !state.isComputerThinking) return;
 
   const securedPoints = state.turnScore;
+  const currentScore = state.currentPlayer === "human" ? state.humanScore : state.computerScore;
+  const nextScore = currentScore + securedPoints;
   if (state.currentPlayer === "human") {
-    state.humanScore += securedPoints;
+    state.humanScore = nextScore;
   } else {
-    state.computerScore += securedPoints;
+    state.computerScore = nextScore;
   }
 
   state.turnScore = 0;
   setMessage(`${getCurrentPlayerName()} sichert ${securedPoints} Punkte.`);
-  triggerSpecialMoment({ gambleSecured: securedPoints });
+  triggerSpecialMoment([], {
+    currentScore,
+    nextScore,
+    scoreApplied: true,
+    gambleSecured: securedPoints,
+  });
   checkWinner();
 
   if (!state.isGameOver) {
@@ -479,8 +514,7 @@ async function rollForCurrentPlayer() {
     setMessage(`${getOpponentName()} würfelt ${formatRoll(values)}. ${playerName} ist dran.`);
   }
 
-  triggerSpecialMoment({
-    values,
+  triggerSpecialMoment(values, {
     currentScore,
     nextScore,
     scoreApplied,

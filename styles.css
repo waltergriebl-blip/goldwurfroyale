@@ -866,7 +866,7 @@ body.dark .table::after {
 .royal-moment {
   position: absolute;
   inset: 0;
-  z-index: 7;
+  z-index: 5;
   display: grid;
   place-items: center;
   pointer-events: none;
