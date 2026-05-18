@@ -1,6 +1,6 @@
 importScripts("./version.js");
 
-const CACHE_NAME = `goldwurf-royale-v${self.APP_VERSION || "125"}`;
+const CACHE_NAME = `goldwurf-royale-v${self.APP_VERSION || "127"}`;
 const APP_FILES = [
   "./",
   "./index.html",

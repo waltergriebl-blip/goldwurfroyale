@@ -2676,6 +2676,7 @@ body.dark {
 }
 
 .game {
+  width: min(1180px, calc(100vw - 48px));
   gap: 12px;
 }
 
@@ -2828,12 +2829,18 @@ body.dark {
 .label,
 .name-button {
   color: #ffd76f;
-  font-size: clamp(1.25rem, 3.4vw, 2rem);
+  font-size: clamp(1.45rem, 3.8vw, 2.35rem);
   font-weight: 950;
   letter-spacing: 0.11em;
   text-shadow:
     0 1px 0 rgba(0, 0, 0, 0.82),
     0 0 15px rgba(255, 190, 50, 0.34);
+}
+
+#humanNameLabel,
+#opponentNameLabel {
+  min-width: 2.4em;
+  text-align: center;
 }
 
 .name-button::before {
@@ -3278,6 +3285,7 @@ body:not(.dark) .wins {
 
 @media (max-width: 720px) {
   .game {
+    width: min(100vw - 18px, 430px);
     gap: 10px;
   }
 
@@ -3291,13 +3299,13 @@ body:not(.dark) .wins {
   }
 
   .menu-trigger {
-    min-height: 54px;
+    min-height: 48px;
     gap: 3px;
     font-size: clamp(0.72rem, 3.1vw, 0.92rem);
   }
 
   .menu-trigger::before {
-    font-size: 1.35rem;
+    font-size: 1.22rem;
   }
 
   .scoreboard {
@@ -3306,19 +3314,19 @@ body:not(.dark) .wins {
   }
 
   .player {
-    min-height: 178px;
-    padding: 14px 12px;
+    min-height: 148px;
+    padding: 12px 10px;
     border-radius: 16px;
   }
 
   .label,
   .name-button {
-    font-size: clamp(1rem, 5.8vw, 1.45rem);
+    font-size: clamp(1rem, 5.4vw, 1.48rem);
     letter-spacing: 0.08em;
   }
 
   .player strong {
-    font-size: clamp(3.5rem, 18vw, 5.1rem);
+    font-size: clamp(3rem, 15vw, 4.35rem);
   }
 
   .player span {
@@ -3332,13 +3340,13 @@ body:not(.dark) .wins {
   }
 
   .wins strong {
-    font-size: clamp(1.8rem, 10vw, 2.9rem);
+    font-size: clamp(1.55rem, 8.4vw, 2.35rem);
   }
 
   .table {
     min-height: 0;
-    padding: 24px 14px 18px;
-    gap: 14px;
+    padding: 18px 12px 16px;
+    gap: 12px;
   }
 
   .table::before {
@@ -3355,17 +3363,17 @@ body:not(.dark) .wins {
   }
 
   .die {
-    width: min(92vw, 380px);
-    min-height: 174px;
+    width: min(88vw, 330px);
+    min-height: 138px;
   }
 
   .die[data-dice-count="1"] .primary {
-    width: min(58vw, 210px);
+    width: min(48vw, 174px);
   }
 
   .die[data-dice-count="2"] .primary,
   .die[data-dice-count="2"] .secondary {
-    width: min(38vw, 152px);
+    width: min(34vw, 132px);
   }
 
   .dice-switcher {
@@ -3374,7 +3382,7 @@ body:not(.dark) .wins {
 
   .theme-option,
   .dice-switcher .theme-option {
-    min-height: 48px;
+    min-height: 44px;
     font-size: clamp(0.85rem, 4vw, 1rem);
   }
 
@@ -3384,15 +3392,27 @@ body:not(.dark) .wins {
   }
 
   .controls button {
-    min-height: 54px;
+    min-height: 48px;
     font-size: clamp(0.9rem, 4.2vw, 1.08rem);
   }
 }
 
 @media (max-width: 460px) {
+  body {
+    padding:
+      calc(env(safe-area-inset-top, 0px) + 10px)
+      0
+      calc(env(safe-area-inset-bottom, 0px) + 10px);
+  }
+
+  .game {
+    width: min(100vw - 12px, 410px);
+    gap: 8px;
+  }
+
   .player {
-    min-height: 168px;
-    padding: 12px 10px;
+    min-height: 136px;
+    padding: 10px 8px;
   }
 
   .starter-button {
@@ -3408,48 +3428,98 @@ body:not(.dark) .wins {
   .wins span {
     font-size: 0.74rem;
   }
+
+  .table {
+    padding: 15px 9px 14px;
+    gap: 10px;
+  }
+
+  .round span {
+    font-size: clamp(0.92rem, 4.7vw, 1.2rem);
+  }
+
+  .die {
+    min-height: 124px;
+  }
+
+  .die[data-dice-count="1"] .primary {
+    width: min(44vw, 160px);
+  }
+
+  .die[data-dice-count="2"] .primary,
+  .die[data-dice-count="2"] .secondary {
+    width: min(31vw, 118px);
+  }
+
+  .message {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
 }
 
 @media (orientation: landscape) and (max-height: 560px) {
+  .game {
+    width: min(100%, 1120px);
+    grid-template-columns: minmax(150px, 0.62fr) minmax(390px, 1.62fr) minmax(150px, 0.62fr);
+    gap: 8px;
+  }
+
   .topbar {
     border-radius: 10px;
     padding: 5px;
   }
 
   .menu-trigger {
-    min-height: 38px;
+    min-height: 34px;
     gap: 0;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
   }
 
   .menu-trigger::before {
-    font-size: 1rem;
+    font-size: 0.92rem;
   }
 
   .player {
     min-height: 0;
-    padding: 12px 10px;
+    padding: 9px 9px;
+    align-content: center;
+    gap: 5px;
   }
 
   .label,
   .name-button {
-    font-size: clamp(0.95rem, 3.1vw, 1.25rem);
+    font-size: clamp(0.82rem, 2.55vw, 1.12rem);
   }
 
   .player strong {
-    font-size: clamp(2.5rem, 7vw, 3.8rem);
+    font-size: clamp(2rem, 5.5vw, 3rem);
+  }
+
+  .player span {
+    font-size: 0.72rem;
   }
 
   .wins {
-    width: min(100%, 130px);
-    min-height: 42px;
-    padding: 6px 9px;
+    width: 100%;
+    max-width: 124px;
+    min-width: 0;
+    min-height: 36px;
+    padding: 5px 8px;
+    gap: 6px;
+  }
+
+  .wins span {
+    font-size: 0.56rem;
+  }
+
+  .wins strong {
+    font-size: 1.15rem;
   }
 
   .table {
     min-height: 0;
-    padding: 9px 8px;
-    gap: 5px;
+    padding: 7px 8px;
+    gap: 4px;
   }
 
   .round::before {
@@ -3457,7 +3527,7 @@ body:not(.dark) .wins {
   }
 
   .round span {
-    font-size: 0.9rem;
+    font-size: 0.76rem;
     letter-spacing: 0.08em;
   }
 
@@ -3467,37 +3537,37 @@ body:not(.dark) .wins {
   }
 
   .die {
-    width: min(100%, 310px);
-    min-height: 100px;
+    width: min(100%, 270px);
+    min-height: 74px;
   }
 
   .die[data-dice-count="1"] .primary {
-    width: min(22vw, 130px);
+    width: min(18vw, 106px);
   }
 
   .die[data-dice-count="2"] .primary,
   .die[data-dice-count="2"] .secondary {
-    width: min(15vw, 112px);
+    width: min(12vw, 86px);
   }
 
   .message {
-    min-height: 34px;
-    padding: 6px 10px;
-    font-size: 0.72rem;
+    min-height: 28px;
+    padding: 5px 9px;
+    font-size: 0.64rem;
   }
 
   .dice-switcher {
-    width: min(100%, 410px);
+    width: min(100%, 360px);
   }
 
   .dice-switcher .theme-option {
-    min-height: 30px;
-    font-size: 0.72rem;
+    min-height: 26px;
+    font-size: 0.66rem;
   }
 
   .controls button {
-    min-height: 34px;
-    font-size: 0.72rem;
+    min-height: 28px;
+    font-size: 0.62rem;
   }
 }
 
