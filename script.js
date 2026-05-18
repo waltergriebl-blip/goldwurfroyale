@@ -233,7 +233,7 @@ function isRoyalMomentActive() {
 function scheduleWinnerOverlay(winner) {
   window.clearTimeout(winnerOverlayTimer);
 
-  const delay = isRoyalMomentActive() ? 1500 : 0;
+  const delay = isRoyalMomentActive() ? 900 : 0;
   if (delay === 0) {
     showWinnerOverlay(winner);
     return;
