@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "113";
+const APP_VERSION = globalThis.APP_VERSION || "114";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -21,6 +21,7 @@ let htmlBackgroundMusic;
 let musicIsPlaying = false;
 let musicStartPending = false;
 let rulesLockedByRematch = false;
+let royalMomentTimer;
 
 const state = {
   humanScore: 0,
@@ -49,6 +50,8 @@ const message = document.querySelector("#message");
 const rollButton = document.querySelector("#rollButton");
 const tablePanel = document.querySelector("#tablePanel");
 const victoryBurst = document.querySelector("#victoryBurst");
+const royalMoment = document.querySelector("#royalMoment");
+const royalMomentText = document.querySelector("#royalMomentText");
 const winnerOverlay = document.querySelector("#winnerOverlay");
 const winnerTitle = document.querySelector("#winnerTitle");
 const winnerScoreLine = document.querySelector("#winnerScoreLine");
@@ -244,6 +247,101 @@ function playWinAnimation(winner) {
   }, 1500);
 }
 
+function detectSpecialMoment(details) {
+  const {
+    values = [],
+    currentScore = 0,
+    nextScore = 0,
+    scoreApplied = false,
+    riskInvalid = false,
+    gambleSecured = 0,
+  } = details;
+
+  if (riskInvalid) {
+    return { text: "RISIKO VERLOREN!", tone: "dark" };
+  }
+
+  if (gambleSecured >= 20) {
+    return { text: "GROSSER GAMBLE!", tone: "royal" };
+  }
+
+  if (
+    difficulty === "hard" &&
+    scoreApplied &&
+    currentScore < winningScore &&
+    nextScore === winningScore
+  ) {
+    return { text: "PERFEKTER SIEG!", tone: "royal" };
+  }
+
+  if (values.length === 2 && values[0] === 6 && values[1] === 6) {
+    return { text: "ROYAL WURF!", tone: "royal" };
+  }
+
+  return null;
+}
+
+function showRoyalMoment(text, tone = "royal") {
+  if (!royalMoment || !royalMomentText || !text) return;
+
+  window.clearTimeout(royalMomentTimer);
+  royalMomentText.textContent = text;
+  royalMoment.dataset.tone = tone;
+  royalMoment.hidden = false;
+  royalMoment.classList.remove("show");
+
+  requestAnimationFrame(() => {
+    royalMoment.classList.add("show");
+  });
+
+  royalMomentTimer = window.setTimeout(() => {
+    royalMoment.classList.remove("show");
+    window.setTimeout(() => {
+      if (!royalMoment.classList.contains("show")) {
+        royalMoment.hidden = true;
+      }
+    }, 180);
+  }, 1500);
+}
+
+function playRoyalMomentSound(tone = "royal") {
+  if (!soundEnabled) return;
+
+  if (tone === "dark") {
+    playDarkMomentSound();
+    return;
+  }
+
+  const context = ensureAudioContext();
+  if (!context) return;
+
+  const now = context.currentTime;
+  [523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => {
+    playTone(frequency, now + index * 0.075, 0.13, 0.06, "triangle");
+  });
+  playTone(392, now + 0.08, 0.28, 0.035, "sine");
+}
+
+function playDarkMomentSound() {
+  if (!soundEnabled) return;
+
+  const context = ensureAudioContext();
+  if (!context) return;
+
+  const now = context.currentTime;
+  playTone(150, now, 0.18, 0.06, "sawtooth");
+  playTone(95, now + 0.11, 0.26, 0.05, "sawtooth");
+  playTone(70, now + 0.24, 0.22, 0.035, "triangle");
+}
+
+function triggerSpecialMoment(details) {
+  const moment = detectSpecialMoment(details);
+  if (!moment) return;
+
+  showRoyalMoment(moment.text, moment.tone);
+  playRoyalMomentSound(moment.tone);
+}
+
 async function rollWithSuspense(finalValues) {
   state.isRolling = true;
   rollButton.classList.add("rolling");
@@ -319,6 +417,7 @@ function bankTurn() {
 
   state.turnScore = 0;
   setMessage(`${getCurrentPlayerName()} sichert ${securedPoints} Punkte.`);
+  triggerSpecialMoment({ gambleSecured: securedPoints });
   checkWinner();
 
   if (!state.isGameOver) {
@@ -340,6 +439,8 @@ async function rollForCurrentPlayer() {
   const currentScore = state.currentPlayer === "human" ? state.humanScore : state.computerScore;
   const nextScore = currentScore + value;
   let gambleTurnLost = false;
+  let riskInvalid = false;
+  let scoreApplied = false;
 
   if (gambleMode && values.includes(1)) {
     playInvalidSound();
@@ -359,6 +460,7 @@ async function rollForCurrentPlayer() {
     }
   } else if (riskMode && values.includes(1)) {
     playInvalidSound();
+    riskInvalid = true;
     setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Risiko! Eine 1 macht den Wurf ungültig.`, true);
   } else if (difficulty === "hard" && nextScore > winningScore) {
     playInvalidSound();
@@ -369,12 +471,21 @@ async function rollForCurrentPlayer() {
     );
   } else if (state.currentPlayer === "human") {
     state.humanScore = nextScore;
+    scoreApplied = true;
     setMessage(`${playerName} hat ${formatRoll(values)} gewürfelt. ${getOpponentName()} ist dran.`);
   } else {
     state.computerScore = nextScore;
+    scoreApplied = true;
     setMessage(`${getOpponentName()} würfelt ${formatRoll(values)}. ${playerName} ist dran.`);
   }
 
+  triggerSpecialMoment({
+    values,
+    currentScore,
+    nextScore,
+    scoreApplied,
+    riskInvalid,
+  });
   checkWinner();
 
   if (gambleTurnLost && !state.isGameOver) {

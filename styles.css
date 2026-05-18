@@ -863,6 +863,113 @@ body.dark .table::after {
   animation: victory-title 1450ms cubic-bezier(0.2, 1, 0.26, 1) both;
 }
 
+.royal-moment {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+.royal-moment[hidden] {
+  display: none;
+}
+
+.royal-moment::before {
+  content: "";
+  position: absolute;
+  width: min(72vw, 520px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(255, 247, 205, 0.64), rgba(241, 200, 106, 0.24) 34%, transparent 70%);
+  filter: blur(4px);
+  opacity: 0;
+}
+
+.royal-moment strong {
+  position: relative;
+  z-index: 1;
+  padding: 12px 26px;
+  border: 1px solid rgba(255, 220, 116, 0.76);
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, rgba(255, 238, 178, 0.96), rgba(221, 155, 42, 0.96) 58%, rgba(108, 66, 18, 0.96));
+  color: #150c03;
+  font-size: clamp(1.55rem, 6vw, 3.4rem);
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255, 248, 217, 0.58);
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 250, 220, 0.62),
+    0 18px 42px rgba(0, 0, 0, 0.34),
+    0 0 34px rgba(241, 200, 106, 0.34);
+}
+
+.royal-moment[data-tone="dark"] strong {
+  border-color: rgba(207, 74, 58, 0.72);
+  background:
+    linear-gradient(180deg, rgba(82, 24, 18, 0.96), rgba(36, 12, 10, 0.98));
+  color: #ffe0c7;
+  text-shadow: 0 0 14px rgba(207, 74, 58, 0.48);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 228, 190, 0.14),
+    0 18px 42px rgba(0, 0, 0, 0.38),
+    0 0 34px rgba(207, 74, 58, 0.28);
+}
+
+.royal-sparks {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.royal-sparks i {
+  position: absolute;
+  width: 8px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--metal-top);
+  box-shadow: 0 0 16px rgba(241, 200, 106, 0.72);
+  opacity: 0;
+}
+
+.royal-sparks i:nth-child(1) { --spark-x: -180px; --spark-y: -88px; }
+.royal-sparks i:nth-child(2) { --spark-x: 176px; --spark-y: -78px; }
+.royal-sparks i:nth-child(3) { --spark-x: -156px; --spark-y: 86px; }
+.royal-sparks i:nth-child(4) { --spark-x: 164px; --spark-y: 92px; }
+.royal-sparks i:nth-child(5) { --spark-x: 0; --spark-y: -132px; }
+.royal-sparks i:nth-child(6) { --spark-x: 0; --spark-y: 132px; }
+
+.royal-moment.show {
+  animation: royal-moment 1500ms ease both;
+}
+
+.royal-moment.show::before {
+  animation: royal-moment-glow 1500ms ease both;
+}
+
+.royal-moment.show strong {
+  animation: royal-moment-title 1500ms cubic-bezier(0.2, 1, 0.26, 1) both;
+}
+
+.royal-moment.show .royal-sparks i {
+  animation: royal-spark 1500ms ease-out both;
+}
+
+.royal-moment.show .royal-sparks i:nth-child(2) { animation-delay: 40ms; }
+.royal-moment.show .royal-sparks i:nth-child(3) { animation-delay: 80ms; }
+.royal-moment.show .royal-sparks i:nth-child(4) { animation-delay: 120ms; }
+.royal-moment.show .royal-sparks i:nth-child(5) { animation-delay: 160ms; }
+.royal-moment.show .royal-sparks i:nth-child(6) { animation-delay: 200ms; }
+
 .winner-overlay {
   position: absolute;
   inset: 0;
@@ -1470,6 +1577,82 @@ body:not(.dark) #resetWinsButton {
   100% {
     opacity: 0;
     transform: translateY(-8px) scale(0.98);
+  }
+}
+
+@keyframes royal-moment {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  14%,
+  72% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes royal-moment-glow {
+  0% {
+    opacity: 0;
+    transform: scale(0.42);
+  }
+
+  30% {
+    opacity: 1;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.16);
+  }
+}
+
+@keyframes royal-moment-title {
+  0% {
+    transform: translateY(16px) scale(0.82);
+    filter: brightness(1.35);
+  }
+
+  22% {
+    transform: translateY(0) scale(1.04);
+  }
+
+  60% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1.05);
+  }
+
+  100% {
+    transform: translateY(-10px) scale(0.98);
+    filter: brightness(0.94);
+  }
+}
+
+@keyframes royal-spark {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.2);
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  78% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--spark-x), var(--spark-y)) scale(1.15);
   }
 }
 
