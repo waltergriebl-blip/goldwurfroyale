@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "116";
+const APP_VERSION = globalThis.APP_VERSION || "117";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -233,7 +233,7 @@ function isRoyalMomentActive() {
 function scheduleWinnerOverlay(winner) {
   window.clearTimeout(winnerOverlayTimer);
 
-  const delay = isRoyalMomentActive() ? 700 : 0;
+  const delay = isRoyalMomentActive() ? 1500 : 0;
   if (delay === 0) {
     showWinnerOverlay(winner);
     return;
