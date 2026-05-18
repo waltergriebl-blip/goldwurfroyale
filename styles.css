@@ -3594,3 +3594,113 @@ body:not(.dark) .table {
   opacity: 0.48;
 }
 
+/* Mobile table tuning */
+@media (max-width: 720px) {
+  .table,
+  body.dark .table,
+  body:not(.dark) .table {
+    background-position: center top;
+  }
+
+  body.gamble-mode .table {
+    padding: 16px 10px 14px;
+    gap: 10px;
+  }
+
+  body.gamble-mode .turn-score {
+    min-width: 104px;
+  }
+
+  body.gamble-mode .message {
+    width: 100%;
+    min-height: 46px;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 460px) {
+  body.gamble-mode .table {
+    padding: 14px 8px 12px;
+    gap: 9px;
+  }
+
+  body.gamble-mode .die {
+    min-height: 118px;
+  }
+
+  body.gamble-mode .dice-switcher .theme-option {
+    min-height: 42px;
+  }
+
+  body.gamble-mode .controls {
+    gap: 8px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .game {
+    grid-template-columns: minmax(138px, 0.56fr) minmax(430px, 1.78fr) minmax(138px, 0.56fr);
+  }
+
+  body.gamble-mode .table {
+    grid-template-rows: auto minmax(96px, 1fr) auto auto auto;
+    gap: 6px 12px;
+    padding: 8px 10px 9px;
+    background-position: center center;
+  }
+
+  body.gamble-mode .round,
+  body.gamble-mode .turn-score {
+    align-self: start;
+  }
+
+  body.gamble-mode .turn-score {
+    min-width: 104px;
+    padding: 5px 10px;
+  }
+
+  body.gamble-mode .die {
+    width: min(100%, 292px);
+    min-height: 88px;
+    margin: 2px 0 4px;
+  }
+
+  body.gamble-mode .die[data-dice-count="1"] .primary {
+    width: min(18vw, 112px);
+  }
+
+  body.gamble-mode .die[data-dice-count="2"] .primary,
+  body.gamble-mode .die[data-dice-count="2"] .secondary {
+    width: min(12vw, 92px);
+  }
+
+  body.gamble-mode .dice-switcher {
+    width: min(100%, 440px);
+    margin-top: 0;
+  }
+
+  body.gamble-mode .message {
+    width: min(100%, 520px);
+    min-height: 30px;
+    padding: 6px 12px;
+    font-size: clamp(0.62rem, 1.55vw, 0.78rem);
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  body.gamble-mode .message::before {
+    flex: 0 0 auto;
+  }
+
+  body.gamble-mode .controls {
+    width: min(100%, 520px);
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  body.gamble-mode .controls button {
+    min-height: 32px;
+    font-size: clamp(0.6rem, 1.55vw, 0.76rem);
+  }
+}
+

@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "129";
+const APP_VERSION = globalThis.APP_VERSION || "130";
 
 let winningScore = 50;
 let difficulty = "normal";
