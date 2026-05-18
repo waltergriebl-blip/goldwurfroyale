@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "132";
+const APP_VERSION = globalThis.APP_VERSION || "133";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -341,7 +341,7 @@ function renderShop() {
     title.textContent = skin.name;
 
     const price = document.createElement("span");
-    price.textContent = skin.price === 0 ? "Freigeschaltet" : `${skin.price} Gold`;
+    price.textContent = isOwned ? "Freigeschaltet" : `${skin.price} Gold`;
 
     const action = document.createElement("button");
     action.type = "button";
