@@ -1930,10 +1930,14 @@ body:not(.dark) #resetWinsButton {
 
   .menu-trigger {
     width: 100%;
+    min-height: 38px;
+    font-size: clamp(0.72rem, 3.2vw, 0.86rem);
+    letter-spacing: 0.04em;
   }
 
   .menu-shell {
     position: static;
+    min-width: 0;
   }
 
   .menu-panel {
@@ -1953,6 +1957,8 @@ body:not(.dark) #resetWinsButton {
   .top-actions {
     width: 100%;
     position: relative;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .shop-panel,
@@ -2214,6 +2220,11 @@ body:not(.dark) #resetWinsButton {
 
   .topbar {
     padding: 6px 8px;
+  }
+
+  .top-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .menu-trigger {
