@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "122";
+const APP_VERSION = globalThis.APP_VERSION || "123";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -41,6 +41,7 @@ const state = {
   isGameOver: false,
   hasRolled: false,
   goldAwarded: false,
+  lastGoldReward: 0,
 };
 
 const SHOP_SKINS = [
@@ -48,6 +49,8 @@ const SHOP_SKINS = [
   { id: "obsidian", name: "Obsidian-Würfel", price: 100 },
   { id: "ruby", name: "Rubin-Würfel", price: 250 },
   { id: "diamond", name: "Diamant-Würfel", price: 500 },
+  { id: "royal", name: "Royal-Würfel", price: 1000 },
+  { id: "diamond-deluxe", name: "Diamant Deluxe", price: 2500 },
 ];
 
 const humanScore = document.querySelector("#humanScore");
@@ -68,6 +71,7 @@ const royalMomentText = document.querySelector("#royalMomentText");
 const winnerOverlay = document.querySelector("#winnerOverlay");
 const winnerTitle = document.querySelector("#winnerTitle");
 const winnerScoreLine = document.querySelector("#winnerScoreLine");
+const winnerGoldReward = document.querySelector("#winnerGoldReward");
 const rematchButton = document.querySelector("#rematchButton");
 const overlayNewGameButton = document.querySelector("#overlayNewGameButton");
 const newGameButton = document.querySelector("#newGameButton");
@@ -250,6 +254,7 @@ function calculateHumanWinGold() {
   if (riskMode && !gambleMode) reward += 10;
   if (gambleMode) reward += 15;
   if (diceCount === 2) reward += 5;
+  // Bewusst zusätzlicher Bonus: Im schweren Modus ist jeder Sieg exakt, dieser Moment soll trotzdem extra belohnt werden.
   if (difficulty === "hard" && state.humanScore === winningScore) reward += 10;
   return reward;
 }
@@ -257,8 +262,10 @@ function calculateHumanWinGold() {
 function awardHumanWinGold() {
   if (state.goldAwarded) return;
 
+  const reward = calculateHumanWinGold();
   state.goldAwarded = true;
-  addGold(calculateHumanWinGold(), "win");
+  state.lastGoldReward = reward;
+  addGold(reward, "win");
 }
 
 function loadShopState() {
@@ -316,6 +323,15 @@ function renderShop() {
     const canBuy = gold >= skin.price;
     const item = document.createElement("article");
     item.className = `shop-item skin-preview-${skin.id}`;
+    item.classList.toggle("owned", isOwned);
+    item.classList.toggle("active", isActive);
+
+    const preview = document.createElement("span");
+    preview.className = "skin-preview-die";
+    preview.setAttribute("aria-hidden", "true");
+    for (let index = 0; index < 5; index += 1) {
+      preview.append(document.createElement("i"));
+    }
 
     const title = document.createElement("strong");
     title.textContent = skin.name;
@@ -340,13 +356,13 @@ function renderShop() {
       action.disabled = true;
     }
 
-    item.append(title, price, action);
+    item.append(preview, title, price, action);
     shopItems.append(item);
   });
 }
 
 function applyActiveSkin() {
-  document.body.classList.remove("skin-gold", "skin-obsidian", "skin-ruby", "skin-diamond");
+  document.body.classList.remove("skin-gold", "skin-obsidian", "skin-ruby", "skin-diamond", "skin-royal", "skin-diamond-deluxe");
   document.body.classList.add(`skin-${activeSkin}`);
 }
 
@@ -378,6 +394,11 @@ function showWinnerOverlay(winner) {
 
   winnerTitle.textContent = `${getWinnerName(winner)} gewinnt`;
   winnerScoreLine.textContent = `Endstand ${state.humanScore} zu ${state.computerScore}`;
+  if (winnerGoldReward) {
+    const reward = winner === "human" ? state.lastGoldReward : 0;
+    winnerGoldReward.hidden = reward <= 0;
+    winnerGoldReward.textContent = `+${reward} Gold`;
+  }
   winnerOverlay.hidden = false;
   winnerOverlay.classList.remove("show");
 
@@ -849,6 +870,7 @@ function newGame(keepRulesLocked = false) {
   state.isGameOver = false;
   state.hasRolled = false;
   state.goldAwarded = false;
+  state.lastGoldReward = 0;
   dieFace.dataset.value = "1";
   dieFaceTwo.dataset.value = "1";
   rollButton.classList.remove("rolling", "shake");
