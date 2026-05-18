@@ -8,14 +8,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Goldwurf Royale" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="manifest" href="manifest.webmanifest?v=107" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=107" />
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=107" />
-    <link rel="stylesheet" href="styles.css?v=107" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="dark">
     <main class="game">
-      <section class="topbar" aria-label="Spielmenue">
+      <section class="topbar" aria-label="Spielmenü">
         <div class="top-actions">
           <div class="menu-shell" id="settingsShell">
             <button class="menu-trigger" id="menuTrigger" type="button" aria-haspopup="true" aria-expanded="false">
@@ -26,7 +26,7 @@
               <div class="menu-options">
                 <div class="setting">
                   <span>Ansicht</span>
-                  <div class="theme-switcher" role="group" aria-label="Hell oder dunkel waehlen">
+                  <div class="theme-switcher" role="group" aria-label="Hell oder dunkel wählen">
                     <button class="theme-option active" id="darkModeButton" type="button" aria-pressed="true">
                       Dunkel
                     </button>
@@ -62,7 +62,7 @@
 
                 <div class="setting">
                   <span>Spieler</span>
-                  <div class="mini-switcher" role="group" aria-label="Spielmodus waehlen">
+                  <div class="mini-switcher" role="group" aria-label="Spielmodus wählen">
                     <button class="theme-option active" id="singleModeButton" type="button" aria-pressed="true">
                       Single
                     </button>
@@ -106,7 +106,7 @@
 
                 <div class="setting">
                   <span>Schwierigkeit</span>
-                  <div class="theme-switcher" role="group" aria-label="Schwierigkeit waehlen">
+                  <div class="theme-switcher" role="group" aria-label="Schwierigkeit wählen">
                     <button class="theme-option active" id="normalModeButton" type="button" aria-pressed="true">
                       Normal
                     </button>
@@ -195,6 +195,17 @@
         <div class="victory-burst" id="victoryBurst" aria-hidden="true">
           <span>Gewonnen</span>
         </div>
+        <div class="winner-overlay" id="winnerOverlay" hidden>
+          <div class="winner-dialog" role="dialog" aria-modal="true" aria-labelledby="winnerTitle">
+            <span class="winner-kicker">Runde beendet</span>
+            <h2 id="winnerTitle">Gewonnen</h2>
+            <p id="winnerScoreLine">Endstand 0 zu 0</p>
+            <div class="winner-actions">
+              <button id="rematchButton" type="button">Revanche</button>
+              <button id="overlayResetWinsButton" type="button">Siege zurücksetzen</button>
+            </div>
+          </div>
+        </div>
 
         <div class="round">
           <span>Letzter Wurf</span>
@@ -242,7 +253,7 @@
           </button>
         </div>
 
-        <p class="message" id="message">Wuerfle einmal. Dann ist der Computer dran.</p>
+        <p class="message" id="message">Würfle einmal. Dann ist der Computer dran.</p>
 
         <div class="controls">
           <button id="bankButton" type="button" hidden>Sichern</button>
@@ -261,7 +272,8 @@
       </footer>
     </main>
 
-    <script src="script.js?v=107"></script>
+    <script src="version.js"></script>
+    <script src="script.js"></script>
     <!-- Cloudflare Web Analytics -->
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"1603d1edbcff4645b15d8dd7f364bf60"}'></script>
     <!-- End Cloudflare Web Analytics -->

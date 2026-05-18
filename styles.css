@@ -849,6 +849,101 @@ body.dark .table::after {
   animation: victory-title 1450ms cubic-bezier(0.2, 1, 0.26, 1) both;
 }
 
+.winner-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.42);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.winner-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.winner-overlay[hidden] {
+  display: none;
+}
+
+.winner-dialog {
+  width: min(100%, 420px);
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--gold-line);
+  border-radius: 10px;
+  background:
+    linear-gradient(145deg, rgba(255, 231, 153, 0.14), transparent 45%),
+    repeating-linear-gradient(135deg, transparent 0 12px, rgba(255, 226, 146, 0.04) 13px 14px),
+    var(--panel);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 180, 0.06),
+    0 22px 70px rgba(0, 0, 0, 0.38),
+    0 0 32px rgba(241, 200, 106, 0.18);
+  text-align: center;
+  transform: translateY(10px) scale(0.96);
+  transition: transform 180ms ease;
+}
+
+.winner-overlay.show .winner-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.winner-kicker {
+  color: var(--gold);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.winner-dialog h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.7rem, 6vw, 2.8rem);
+  line-height: 1.05;
+  text-shadow: 0 0 18px rgba(241, 200, 106, 0.22);
+}
+
+.winner-dialog p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.winner-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.winner-actions button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, var(--metal-top), var(--metal-mid) 58%, var(--metal-low));
+  color: var(--button-ink);
+  cursor: pointer;
+  font-weight: 900;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 210, 0.35),
+    0 10px 22px rgba(34, 19, 4, 0.18);
+}
+
+.winner-actions button:last-child {
+  background:
+    linear-gradient(180deg, rgba(255, 252, 230, 0.18), rgba(0, 0, 0, 0.08)),
+    #756b56;
+  color: #fff4d7;
+}
+
 .round {
   display: grid;
   gap: 4px;

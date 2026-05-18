@@ -1,7 +1,10 @@
-const CACHE_NAME = "wuerfelduell-v107";
+importScripts("./version.js");
+
+const CACHE_NAME = `goldwurf-royale-v${self.APP_VERSION || "108"}`;
 const APP_FILES = [
   "./",
   "./index.html",
+  "./version.js",
   "./styles.css",
   "./script.js",
   "./manifest.webmanifest",
@@ -31,11 +34,18 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
         const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        if (response.ok) {
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
         return response;
       })
       .catch(() => caches.match(event.request))

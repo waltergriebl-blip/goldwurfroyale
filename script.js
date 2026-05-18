@@ -1,3 +1,5 @@
+const APP_VERSION = globalThis.APP_VERSION || "108";
+
 let winningScore = 50;
 let difficulty = "normal";
 let playerName = "Du";
@@ -46,6 +48,11 @@ const message = document.querySelector("#message");
 const rollButton = document.querySelector("#rollButton");
 const tablePanel = document.querySelector("#tablePanel");
 const victoryBurst = document.querySelector("#victoryBurst");
+const winnerOverlay = document.querySelector("#winnerOverlay");
+const winnerTitle = document.querySelector("#winnerTitle");
+const winnerScoreLine = document.querySelector("#winnerScoreLine");
+const rematchButton = document.querySelector("#rematchButton");
+const overlayResetWinsButton = document.querySelector("#overlayResetWinsButton");
 const newGameButton = document.querySelector("#newGameButton");
 const resetWinsButton = document.querySelector("#resetWinsButton");
 const bankButton = document.querySelector("#bankButton");
@@ -156,6 +163,34 @@ function setMessage(text, isBadRoll = false) {
   message.classList.toggle("bad-roll", isBadRoll);
 }
 
+function getWinnerName(winner) {
+  return winner === "human" ? playerName : getOpponentName();
+}
+
+function showWinnerOverlay(winner) {
+  if (!winnerOverlay || !winnerTitle || !winnerScoreLine) return;
+
+  winnerTitle.textContent = `${getWinnerName(winner)} gewinnt`;
+  winnerScoreLine.textContent = `Endstand ${state.humanScore} zu ${state.computerScore}`;
+  winnerOverlay.hidden = false;
+  winnerOverlay.classList.remove("show");
+
+  requestAnimationFrame(() => {
+    winnerOverlay.classList.add("show");
+  });
+}
+
+function hideWinnerOverlay() {
+  if (!winnerOverlay) return;
+
+  winnerOverlay.classList.remove("show");
+  window.setTimeout(() => {
+    if (!winnerOverlay.classList.contains("show")) {
+      winnerOverlay.hidden = true;
+    }
+  }, 160);
+}
+
 function playWinAnimation(winner) {
   const winnerPanel = winner === "human" ? humanPanel : computerPanel;
 
@@ -169,6 +204,7 @@ function playWinAnimation(winner) {
     tablePanel?.classList.add("win-flash");
     message.classList.add("win-message");
     victoryBurst?.classList.add("show");
+    showWinnerOverlay(winner);
   });
 
   window.setTimeout(() => {
@@ -299,8 +335,8 @@ async function rollForCurrentPlayer() {
     playInvalidSound();
     setMessage(
       state.currentPlayer === "human"
-        ? `${playerName} hat ${formatRoll(values)} gewürfelt. Zu viel fuer genau ${winningScore}, der Wurf zaehlt nicht.`
-        : `${getOpponentName()} würfelt ${formatRoll(values)}. Zu viel fuer genau ${winningScore}, der Wurf zaehlt nicht.`,
+        ? `${playerName} hat ${formatRoll(values)} gewürfelt. Zu viel für genau ${winningScore}, der Wurf zählt nicht.`
+        : `${getOpponentName()} würfelt ${formatRoll(values)}. Zu viel für genau ${winningScore}, der Wurf zählt nicht.`,
     );
   } else if (state.currentPlayer === "human") {
     state.humanScore = nextScore;
@@ -352,8 +388,7 @@ async function computerTurn() {
 async function runComputerGambleDecision() {
   if (!gambleMode || state.isGameOver || state.currentPlayer !== "computer") return;
 
-  const canWinByBanking = hasWinningScore(state.computerScore + state.turnScore);
-  if (state.turnScore > 0 && (canWinByBanking || state.turnScore >= 10)) {
+  if (shouldComputerBankGamble()) {
     await wait(550);
     bankTurn();
     return;
@@ -361,6 +396,52 @@ async function runComputerGambleDecision() {
 
   await wait(850);
   await rollForCurrentPlayer();
+}
+
+function shouldComputerBankGamble() {
+  const turnPoints = state.turnScore;
+  if (turnPoints <= 0) return false;
+
+  const bankScore = state.computerScore + turnPoints;
+  if (hasWinningScore(bankScore)) return true;
+  if (difficulty === "hard" && bankScore > winningScore) return false;
+
+  const pointsLeftBefore = winningScore - state.computerScore;
+  const pointsLeftAfter = winningScore - bankScore;
+  const opponentLead = state.humanScore - state.computerScore;
+  const randomShift = Math.floor(Math.random() * 3) - 1;
+
+  if (difficulty === "hard") {
+    if (pointsLeftAfter === 1) return false;
+
+    let threshold = 10;
+    if (pointsLeftAfter > 1 && pointsLeftAfter <= 6) {
+      threshold = 4;
+    } else if (pointsLeftAfter <= 12) {
+      threshold = 6;
+    } else if (opponentLead >= 10) {
+      threshold = 8;
+    } else if (state.computerScore - state.humanScore >= 10) {
+      threshold = 9;
+    }
+
+    threshold += randomShift;
+    return turnPoints >= Math.max(4, threshold);
+  }
+
+  let threshold = 10;
+  if (pointsLeftBefore <= 8) {
+    threshold = Math.max(4, pointsLeftBefore - 2);
+  } else if (pointsLeftBefore <= 14) {
+    threshold = 7;
+  } else if (opponentLead >= 10) {
+    threshold = 8;
+  } else if (state.computerScore - state.humanScore >= 12) {
+    threshold = 9;
+  }
+
+  threshold += randomShift;
+  return turnPoints >= Math.max(4, threshold);
 }
 
 function wait(ms) {
@@ -386,6 +467,7 @@ function scheduleComputerStart(delay = 2200) {
 
 function newGame() {
   clearComputerStartTimer();
+  hideWinnerOverlay();
   state.humanScore = 0;
   state.computerScore = 0;
   state.roundScore = 0;
@@ -603,8 +685,8 @@ function getStartMessage() {
   }
 
   return difficulty === "hard"
-    ? `Wuerfle einmal. Wer genau ${winningScore} Punkte erreicht, gewinnt.`
-    : `Wuerfle einmal. Wer zuerst ${winningScore} Punkte erreicht, gewinnt.`;
+    ? `Würfle einmal. Wer genau ${winningScore} Punkte erreicht, gewinnt.`
+    : `Würfle einmal. Wer zuerst ${winningScore} Punkte erreicht, gewinnt.`;
 }
 
 function canChooseStartPlayer() {
@@ -706,7 +788,7 @@ function shouldUseWebAudioMusic() {
 
 function getHtmlBackgroundMusic() {
   if (!htmlBackgroundMusic) {
-    htmlBackgroundMusic = new Audio("background-music.wav?v=107");
+    htmlBackgroundMusic = new Audio(`background-music.wav?v=${APP_VERSION}`);
     htmlBackgroundMusic.loop = true;
     htmlBackgroundMusic.preload = "auto";
   }
@@ -731,7 +813,7 @@ function loadBackgroundMusic() {
   }
 
   if (!backgroundMusicLoadingPromise) {
-    backgroundMusicLoadingPromise = fetch("background-music.wav?v=107")
+    backgroundMusicLoadingPromise = fetch(`background-music.wav?v=${APP_VERSION}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Musik konnte nicht geladen werden.");
@@ -741,7 +823,7 @@ function loadBackgroundMusic() {
       .then((data) => {
         const context = ensureAudioContext();
         if (!context) {
-          throw new Error("Audio wird nicht unterstuetzt.");
+          throw new Error("Audio wird nicht unterstützt.");
         }
         return context.decodeAudioData(data);
       })
@@ -968,7 +1050,7 @@ const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
 
 const savedMusic = localStorage.getItem("wuerfelduell-music");
-setMusic(savedMusic === null ? true : savedMusic === "on");
+setMusic(savedMusic === "on");
 if (musicEnabled) {
   startBackgroundMusic(false);
 }
@@ -1041,6 +1123,15 @@ resetWinsButton.addEventListener("click", resetWins);
 bankButton?.addEventListener("click", () => {
   playClickSound();
   bankTurn();
+});
+rematchButton?.addEventListener("click", () => {
+  playClickSound();
+  newGame();
+});
+overlayResetWinsButton?.addEventListener("click", () => {
+  playClickSound();
+  resetWins();
+  hideWinnerOverlay();
 });
 applyScoreButton.addEventListener("click", () => {
   playClickSound();
@@ -1166,6 +1257,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js?v=107").then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register(`sw.js?v=${APP_VERSION}`).then((registration) => registration.update()).catch(() => {});
   });
 }
