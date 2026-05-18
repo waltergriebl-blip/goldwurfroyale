@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "117";
+const APP_VERSION = globalThis.APP_VERSION || "121";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -11,6 +11,9 @@ let soundEnabled = true;
 let musicEnabled = false;
 let riskMode = false;
 let gambleMode = false;
+let gold = 0;
+let ownedSkins = new Set(["gold"]);
+let activeSkin = "gold";
 let audioContext;
 let computerStartTimer;
 let backgroundMusicBuffer;
@@ -23,6 +26,7 @@ let musicStartPending = false;
 let rulesLockedByRematch = false;
 let royalMomentTimer;
 let winnerOverlayTimer;
+let goldGainTimer;
 
 const state = {
   humanScore: 0,
@@ -36,7 +40,15 @@ const state = {
   isRolling: false,
   isGameOver: false,
   hasRolled: false,
+  goldAwarded: false,
 };
+
+const SHOP_SKINS = [
+  { id: "gold", name: "Standard Goldwürfel", price: 0 },
+  { id: "obsidian", name: "Obsidian-Würfel", price: 100 },
+  { id: "ruby", name: "Rubin-Würfel", price: 250 },
+  { id: "diamond", name: "Diamant-Würfel", price: 500 },
+];
 
 const humanScore = document.querySelector("#humanScore");
 const computerScore = document.querySelector("#computerScore");
@@ -95,6 +107,11 @@ const humanStarterButton = document.querySelector("#humanStarterButton");
 const computerStarterButton = document.querySelector("#computerStarterButton");
 const menuShell = document.querySelector("#settingsShell");
 const menuTrigger = document.querySelector("#menuTrigger");
+const shopShell = document.querySelector("#shopShell");
+const shopTrigger = document.querySelector("#shopTrigger");
+const shopItems = document.querySelector("#shopItems");
+const goldBalance = document.querySelector("#goldBalance");
+const goldGainToast = document.querySelector("#goldGainToast");
 const infoShell = document.querySelector("#infoShell");
 const infoTrigger = document.querySelector("#infoTrigger");
 const lockedRuleControls = [
@@ -176,6 +193,161 @@ function render() {
     (gameMode === "single" && state.currentPlayer !== "human") ||
     state.isComputerThinking ||
     state.isRolling;
+  renderGold();
+  renderShop();
+}
+
+function loadGold() {
+  const savedGold = Number(localStorage.getItem("goldwurf-royale-gold"));
+  gold = Number.isFinite(savedGold) && savedGold >= 0 ? Math.floor(savedGold) : 0;
+  renderGold();
+}
+
+function saveGold() {
+  localStorage.setItem("goldwurf-royale-gold", String(gold));
+}
+
+function addGold(amount, reason = "") {
+  const cleanAmount = Math.max(0, Math.floor(Number(amount) || 0));
+  if (cleanAmount <= 0) return;
+
+  gold += cleanAmount;
+  saveGold();
+  renderGold();
+  renderShop();
+  showGoldGain(cleanAmount, reason);
+}
+
+function renderGold() {
+  if (goldBalance) goldBalance.textContent = gold;
+}
+
+function showGoldGain(amount) {
+  if (!goldGainToast) return;
+
+  window.clearTimeout(goldGainTimer);
+  goldGainToast.textContent = `+${amount} Gold`;
+  goldGainToast.hidden = false;
+  goldGainToast.classList.remove("show");
+
+  requestAnimationFrame(() => {
+    goldGainToast.classList.add("show");
+  });
+
+  goldGainTimer = window.setTimeout(() => {
+    goldGainToast.classList.remove("show");
+    window.setTimeout(() => {
+      if (!goldGainToast.classList.contains("show")) {
+        goldGainToast.hidden = true;
+      }
+    }, 180);
+  }, 1450);
+}
+
+function calculateHumanWinGold() {
+  let reward = 10;
+  if (difficulty === "hard") reward += 10;
+  if (riskMode && !gambleMode) reward += 10;
+  if (gambleMode) reward += 15;
+  if (diceCount === 2) reward += 5;
+  if (difficulty === "hard" && state.humanScore === winningScore) reward += 10;
+  return reward;
+}
+
+function awardHumanWinGold() {
+  if (state.goldAwarded) return;
+
+  state.goldAwarded = true;
+  addGold(calculateHumanWinGold(), "win");
+}
+
+function loadShopState() {
+  try {
+    const savedOwned = JSON.parse(localStorage.getItem("goldwurf-royale-owned-skins") || "[]");
+    if (Array.isArray(savedOwned)) {
+      ownedSkins = new Set(["gold", ...savedOwned.filter((skinId) => SHOP_SKINS.some((skin) => skin.id === skinId))]);
+    }
+  } catch {
+    ownedSkins = new Set(["gold"]);
+  }
+
+  const savedActiveSkin = localStorage.getItem("goldwurf-royale-active-skin");
+  activeSkin = ownedSkins.has(savedActiveSkin) ? savedActiveSkin : "gold";
+  saveShopState();
+  applyActiveSkin();
+  renderShop();
+}
+
+function saveShopState() {
+  localStorage.setItem("goldwurf-royale-owned-skins", JSON.stringify(Array.from(ownedSkins)));
+  localStorage.setItem("goldwurf-royale-active-skin", activeSkin);
+}
+
+function buySkin(skinId) {
+  const skin = SHOP_SKINS.find((item) => item.id === skinId);
+  if (!skin || ownedSkins.has(skin.id) || gold < skin.price) return;
+
+  gold -= skin.price;
+  ownedSkins.add(skin.id);
+  activeSkin = skin.id;
+  saveGold();
+  saveShopState();
+  applyActiveSkin();
+  renderGold();
+  renderShop();
+}
+
+function selectSkin(skinId) {
+  if (!ownedSkins.has(skinId)) return;
+
+  activeSkin = skinId;
+  saveShopState();
+  applyActiveSkin();
+  renderShop();
+}
+
+function renderShop() {
+  if (!shopItems) return;
+
+  shopItems.innerHTML = "";
+  SHOP_SKINS.forEach((skin) => {
+    const isOwned = ownedSkins.has(skin.id);
+    const isActive = activeSkin === skin.id;
+    const canBuy = gold >= skin.price;
+    const item = document.createElement("article");
+    item.className = `shop-item skin-preview-${skin.id}`;
+
+    const title = document.createElement("strong");
+    title.textContent = skin.name;
+
+    const price = document.createElement("span");
+    price.textContent = skin.price === 0 ? "Freigeschaltet" : `${skin.price} Gold`;
+
+    const action = document.createElement("button");
+    action.type = "button";
+    action.dataset.skinId = skin.id;
+    if (isActive) {
+      action.textContent = "Ausgewählt";
+      action.disabled = true;
+    } else if (isOwned) {
+      action.textContent = "Auswählen";
+      action.dataset.action = "select";
+    } else if (canBuy) {
+      action.textContent = "Kaufen";
+      action.dataset.action = "buy";
+    } else {
+      action.textContent = `Noch ${skin.price - gold} Gold`;
+      action.disabled = true;
+    }
+
+    item.append(title, price, action);
+    shopItems.append(item);
+  });
+}
+
+function applyActiveSkin() {
+  document.body.classList.remove("skin-gold", "skin-obsidian", "skin-ruby", "skin-diamond");
+  document.body.classList.add(`skin-${activeSkin}`);
 }
 
 function areRuleControlsLocked() {
@@ -434,6 +606,7 @@ function checkWinner() {
     state.isGameOver = true;
     state.humanWins += 1;
     hasNewWinner = true;
+    awardHumanWinGold();
     playWinSound();
     setMessage("Gewonnen! Sehr sauber gesichert.");
     playWinAnimation("human");
@@ -675,6 +848,7 @@ function newGame(keepRulesLocked = false) {
   state.isRolling = false;
   state.isGameOver = false;
   state.hasRolled = false;
+  state.goldAwarded = false;
   dieFace.dataset.value = "1";
   dieFaceTwo.dataset.value = "1";
   rollButton.classList.remove("rolling", "shake");
@@ -816,6 +990,7 @@ function checkCurrentPlayerRiskDeadEnd() {
 
   if (humanFinalScore > computerFinalScore) {
     state.humanWins += 1;
+    awardHumanWinGold();
     setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. ${playerName} gewinnt mit ${humanFinalScore} zu ${computerFinalScore}.`);
     playWinAnimation("human");
   } else if (computerFinalScore > humanFinalScore) {
@@ -840,6 +1015,7 @@ function finishDeadEndByScore(reason) {
 
   if (state.humanScore > state.computerScore) {
     state.humanWins += 1;
+    awardHumanWinGold();
     playWinSound();
     setMessage(`${reason} ${playerName} gewinnt mit ${state.humanScore} zu ${state.computerScore}.`);
     playWinAnimation("human");
@@ -1242,6 +1418,7 @@ function setMenuOpen(shell, trigger, isOpen) {
 
 function closePanels() {
   setMenuOpen(menuShell, menuTrigger, false);
+  setMenuOpen(shopShell, shopTrigger, false);
   setMenuOpen(infoShell, infoTrigger, false);
 }
 
@@ -1285,6 +1462,9 @@ riskMode = savedRiskMode === "on";
 
 const savedGambleMode = localStorage.getItem("wuerfelduell-gamble-mode");
 gambleMode = savedGambleMode === "on";
+
+loadGold();
+loadShopState();
 
 const savedHumanWins = Number(localStorage.getItem("wuerfelduell-human-wins"));
 const savedComputerWins = Number(localStorage.getItem("wuerfelduell-computer-wins"));
@@ -1441,6 +1621,25 @@ menuTrigger?.addEventListener("click", (event) => {
 menuShell?.addEventListener("click", (event) => {
   event.stopPropagation();
 });
+shopTrigger?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  playClickSound();
+  togglePanel(shopShell, shopTrigger);
+});
+shopShell?.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+shopItems?.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+
+  playClickSound();
+  if (button.dataset.action === "buy") {
+    buySkin(button.dataset.skinId);
+  } else if (button.dataset.action === "select") {
+    selectSkin(button.dataset.skinId);
+  }
+});
 infoTrigger?.addEventListener("click", (event) => {
   event.stopPropagation();
   playClickSound();
@@ -1450,7 +1649,7 @@ infoShell?.addEventListener("click", (event) => {
   event.stopPropagation();
 });
 document.addEventListener("click", (event) => {
-  if (!menuShell?.contains(event.target) && !infoShell?.contains(event.target)) {
+  if (!menuShell?.contains(event.target) && !shopShell?.contains(event.target) && !infoShell?.contains(event.target)) {
     closePanels();
   }
 });
