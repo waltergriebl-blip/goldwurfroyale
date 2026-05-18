@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "131";
+const APP_VERSION = globalThis.APP_VERSION || "132";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -230,8 +230,10 @@ function showGoldGain(amount) {
   if (!goldGainToast) return;
 
   window.clearTimeout(goldGainTimer);
-  goldGainToast.textContent = `+${amount} Gold`;
+  const isSpend = amount < 0;
+  goldGainToast.textContent = `${isSpend ? "" : "+"}${amount} Gold`;
   goldGainToast.hidden = false;
+  goldGainToast.classList.toggle("spend", isSpend);
   goldGainToast.classList.remove("show");
 
   requestAnimationFrame(() => {
@@ -302,6 +304,8 @@ function buySkin(skinId) {
   applyActiveSkin();
   renderGold();
   renderShop();
+  showGoldSpend(skin.price, skin.id);
+  playShopPurchaseSound();
 }
 
 function selectSkin(skinId) {
@@ -359,6 +363,19 @@ function renderShop() {
     item.append(preview, title, price, action);
     shopItems.append(item);
   });
+}
+
+function showGoldSpend(amount, skinId) {
+  showGoldGain(-amount);
+
+  if (!shopItems) return;
+  const item = shopItems.querySelector(`[data-skin-id="${skinId}"]`)?.closest(".shop-item");
+  if (!item) return;
+
+  item.classList.remove("purchase-pop");
+  void item.offsetWidth;
+  item.classList.add("purchase-pop");
+  window.setTimeout(() => item.classList.remove("purchase-pop"), 920);
 }
 
 function applyActiveSkin() {
@@ -1429,6 +1446,19 @@ function playClickSound() {
   const now = context.currentTime;
   playTone(420, now, 0.045, 0.035, "sine");
   playTone(620, now + 0.035, 0.055, 0.03, "sine");
+}
+
+function playShopPurchaseSound() {
+  if (!soundEnabled) return;
+
+  const context = ensureAudioContext();
+  if (!context) return;
+
+  const now = context.currentTime;
+  [740, 980, 1240, 1560].forEach((frequency, index) => {
+    playTone(frequency, now + index * 0.045, 0.075, 0.038 - index * 0.004, "triangle");
+  });
+  playTone(260, now + 0.015, 0.12, 0.024, "sine");
 }
 
 function setMenuOpen(shell, trigger, isOpen) {
