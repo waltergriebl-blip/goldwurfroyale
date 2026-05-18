@@ -3,13 +3,13 @@
 **Version 1.20**
 
 Ein kleines, mobiles Würfelspiel für Web und Smartphone.
-Spiele alleine gegen den Computer oder lokal zu zweit am selben Gerät.
+Spiele alleine gegen die KI oder lokal zu zweit am selben Gerät.
 
 ![Screenshot von Goldwurf Royale](screenshot.png)
 
 ## Features
 
-- Singleplayer gegen Computer
+- Singleplayer gegen KI
 - Multiplayer am selben Gerät
 - Startspieler auswählbar
 - 1 oder 2 Würfel

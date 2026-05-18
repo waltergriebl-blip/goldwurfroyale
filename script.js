@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "123";
+const APP_VERSION = globalThis.APP_VERSION || "125";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -756,7 +756,7 @@ async function computerTurn() {
   if (state.isComputerThinking || state.isGameOver || state.currentPlayer !== "computer") return;
 
   state.isComputerThinking = true;
-  setMessage("Computer denkt kurz nach...");
+  setMessage("KI denkt kurz nach...");
   render();
 
   if (checkCurrentPlayerRiskDeadEnd()) {
@@ -900,7 +900,7 @@ function getCurrentPlayerName() {
 }
 
 function getOpponentName() {
-  return gameMode === "single" ? "Computer" : opponentName;
+  return gameMode === "single" ? "KI" : opponentName;
 }
 
 function getCurrentScore() {

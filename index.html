@@ -161,14 +161,14 @@
                     <li><strong>Ansicht:</strong> Hell oder Dunkel.</li>
                     <li><strong>Sound:</strong> Effekte für Würfeln, Gewinnen und ungültige Würfe.</li>
                     <li><strong>Musik:</strong> Optionale Hintergrundmusik.</li>
-                    <li><strong>Spieler:</strong> Single gegen Computer oder Multiplayer am selben Gerät.</li>
+                    <li><strong>Spieler:</strong> Single gegen KI oder Multiplayer am selben Gerät.</li>
                     <li><strong>Name ändern:</strong> Tippe auf den Spielernamen und bestätige mit OK.</li>
                     <li><strong>Zielpunkte:</strong> Legt fest, bis wie viele Punkte gespielt wird.</li>
                     <li><strong>Schwer:</strong> Die Zielpunkte müssen genau getroffen werden.</li>
                     <li><strong>Risiko:</strong> Wenn eine 1 fällt, zählt der aktuelle Wurf nicht. Im schweren Modus endet das Spiel, wenn kein gültiger Siegwurf mehr möglich ist. Dann gewinnt die höhere Punktzahl.</li>
                     <li><strong>Gamble:</strong> Würfle mehrfach und sammle Zugpunkte. Mit Sichern werden sie übernommen. Bei einer 1 verfallen die Zugpunkte und der Zug endet. Im schweren Modus muss die Zielpunktzahl genau getroffen werden. Ist kein gültiger Siegwurf mehr möglich, bekommt der Gegner noch seine Chance.</li>
                     <li><strong>Würfel:</strong> Wähle 1 oder 2 Würfel.</li>
-                    <li><strong>Startspieler:</strong> Vor dem ersten Wurf auswählbar. Im Singleplayer kann auch der Computer beginnen.</li>
+                    <li><strong>Startspieler:</strong> Vor dem ersten Wurf auswählbar. Im Singleplayer kann auch die KI beginnen.</li>
                     <li><strong>Siege:</strong> Zählen gewonnene Runden bis zum Zurücksetzen.</li>
                     <li><strong>Gold und Shop:</strong> Gold erhältst du bei eigenen Siegen. Höhere Risiken und schwere Modi bringen mehr Gold. Im Shop kannst du kosmetische Würfel-Skins freischalten.</li>
                     <li><strong>Home-Bildschirm:</strong> Für ein optimales Spielerlebnis speichern. iOS: Teilen und „Zum Home-Bildschirm“. Android: Browser-Menü und „Zum Startbildschirm“.</li>
@@ -200,7 +200,7 @@
 
         <article class="player" id="computerPanel">
           <div class="opponent-top">
-            <button class="label name-button" id="opponentNameLabel" type="button">Computer</button>
+            <button class="label name-button" id="opponentNameLabel" type="button">KI</button>
             <div class="inline-name-editor" id="opponentNameEditor" hidden>
               <input id="opponentNameInput" type="text" maxlength="18" value="Spieler 2" aria-label="Name Spieler 2" />
               <button id="applyOpponentNameButton" type="button">OK</button>
@@ -290,7 +290,7 @@
           </button>
         </div>
 
-        <p class="message" id="message">Würfle einmal. Dann ist der Computer dran.</p>
+        <p class="message" id="message">Würfle einmal. Dann ist die KI dran.</p>
 
         <div class="controls">
           <button id="bankButton" type="button" hidden>Sichern</button>
