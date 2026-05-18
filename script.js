@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "115";
+const APP_VERSION = globalThis.APP_VERSION || "116";
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -22,6 +22,7 @@ let musicIsPlaying = false;
 let musicStartPending = false;
 let rulesLockedByRematch = false;
 let royalMomentTimer;
+let winnerOverlayTimer;
 
 const state = {
   humanScore: 0,
@@ -201,6 +202,7 @@ function getWinnerName(winner) {
 
 function showWinnerOverlay(winner) {
   if (!winnerOverlay || !winnerTitle || !winnerScoreLine) return;
+  window.clearTimeout(winnerOverlayTimer);
 
   winnerTitle.textContent = `${getWinnerName(winner)} gewinnt`;
   winnerScoreLine.textContent = `Endstand ${state.humanScore} zu ${state.computerScore}`;
@@ -215,12 +217,33 @@ function showWinnerOverlay(winner) {
 function hideWinnerOverlay() {
   if (!winnerOverlay) return;
 
+  window.clearTimeout(winnerOverlayTimer);
   winnerOverlay.classList.remove("show");
   window.setTimeout(() => {
     if (!winnerOverlay.classList.contains("show")) {
       winnerOverlay.hidden = true;
     }
   }, 160);
+}
+
+function isRoyalMomentActive() {
+  return Boolean(royalMoment && !royalMoment.hidden && royalMoment.classList.contains("show"));
+}
+
+function scheduleWinnerOverlay(winner) {
+  window.clearTimeout(winnerOverlayTimer);
+
+  const delay = isRoyalMomentActive() ? 700 : 0;
+  if (delay === 0) {
+    showWinnerOverlay(winner);
+    return;
+  }
+
+  winnerOverlayTimer = window.setTimeout(() => {
+    if (state.isGameOver) {
+      showWinnerOverlay(winner);
+    }
+  }, delay);
 }
 
 function playWinAnimation(winner) {
@@ -236,7 +259,7 @@ function playWinAnimation(winner) {
     tablePanel?.classList.add("win-flash");
     message.classList.add("win-message");
     victoryBurst?.classList.add("show");
-    showWinnerOverlay(winner);
+    scheduleWinnerOverlay(winner);
   });
 
   window.setTimeout(() => {
