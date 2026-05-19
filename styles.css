@@ -657,7 +657,9 @@ button {
 }
 
 body.gamble-mode .risk-setting {
-  display: none;
+  opacity: 0.42;
+  filter: grayscale(0.4);
+  pointer-events: none;
 }
 
 .topbar span,
@@ -1695,6 +1697,29 @@ body.dark .message {
 
 body.gamble-mode .controls {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body:not(.gamble-mode) .turn-score,
+body:not(.gamble-mode) #bankButton {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body:not(.gamble-mode) .controls {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body:not(.gamble-mode) #newGameButton {
+  grid-column: 1;
+}
+
+body:not(.gamble-mode) #bankButton {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+body:not(.gamble-mode) #resetWinsButton {
+  grid-column: 3;
 }
 
 body.gamble-mode #newGameButton {

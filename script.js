@@ -534,7 +534,7 @@ function render() {
   computerWins.textContent = state.computerWins;
   roundScore.textContent = state.roundScore;
   turnScore.textContent = state.turnScore;
-  turnScorePanel.hidden = !gambleMode;
+  turnScorePanel.hidden = false;
   humanNameLabel.textContent = playerName;
   opponentNameLabel.textContent = getOpponentName();
   document.body.classList.toggle("gamble-mode", gambleMode);
@@ -576,7 +576,7 @@ function render() {
   gambleOnButton?.setAttribute("aria-pressed", String(gambleMode));
   gambleOffButton?.setAttribute("aria-pressed", String(!gambleMode));
   updateRuleControlsLock();
-  bankButton.hidden = !gambleMode;
+  bankButton.hidden = false;
   bankButton.disabled =
     !gambleMode ||
     state.turnScore <= 0 ||
@@ -806,8 +806,10 @@ function areRuleControlsLocked() {
 function updateRuleControlsLock() {
   const isLocked = areRuleControlsLocked();
   lockedRuleControls.forEach((control) => {
-    control.disabled = isLocked;
-    control.closest(".setting")?.classList.toggle("locked", isLocked);
+    const isRiskControl = control === riskOnButton || control === riskOffButton;
+    const shouldLock = isLocked || (gambleMode && isRiskControl);
+    control.disabled = shouldLock;
+    control.closest(".setting")?.classList.toggle("locked", shouldLock);
   });
   oneDieButton?.closest(".dice-switcher")?.classList.toggle("locked", isLocked);
 }
