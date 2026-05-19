@@ -3770,6 +3770,46 @@ body:not(.dark) .table {
     url("./assets/table-bg.webp");
 }
 
+/* Balanced settings menu */
+.menu-shell:not(.shop-shell):not(.info-shell) .menu-panel {
+  width: min(500px, calc(100vw - 28px));
+}
+
+.menu-shell:not(.shop-shell):not(.info-shell) .setting {
+  grid-template-columns: 126px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.menu-shell:not(.shop-shell):not(.info-shell) .setting > span,
+.menu-shell:not(.shop-shell):not(.info-shell) .setting > label {
+  min-width: 0;
+  font-size: clamp(0.72rem, 1.7vw, 0.86rem);
+}
+
+.menu-shell:not(.shop-shell):not(.info-shell) .theme-switcher,
+.menu-shell:not(.shop-shell):not(.info-shell) .mini-switcher,
+.menu-shell:not(.shop-shell):not(.info-shell) .score-setting {
+  width: 100%;
+  min-width: 0;
+}
+
+.menu-shell:not(.shop-shell):not(.info-shell) .theme-option {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 8px;
+  font-size: clamp(0.78rem, 1.7vw, 0.95rem);
+  white-space: nowrap;
+}
+
+.menu-shell:not(.shop-shell):not(.info-shell) .mini-switcher .theme-option {
+  font-size: clamp(0.7rem, 1.55vw, 0.84rem);
+  letter-spacing: 0.01em;
+}
+
+.menu-shell:not(.shop-shell):not(.info-shell) .score-setting {
+  grid-template-columns: minmax(80px, 0.45fr) minmax(130px, 1fr);
+}
+
 /* Desktop side-by-side game layout */
 @media (min-width: 721px) {
   .game {
