@@ -3626,14 +3626,14 @@ body:not(.dark) .table {
   background:
     linear-gradient(180deg, rgba(3, 2, 1, 0.42), rgba(3, 2, 1, 0.62)),
     radial-gradient(circle at 50% 38%, rgba(255, 190, 52, 0.2), transparent 0 22%, transparent 48%),
-    url("./assets/table-bg.webp") center / cover no-repeat;
+    url("./assets/table-bg.png") center / cover no-repeat;
 }
 
 body:not(.dark) .table {
   background:
     linear-gradient(180deg, rgba(255, 238, 178, 0.18), rgba(60, 34, 4, 0.34)),
     radial-gradient(circle at 50% 38%, rgba(255, 190, 52, 0.18), transparent 0 22%, transparent 48%),
-    url("./assets/table-bg.webp") center / cover no-repeat;
+    url("./assets/table-bg.png") center / cover no-repeat;
 }
 
 .table::after {
@@ -3757,7 +3757,7 @@ body:not(.dark) .table {
   background-image:
     linear-gradient(180deg, rgba(3, 2, 1, 0.46), rgba(3, 2, 1, 0.66)),
     radial-gradient(circle at 50% 38%, rgba(255, 190, 52, 0.2), transparent 0 22%, transparent 48%),
-    url("./assets/table-bg.webp");
+    url("./assets/table-bg.png");
   background-size: cover, cover, cover;
   background-position: center, center, center;
   background-repeat: no-repeat, no-repeat, no-repeat;
@@ -3767,7 +3767,7 @@ body:not(.dark) .table {
   background-image:
     linear-gradient(180deg, rgba(255, 238, 178, 0.18), rgba(42, 23, 3, 0.42)),
     radial-gradient(circle at 50% 38%, rgba(255, 190, 52, 0.18), transparent 0 22%, transparent 48%),
-    url("./assets/table-bg.webp");
+    url("./assets/table-bg.png");
 }
 
 /* Balanced settings menu */
@@ -3864,13 +3864,13 @@ body:not(.dark) .table {
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.58)),
     radial-gradient(circle at 50% 38%, rgba(255, 190, 52, 0.18), transparent 0 24%, transparent 54%),
-    url("./assets/table-bg.webp") center / cover no-repeat;
+    url("./assets/table-bg.png") center / cover no-repeat;
 }
 
 body:not(.dark) #tablePanel.table {
   background:
     linear-gradient(180deg, rgba(255, 238, 178, 0.16), rgba(30, 16, 2, 0.42)),
     radial-gradient(circle at 50% 38%, rgba(255, 190, 52, 0.16), transparent 0 24%, transparent 54%),
-    url("./assets/table-bg.webp") center / cover no-repeat;
+    url("./assets/table-bg.png") center / cover no-repeat;
 }
 
