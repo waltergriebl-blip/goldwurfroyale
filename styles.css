@@ -3910,7 +3910,7 @@ body:not(.dark) .table {
 /* Desktop side-by-side game layout */
 @media (min-width: 721px) {
   .game {
-    width: min(1540px, calc(100vw - 48px));
+    width: min(1540px, calc(100vw - 24px));
     grid-template-columns: minmax(230px, 0.72fr) minmax(520px, 1.55fr) minmax(230px, 0.72fr);
     grid-template-areas:
       "topbar topbar topbar"
@@ -3953,6 +3953,19 @@ body:not(.dark) .table {
   .player {
     min-height: 560px;
     align-content: center;
+  }
+}
+
+@media (min-width: 1200px) and (min-height: 720px) {
+  .game {
+    zoom: 1.05;
+    width: min(1460px, calc((100vw - 40px) / 1.05));
+  }
+}
+
+@media (min-width: 1200px) and (min-height: 720px) and (max-height: 900px) {
+  .game {
+    zoom: 1.04;
   }
 }
 
