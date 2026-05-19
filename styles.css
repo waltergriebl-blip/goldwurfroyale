@@ -3965,3 +3965,155 @@ body:not(.dark) #tablePanel.table {
   }
 }
 
+/* Light theme polish */
+body:not(.dark) {
+  background:
+    radial-gradient(circle at 50% 8%, rgba(255, 205, 88, 0.2), transparent 0 18%, transparent 44%),
+    radial-gradient(circle at 50% 58%, rgba(178, 118, 25, 0.12), transparent 0 20%, transparent 52%),
+    repeating-linear-gradient(135deg, transparent 0 18px, rgba(132, 91, 22, 0.028) 19px 21px),
+    linear-gradient(145deg, #f7ecd1 0%, #fff8e8 46%, #e6d6b8 100%);
+}
+
+body:not(.dark) .topbar {
+  border-color: rgba(205, 143, 27, 0.66);
+  background:
+    linear-gradient(180deg, rgba(255, 252, 236, 0.86), rgba(245, 224, 176, 0.82)),
+    radial-gradient(circle at 4% 12%, rgba(255, 220, 112, 0.42), transparent 0 2px, transparent 9%),
+    repeating-linear-gradient(135deg, transparent 0 19px, rgba(125, 85, 19, 0.04) 20px 22px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    inset 0 -16px 30px rgba(180, 124, 26, 0.12),
+    0 0 0 1px rgba(178, 118, 25, 0.1),
+    0 16px 34px rgba(78, 48, 9, 0.16);
+}
+
+body:not(.dark) .menu-shell:not(:last-child) {
+  border-right-color: rgba(166, 104, 17, 0.22);
+}
+
+body:not(.dark) .menu-trigger {
+  color: #5f3b0c;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+body:not(.dark) .menu-trigger::before,
+body:not(.dark) .name-button::before,
+body:not(.dark) .round::before,
+body:not(.dark) .message::before {
+  color: #c88a17;
+  text-shadow: 0 0 12px rgba(255, 190, 52, 0.28);
+}
+
+body:not(.dark) .menu-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 232, 154, 0.28), transparent 48%),
+    repeating-linear-gradient(135deg, transparent 0 18px, rgba(125, 85, 19, 0.04) 19px 21px),
+    rgba(255, 248, 225, 0.98);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.56),
+    0 24px 54px rgba(83, 52, 9, 0.2);
+}
+
+body:not(.dark) .player {
+  border-color: rgba(207, 148, 34, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 254, 238, 0.7), rgba(243, 218, 160, 0.5)),
+    radial-gradient(circle at 50% 44%, rgba(255, 246, 210, 0.48), transparent 0 30%, transparent 62%),
+    url("./assets/player-bg.png") center / 100% 100% no-repeat;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.42),
+    inset 0 0 30px rgba(255, 224, 142, 0.16),
+    0 0 0 1px rgba(185, 121, 18, 0.14),
+    0 16px 32px rgba(78, 48, 9, 0.2);
+}
+
+body:not(.dark) .player::before {
+  border-color: rgba(178, 118, 25, 0.16);
+  box-shadow: inset 0 0 22px rgba(255, 255, 255, 0.36);
+}
+
+body:not(.dark) .player::after {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 252, 230, 0.32), transparent 0 30%, transparent 58%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(92, 57, 9, 0.06)),
+    linear-gradient(90deg, rgba(92, 57, 9, 0.06), transparent 20% 80%, rgba(92, 57, 9, 0.06));
+}
+
+body:not(.dark) .player.active {
+  border-color: #d79b25;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.52),
+    inset 0 0 42px rgba(255, 213, 110, 0.18),
+    0 0 22px rgba(218, 154, 43, 0.22),
+    0 16px 34px rgba(78, 48, 9, 0.22);
+}
+
+body:not(.dark) .label,
+body:not(.dark) .name-button,
+body:not(.dark) .wins span,
+body:not(.dark) .round span {
+  color: #9b6211;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+body:not(.dark) .wins {
+  border-color: rgba(207, 148, 34, 0.5);
+  background:
+    linear-gradient(180deg, rgba(255, 251, 230, 0.84), rgba(232, 203, 132, 0.36)),
+    rgba(255, 248, 225, 0.82);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.58),
+    0 10px 22px rgba(78, 48, 9, 0.14);
+}
+
+body:not(.dark) #tablePanel.table {
+  border-color: rgba(207, 148, 34, 0.7);
+  background:
+    linear-gradient(180deg, rgba(255, 244, 203, 0.22), rgba(92, 51, 7, 0.28)),
+    radial-gradient(circle at 50% 38%, rgba(255, 205, 88, 0.2), transparent 0 24%, transparent 54%),
+    url("./assets/table-bg.png") center / cover no-repeat;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 248, 218, 0.34),
+    inset 0 0 58px rgba(255, 196, 61, 0.12),
+    0 16px 34px rgba(78, 48, 9, 0.2);
+}
+
+body:not(.dark) .dice-switcher,
+body:not(.dark) .message {
+  border-color: rgba(207, 148, 34, 0.5);
+  background:
+    linear-gradient(180deg, rgba(255, 249, 224, 0.64), rgba(120, 76, 12, 0.06)),
+    rgba(255, 248, 225, 0.76);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.46),
+    0 10px 24px rgba(72, 45, 8, 0.14);
+}
+
+body:not(.dark) .theme-option,
+body:not(.dark) .dice-switcher .theme-option {
+  color: #5f451f;
+}
+
+body:not(.dark) .controls button,
+body:not(.dark) .shop-item button,
+body:not(.dark) .score-setting button {
+  box-shadow:
+    inset 0 2px 0 rgba(255, 252, 220, 0.46),
+    inset 0 -12px 20px rgba(95, 56, 12, 0.14),
+    0 10px 22px rgba(72, 45, 8, 0.18);
+}
+
+body:not(.dark) #newGameButton {
+  background:
+    linear-gradient(180deg, rgba(255, 244, 200, 0.28), rgba(95, 56, 12, 0.04)),
+    linear-gradient(180deg, #a46b18, #69400c);
+  color: #fff6d8;
+}
+
+body:not(.dark) #resetWinsButton {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 245, 0.7), rgba(126, 103, 68, 0.36)),
+    linear-gradient(180deg, #f6edce, #b9ab86);
+  color: #3b2b11;
+}
+
