@@ -3910,7 +3910,7 @@ body:not(.dark) .table {
 /* Desktop side-by-side game layout */
 @media (min-width: 721px) {
   .game {
-    width: min(1400px, calc(100vw - 48px));
+    width: min(1540px, calc(100vw - 48px));
     grid-template-columns: minmax(230px, 0.72fr) minmax(520px, 1.55fr) minmax(230px, 0.72fr);
     grid-template-areas:
       "topbar topbar topbar"
