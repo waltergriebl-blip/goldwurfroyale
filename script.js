@@ -456,6 +456,7 @@ const tablePanel = document.querySelector("#tablePanel");
 const victoryBurst = document.querySelector("#victoryBurst");
 const royalMoment = document.querySelector("#royalMoment");
 const royalMomentText = document.querySelector("#royalMomentText");
+const royalMomentReward = document.querySelector("#royalMomentReward");
 const winnerOverlay = document.querySelector("#winnerOverlay");
 const winnerTitle = document.querySelector("#winnerTitle");
 const winnerScoreLine = document.querySelector("#winnerScoreLine");
@@ -660,6 +661,11 @@ function awardHumanWinGold() {
   state.goldAwarded = true;
   state.lastGoldReward = reward;
   addGold(reward, "win");
+}
+
+function getSpecialMomentGoldReward(moment) {
+  if (!moment || moment.type === "dark") return 0;
+  return moment.reward ?? 50;
 }
 
 function loadShopState() {
@@ -894,18 +900,24 @@ function detectSpecialMoment(values = [], context = {}) {
   const {
     currentScore = 0,
     nextScore = 0,
+    currentPlayer = state.currentPlayer,
     scoreApplied = false,
     riskInvalid = false,
     gambleSecured = 0,
   } = context;
   const rolledValues = Array.isArray(values) ? values : [];
+  const isHumanMoment = currentPlayer === "human";
 
   if (riskInvalid) {
     return { text: "RISIKO VERLOREN!", type: "dark" };
   }
 
   if (gambleSecured >= 20) {
-    return { text: "GROSSER GAMBLE!", type: "gold" };
+    return { text: "GROSSER GAMBLE!", type: "gold", reward: isHumanMoment ? 50 : 0 };
+  }
+
+  if (rolledValues.length === 2 && rolledValues[0] === 6 && rolledValues[1] === 6) {
+    return { text: "ROYAL WURF!", type: "gold", reward: isHumanMoment ? 100 : 0 };
   }
 
   if (
@@ -915,7 +927,7 @@ function detectSpecialMoment(values = [], context = {}) {
     nextScore === winningScore &&
     isLastChanceWin(currentScore)
   ) {
-    return { text: "LETZTE CHANCE GENUTZT!", type: "gold" };
+    return { text: "LETZTE CHANCE GENUTZT!", type: "gold", reward: isHumanMoment ? 50 : 0 };
   }
 
   if (
@@ -924,21 +936,21 @@ function detectSpecialMoment(values = [], context = {}) {
     currentScore < winningScore &&
     nextScore === winningScore
   ) {
-    return { text: "PERFEKTER SIEG!", type: "gold" };
-  }
-
-  if (rolledValues.length === 2 && rolledValues[0] === 6 && rolledValues[1] === 6) {
-    return { text: "ROYAL WURF!", type: "gold" };
+    return { text: "PERFEKTER WURF!", type: "gold", reward: isHumanMoment ? 50 : 0 };
   }
 
   return null;
 }
 
-function showRoyalMoment(text, type = "gold") {
+function showRoyalMoment(text, type = "gold", reward = 0) {
   if (!royalMoment || !royalMomentText || !text) return;
 
   window.clearTimeout(royalMomentTimer);
   royalMomentText.textContent = text;
+  if (royalMomentReward) {
+    royalMomentReward.textContent = `+${reward} Gold`;
+    royalMomentReward.hidden = reward <= 0;
+  }
   royalMoment.dataset.tone = type === "dark" ? "dark" : "gold";
   royalMoment.hidden = false;
   royalMoment.classList.remove("show");
@@ -994,8 +1006,12 @@ function playDarkMomentSound() {
 function triggerSpecialMoment(values = [], context = {}) {
   const moment = detectSpecialMoment(values, context);
   if (!moment) return;
+  const reward = getSpecialMomentGoldReward(moment);
 
-  showRoyalMoment(moment.text, moment.type);
+  if (reward > 0) {
+    addGold(reward, "special");
+  }
+  showRoyalMoment(moment.text, moment.type, reward);
   playRoyalMomentSound(moment.type);
   if (moment.type !== "dark") {
     navigator.vibrate?.(60);
