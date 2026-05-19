@@ -1,4 +1,4 @@
-const APP_VERSION = globalThis.APP_VERSION || "137";
+const APP_VERSION = String(globalThis.APP_VERSION || "");
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -118,6 +118,10 @@ const goldBalance = document.querySelector("#goldBalance");
 const goldGainToast = document.querySelector("#goldGainToast");
 const infoShell = document.querySelector("#infoShell");
 const infoTrigger = document.querySelector("#infoTrigger");
+const appVersion = document.querySelector("#appVersion");
+if (appVersion && APP_VERSION) {
+  appVersion.textContent = APP_VERSION;
+}
 const lockedRuleControls = [
   singleModeButton,
   multiModeButton,
@@ -1717,6 +1721,6 @@ render();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register(`sw.js?v=${APP_VERSION}`).then((registration) => registration.update()).catch(() => {});
+    navigator.serviceWorker.register(`service-worker.js?v=${APP_VERSION}`).then((registration) => registration.update()).catch(() => {});
   });
 }
