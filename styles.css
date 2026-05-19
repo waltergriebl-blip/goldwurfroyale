@@ -3770,3 +3770,52 @@ body:not(.dark) .table {
     url("./assets/table-bg.webp");
 }
 
+/* Desktop side-by-side game layout */
+@media (min-width: 721px) {
+  .game {
+    width: min(1400px, calc(100vw - 48px));
+    grid-template-columns: minmax(230px, 0.72fr) minmax(520px, 1.55fr) minmax(230px, 0.72fr);
+    grid-template-areas:
+      "topbar topbar topbar"
+      "human table computer"
+      "rules rules rules"
+      "copyright copyright copyright";
+    align-items: stretch;
+  }
+
+  .topbar {
+    grid-area: topbar;
+  }
+
+  .scoreboard {
+    display: contents;
+  }
+
+  #humanPanel {
+    grid-area: human;
+  }
+
+  #computerPanel {
+    grid-area: computer;
+  }
+
+  .table {
+    grid-area: table;
+    min-height: 560px;
+    align-content: center;
+  }
+
+  .rules {
+    grid-area: rules;
+  }
+
+  .copyright {
+    grid-area: copyright;
+  }
+
+  .player {
+    min-height: 560px;
+    align-content: center;
+  }
+}
+
