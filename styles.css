@@ -4232,3 +4232,50 @@ body.gamble-mode .message {
   }
 }
 
+/* Keep the wide game anchored and evenly scaled when Gamble is turned off */
+@media (min-width: 1000px) and (max-height: 1000px) {
+  body {
+    place-items: start center;
+    padding-top: max(env(safe-area-inset-top, 0px), 10px);
+  }
+
+  .game {
+    align-content: start;
+  }
+
+  .table,
+  .player {
+    min-height: clamp(520px, calc(100vh - 385px), 620px);
+  }
+
+  .table {
+    gap: clamp(8px, 1.25vh, 14px);
+    padding-block: clamp(12px, 1.8vh, 22px);
+  }
+
+  .die {
+    min-height: clamp(132px, 18vh, 190px);
+  }
+
+  .die[data-dice-count="1"] .primary {
+    width: min(34vw, 188px);
+  }
+
+  .die[data-dice-count="2"] .primary,
+  .die[data-dice-count="2"] .secondary {
+    width: min(22vw, 150px);
+  }
+
+  .rules {
+    padding-block: 10px;
+  }
+
+  .rules h1 {
+    font-size: clamp(1.15rem, 1.7vw, 1.65rem);
+  }
+
+  .rules p {
+    font-size: 0.95rem;
+  }
+}
+
