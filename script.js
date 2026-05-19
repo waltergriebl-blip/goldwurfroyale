@@ -45,13 +45,401 @@ const state = {
 };
 
 const SHOP_SKINS = [
-  { id: "gold", name: "Standard Goldwürfel", price: 0 },
-  { id: "obsidian", name: "Obsidian-Würfel", price: 100 },
-  { id: "ruby", name: "Rubin-Würfel", price: 250 },
-  { id: "diamond", name: "Diamant-Würfel", price: 500 },
-  { id: "royal", name: "Royal-Würfel", price: 1000 },
-  { id: "diamond-deluxe", name: "Diamant Deluxe", price: 2500 },
+  {
+    id: "gold",
+    name: "Standard Goldwürfel",
+    rarity: "Common",
+    price: 0,
+    description: "Der klassische Goldwurf-Look.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "linear-gradient(145deg, #fff4c9, #c58c30 60%, #5f380c)",
+      pip: "radial-gradient(circle at 34% 28%, #33312c, #050403 64%, #000 100%)",
+      glow: "rgba(241, 200, 106, 0.24)",
+      text: "#070604",
+    },
+    assetRef: "assets/skins/gold.png",
+  },
+  {
+    id: "obsidian",
+    name: "Obsidian-Würfel",
+    rarity: "Rare",
+    price: 100,
+    description: "Dunkler Stein mit warmer Goldkante.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "linear-gradient(145deg, #777068 0%, #24211e 42%, #030303 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #ffd76f, #1a1204 68%, #000 100%)",
+      glow: "rgba(255, 190, 52, 0.2)",
+      text: "#ffd76f",
+    },
+    assetRef: "assets/skins/obsidian.png",
+  },
+  {
+    id: "ruby",
+    name: "Rubin-Würfel",
+    rarity: "Rare",
+    price: 250,
+    description: "Rot geschliffen, heiß belohnt.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "linear-gradient(145deg, #ffe4dc 0%, #e12a48 42%, #5a0615 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fff0d0, #4a0611 68%, #1a0205 100%)",
+      glow: "rgba(255, 68, 96, 0.28)",
+      text: "#ffe8b6",
+    },
+    assetRef: "assets/skins/ruby.png",
+  },
+  {
+    id: "diamond",
+    name: "Diamant-Würfel",
+    rarity: "Epic",
+    price: 500,
+    description: "Klar, kalt und funkelnd.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "linear-gradient(145deg, #ffffff 0%, #dbf8ff 38%, #6ed1ff 72%, #315b7d 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #0a2432, #02070a 68%, #000 100%)",
+      glow: "rgba(150, 229, 255, 0.34)",
+      text: "#081722",
+    },
+    assetRef: "assets/skins/diamond.png",
+  },
+  {
+    id: "royal",
+    name: "Royal-Würfel",
+    rarity: "Epic",
+    price: 1000,
+    description: "Macht, Reichtum, Ehre.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "linear-gradient(145deg, #fff7b8 0%, #ffc83f 36%, #c47a0c 72%, #5e3202 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #2c1702, #050301 68%, #000 100%)",
+      glow: "rgba(255, 203, 73, 0.48)",
+      text: "#070604",
+    },
+    assetRef: "assets/skins/royal.png",
+  },
+  {
+    id: "diamond-deluxe",
+    name: "Diamant Deluxe",
+    rarity: "Legendary",
+    price: 2500,
+    description: "Luxus aus Licht und Eis.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "conic-gradient(from 215deg at 50% 50%, #ffffff, #9de9ff, #8767ff, #ffffff, #dff9ff, #ffffff)",
+      pip: "radial-gradient(circle at 34% 28%, #0a2432, #02070a 68%, #000 100%)",
+      glow: "rgba(174, 231, 255, 0.46)",
+      text: "#081722",
+    },
+    assetRef: "assets/skins/diamond-deluxe.png",
+  },
+  {
+    id: "dragonfire",
+    name: "Drachenfeuer",
+    rarity: "Legendary",
+    price: 3000,
+    description: "Geboren aus Feuer und Zorn.",
+    unlockCondition: { type: "wins", value: 10 },
+    preview: {
+      background: "radial-gradient(circle at 62% 70%, rgba(255, 196, 62, 0.55), transparent 0 18%, transparent 42%), linear-gradient(145deg, #1b1512 0%, #4b1307 42%, #ff5b16 74%, #140704 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #ffd871, #ff4a13 54%, #140300 100%)",
+      glow: "rgba(255, 92, 22, 0.52)",
+      text: "#ffd871",
+    },
+    assetRef: "assets/skins/dragonfire.png",
+  },
+  {
+    id: "void-eclipse",
+    name: "Void Eclipse",
+    rarity: "Legendary",
+    price: 3600,
+    description: "Verschlungen von der Leere.",
+    unlockCondition: { type: "wins", value: 15 },
+    preview: {
+      background: "radial-gradient(circle at 70% 28%, rgba(183, 73, 255, 0.55), transparent 0 24%, transparent 48%), linear-gradient(145deg, #27113c 0%, #09040f 52%, #000 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #f0d7ff, #8d35ff 58%, #100018 100%)",
+      glow: "rgba(154, 64, 255, 0.48)",
+      text: "#ecd7ff",
+    },
+    assetRef: "assets/skins/void-eclipse.png",
+  },
+  {
+    id: "lightbringer",
+    name: "Lichtbringer",
+    rarity: "Legendary",
+    price: 4200,
+    description: "Segen des Himmels.",
+    unlockCondition: { type: "wins", value: 20 },
+    preview: {
+      background: "radial-gradient(circle at 45% 35%, rgba(255, 255, 255, 0.96), transparent 0 22%, transparent 44%), linear-gradient(145deg, #ffffff 0%, #ffe8a7 42%, #d69a1f 74%, #70460b 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #7a4500, #231202 68%, #000 100%)",
+      glow: "rgba(255, 230, 142, 0.58)",
+      text: "#4a2700",
+    },
+    assetRef: "assets/skins/lightbringer.png",
+  },
+  {
+    id: "chaos-core",
+    name: "Chaos Core",
+    rarity: "Mythic",
+    price: 5000,
+    description: "Instabil. Unberechenbar. Mächtig.",
+    unlockCondition: { type: "wins", value: 25 },
+    preview: {
+      background: "radial-gradient(circle at 50% 50%, rgba(255, 35, 20, 0.86), transparent 0 16%, transparent 38%), linear-gradient(145deg, #30201d 0%, #080504 45%, #b61610 70%, #030101 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #ffedc8, #ff2115 54%, #120000 100%)",
+      glow: "rgba(255, 35, 20, 0.62)",
+      text: "#ffb29c",
+    },
+    assetRef: "assets/skins/chaos-core.png",
+  },
+  {
+    id: "timekeeper",
+    name: "Zeitwächter",
+    rarity: "Mythic",
+    price: 5500,
+    description: "Herrscher über Sekunden.",
+    unlockCondition: { type: "wins", value: 30 },
+    preview: {
+      background: "radial-gradient(circle at 50% 50%, rgba(41, 219, 255, 0.42), transparent 0 24%, transparent 48%), linear-gradient(145deg, #a76f22 0%, #2f2111 44%, #062d3c 72%, #02080b 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #bdf6ff, #19b9e6 58%, #031116 100%)",
+      glow: "rgba(41, 219, 255, 0.48)",
+      text: "#8eeeff",
+    },
+    assetRef: "assets/skins/timekeeper.png",
+  },
+  {
+    id: "god-dice",
+    name: "Götter Würfel",
+    rarity: "Mythic",
+    price: 7500,
+    description: "Nur für Auserwählte.",
+    unlockCondition: { type: "wins", value: 50 },
+    preview: {
+      background: "radial-gradient(circle at 72% 22%, rgba(108, 215, 255, 0.5), transparent 0 20%, transparent 42%), linear-gradient(145deg, #ffffff 0%, #d7d1c4 36%, #d7a53a 64%, #5f3a0c 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #7b4a00, #1b1203 68%, #000 100%)",
+      glow: "rgba(255, 232, 170, 0.62)",
+      text: "#5c3700",
+    },
+    assetRef: "assets/skins/god-dice.png",
+  },
+  {
+    id: "halloween",
+    name: "Halloween",
+    rarity: "Epic",
+    price: 1200,
+    description: "Schaurig schön.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 45% 28%, rgba(255, 183, 64, 0.58), transparent 0 20%, transparent 42%), linear-gradient(145deg, #2b1608 0%, #f5821f 42%, #1a0a04 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fff0a8, #ff7b00 58%, #140400 100%)",
+      glow: "rgba(255, 130, 31, 0.5)",
+      text: "#ffe1a3",
+    },
+    assetRef: "assets/skins/halloween.png",
+  },
+  {
+    id: "christmas",
+    name: "Weihnachten",
+    rarity: "Epic",
+    price: 1200,
+    description: "Festlich. Fröhlich. Goldwurf.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.85), transparent 0 18%, transparent 34%), linear-gradient(145deg, #fff8e8 0%, #d93030 34%, #1f7d3d 70%, #0d321b 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fff4cf, #b80d1e 58%, #180204 100%)",
+      glow: "rgba(255, 244, 207, 0.44)",
+      text: "#fff4cf",
+    },
+    assetRef: "assets/skins/christmas.png",
+  },
+  {
+    id: "pirate-gold",
+    name: "Piraten Gold",
+    rarity: "Epic",
+    price: 1800,
+    description: "Techdreh und gewinnen.",
+    unlockCondition: { type: "wins", value: 5 },
+    preview: {
+      background: "linear-gradient(145deg, #21160b 0%, #050403 42%, #d19b2a 70%, #3e2606 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #ffe2a0, #9b6712 58%, #050201 100%)",
+      glow: "rgba(209, 155, 42, 0.42)",
+      text: "#ffe2a0",
+    },
+    assetRef: "assets/skins/pirate-gold.png",
+  },
+  {
+    id: "oktoberfest",
+    name: "Oktoberfest",
+    rarity: "Rare",
+    price: 900,
+    description: "O'zapft is!",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "linear-gradient(145deg, #f8fbff 0%, #267ec8 42%, #d69b2c 72%, #102d4b 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #ffe4a3, #0e4f8d 62%, #020b13 100%)",
+      glow: "rgba(55, 153, 230, 0.4)",
+      text: "#ffe4a3",
+    },
+    assetRef: "assets/skins/oktoberfest.png",
+  },
+  {
+    id: "spring-magic",
+    name: "Frühlingszauber",
+    rarity: "Rare",
+    price: 900,
+    description: "Blumen, Glück und Gold.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 72% 28%, rgba(255, 162, 203, 0.75), transparent 0 18%, transparent 38%), linear-gradient(145deg, #e6ffd4 0%, #4e9d3d 44%, #17451a 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fff0f8, #ff83b8 58%, #16320e 100%)",
+      glow: "rgba(154, 229, 112, 0.42)",
+      text: "#fff0f8",
+    },
+    assetRef: "assets/skins/spring-magic.png",
+  },
+  {
+    id: "summer-vibes",
+    name: "Sommer Vibes",
+    rarity: "Rare",
+    price: 900,
+    description: "Sonne. Strand. Gewinnen.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "linear-gradient(145deg, #fff0a6 0%, #40d4d4 42%, #1a90b2 70%, #b57728 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fff1a8, #d27913 60%, #062f38 100%)",
+      glow: "rgba(64, 212, 212, 0.44)",
+      text: "#fff1a8",
+    },
+    assetRef: "assets/skins/summer-vibes.png",
+  },
+  {
+    id: "cyber-neon",
+    name: "Cyber Neon",
+    rarity: "Legendary",
+    price: 2800,
+    description: "Plug in. Level up.",
+    unlockCondition: { type: "wins", value: 8 },
+    preview: {
+      background: "linear-gradient(145deg, #10131b 0%, #081122 42%, #00d8ff 58%, #ff3bce 82%, #13031b 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #d8fbff, #00c8ff 48%, #ff39d2 82%, #06020a 100%)",
+      glow: "rgba(0, 216, 255, 0.56)",
+      text: "#bff8ff",
+    },
+    assetRef: "assets/skins/cyber-neon.png",
+  },
+  {
+    id: "hologram",
+    name: "Hologramm",
+    rarity: "Legendary",
+    price: 3200,
+    description: "Nichts ist, wie es scheint.",
+    unlockCondition: { type: "wins", value: 12 },
+    preview: {
+      background: "conic-gradient(from 180deg at 50% 50%, rgba(255, 255, 255, 0.9), #8ff4ff, #f09cff, #ffe7a8, #9affd6, rgba(255, 255, 255, 0.9))",
+      pip: "radial-gradient(circle at 34% 28%, #08242a, #5b34a8 58%, #010407 100%)",
+      glow: "rgba(196, 244, 255, 0.58)",
+      text: "#092129",
+    },
+    assetRef: "assets/skins/hologram.png",
+  },
+  {
+    id: "titan-core",
+    name: "Titan Core",
+    rarity: "Legendary",
+    price: 3400,
+    description: "Technologie der Titanen.",
+    unlockCondition: { type: "wins", value: 14 },
+    preview: {
+      background: "radial-gradient(circle at 50% 50%, rgba(0, 194, 255, 0.44), transparent 0 22%, transparent 48%), linear-gradient(145deg, #2e3b42 0%, #0b1015 46%, #00aee8 70%, #02060a 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #d6f8ff, #00aee8 58%, #02060a 100%)",
+      glow: "rgba(0, 174, 232, 0.48)",
+      text: "#b8f2ff",
+    },
+    assetRef: "assets/skins/titan-core.png",
+  },
+  {
+    id: "quantum-shift",
+    name: "Quantum Shift",
+    rarity: "Legendary",
+    price: 3800,
+    description: "Zukunft. Jetzt.",
+    unlockCondition: { type: "wins", value: 18 },
+    preview: {
+      background: "linear-gradient(145deg, #151021 0%, #6c27d9 40%, #13d6ff 64%, #1d062e 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #ebd8ff, #8a35ff 48%, #05c6ff 80%, #05020a 100%)",
+      glow: "rgba(128, 67, 255, 0.52)",
+      text: "#eadcff",
+    },
+    assetRef: "assets/skins/quantum-shift.png",
+  },
+  {
+    id: "robotic-steel",
+    name: "Robotic Steel",
+    rarity: "Epic",
+    price: 2200,
+    description: "Kalt. Präzise. Dominant.",
+    unlockCondition: { type: "wins", value: 7 },
+    preview: {
+      background: "linear-gradient(145deg, #d9e4ea 0%, #6d8794 36%, #1f2c35 68%, #071017 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #e7f8ff, #4bb8ff 58%, #061018 100%)",
+      glow: "rgba(96, 188, 255, 0.38)",
+      text: "#d8f4ff",
+    },
+    assetRef: "assets/skins/robotic-steel.png",
+  },
+  {
+    id: "plasma-drive",
+    name: "Plasma Drive",
+    rarity: "Legendary",
+    price: 4000,
+    description: "Energie ohne Grenzen.",
+    unlockCondition: { type: "wins", value: 22 },
+    preview: {
+      background: "radial-gradient(circle at 50% 64%, rgba(255, 123, 21, 0.68), transparent 0 20%, transparent 42%), linear-gradient(145deg, #16110d 0%, #050403 42%, #ff7a15 70%, #220802 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #ffe2a0, #ff7814 58%, #120300 100%)",
+      glow: "rgba(255, 122, 21, 0.56)",
+      text: "#ffd99a",
+    },
+    assetRef: "assets/skins/plasma-drive.png",
+  },
 ];
+
+function getSkinById(skinId) {
+  return SHOP_SKINS.find((skin) => skin.id === skinId);
+}
+
+function getSkinClassName(skinId) {
+  return `skin-${skinId}`;
+}
+
+function isSkinUnlocked(skin) {
+  if (!skin?.unlockCondition || skin.unlockCondition.type === "none") return true;
+  if (skin.unlockCondition.type === "wins") {
+    return state.humanWins >= skin.unlockCondition.value;
+  }
+  return false;
+}
+
+function getUnlockText(skin) {
+  if (!skin?.unlockCondition || skin.unlockCondition.type === "none") return "Sofort verfügbar";
+  if (skin.unlockCondition.type === "wins") {
+    const wins = skin.unlockCondition.value;
+    return `Ab ${wins} ${wins === 1 ? "Sieg" : "Siegen"}`;
+  }
+  return "Freischaltung erforderlich";
+}
+
+function applySkinPreviewStyles(element, skin) {
+  if (!element || !skin?.preview) return;
+
+  element.style.setProperty("--skin-die-bg", skin.preview.background);
+  element.style.setProperty("--skin-pip-bg", skin.preview.pip);
+  element.style.setProperty("--skin-glow", skin.preview.glow);
+  element.style.setProperty("--skin-die-text", skin.preview.text);
+}
 
 const humanScore = document.querySelector("#humanScore");
 const computerScore = document.querySelector("#computerScore");
@@ -278,7 +666,7 @@ function loadShopState() {
   try {
     const savedOwned = JSON.parse(localStorage.getItem("goldwurf-royale-owned-skins") || "[]");
     if (Array.isArray(savedOwned)) {
-      ownedSkins = new Set(["gold", ...savedOwned.filter((skinId) => SHOP_SKINS.some((skin) => skin.id === skinId))]);
+      ownedSkins = new Set(["gold", ...savedOwned.filter((skinId) => getSkinById(skinId))]);
     }
   } catch {
     ownedSkins = new Set(["gold"]);
@@ -297,8 +685,8 @@ function saveShopState() {
 }
 
 function buySkin(skinId) {
-  const skin = SHOP_SKINS.find((item) => item.id === skinId);
-  if (!skin || ownedSkins.has(skin.id) || gold < skin.price) return;
+  const skin = getSkinById(skinId);
+  if (!skin || ownedSkins.has(skin.id) || gold < skin.price || !isSkinUnlocked(skin)) return;
 
   gold -= skin.price;
   ownedSkins.add(skin.id);
@@ -328,23 +716,35 @@ function renderShop() {
   SHOP_SKINS.forEach((skin) => {
     const isOwned = ownedSkins.has(skin.id);
     const isActive = activeSkin === skin.id;
+    const isUnlocked = isSkinUnlocked(skin);
     const canBuy = gold >= skin.price;
     const item = document.createElement("article");
     item.className = `shop-item skin-preview-${skin.id}`;
     item.classList.toggle("owned", isOwned);
     item.classList.toggle("active", isActive);
+    item.classList.toggle("locked", !isOwned && !isUnlocked);
 
     const preview = document.createElement("span");
     preview.className = "skin-preview-die";
     preview.setAttribute("aria-hidden", "true");
+    applySkinPreviewStyles(preview, skin);
     for (let index = 0; index < 5; index += 1) {
       preview.append(document.createElement("i"));
     }
 
+    const meta = document.createElement("span");
+    meta.className = `shop-item-meta rarity-${skin.rarity.toLowerCase()}`;
+    meta.textContent = `${skin.rarity} · ${getUnlockText(skin)}`;
+
     const title = document.createElement("strong");
     title.textContent = skin.name;
 
+    const description = document.createElement("p");
+    description.className = "shop-item-description";
+    description.textContent = skin.description;
+
     const price = document.createElement("span");
+    price.className = "shop-item-price";
     price.textContent = isOwned ? "Freigeschaltet" : `${skin.price} Gold`;
 
     const action = document.createElement("button");
@@ -356,6 +756,9 @@ function renderShop() {
     } else if (isOwned) {
       action.textContent = "Auswählen";
       action.dataset.action = "select";
+    } else if (!isUnlocked) {
+      action.textContent = getUnlockText(skin);
+      action.disabled = true;
     } else if (canBuy) {
       action.textContent = "Kaufen";
       action.dataset.action = "buy";
@@ -364,7 +767,7 @@ function renderShop() {
       action.disabled = true;
     }
 
-    item.append(preview, title, price, action);
+    item.append(preview, meta, title, description, price, action);
     shopItems.append(item);
   });
 }
@@ -383,8 +786,11 @@ function showGoldSpend(amount, skinId) {
 }
 
 function applyActiveSkin() {
-  document.body.classList.remove("skin-gold", "skin-obsidian", "skin-ruby", "skin-diamond", "skin-royal", "skin-diamond-deluxe");
-  document.body.classList.add(`skin-${activeSkin}`);
+  SHOP_SKINS.forEach((skin) => document.body.classList.remove(getSkinClassName(skin.id)));
+  const skin = getSkinById(activeSkin) || getSkinById("gold");
+  activeSkin = skin.id;
+  document.body.classList.add(getSkinClassName(activeSkin));
+  applySkinPreviewStyles(document.body, skin);
 }
 
 function areRuleControlsLocked() {

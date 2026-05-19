@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.26 - 2026-05-19
+
+- Neue Würfel-Skin-Daten für Shop-Items ergänzt, inklusive Seltenheit, Preis, Beschreibung, Freischaltbedingung und Platzhalter-Preview.
+- Shop-Logik prüft Freischaltungen jetzt vor dem Kauf und zeigt die Bedingungen direkt am Item.
+- Skin-Platzhalter nutzen CSS-Farben/Effekte, damit spätere Sprite- oder Icon-Dateien leicht ergänzt werden können.
+
 ## Version 1.25 - 2026-05-19
 
 - Zentrale Versionsquelle in `version.js` festgelegt.
