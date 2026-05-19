@@ -3940,6 +3940,25 @@ body:not(.dark) #tablePanel.table {
     0 18px 42px rgba(0, 0, 0, 0.48);
 }
 
+.player {
+  justify-items: center;
+  text-align: center;
+}
+
+.opponent-top {
+  justify-items: center;
+  width: 100%;
+}
+
+.name-button,
+.starter-button {
+  text-align: center;
+}
+
+.wins {
+  justify-content: center;
+}
+
 @media (max-width: 760px) {
   .player {
     background-size: cover;
