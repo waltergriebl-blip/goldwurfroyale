@@ -5122,9 +5122,9 @@ body.combo-mode .die .die-face i {
     height: clamp(64px, 17vh, 88px);
     min-height: 0;
     display: grid !important;
-    align-self: center;
+    align-self: end;
     justify-self: center;
-    margin: 0;
+    margin: 0 0 10px;
   }
 
   body.combo-mode .combo-panel {
