@@ -5190,3 +5190,42 @@ body.combo-mode .die .die-face i {
   }
 }
 
+/* Orakel side cards on phone landscape: selected numbers need compact score type */
+@media (orientation: landscape) and (max-height: 560px) and (pointer: coarse) {
+  body.combo-mode .player {
+    padding: 6px 4px;
+    gap: 5px;
+  }
+
+  body.combo-mode .name-button {
+    font-size: clamp(0.9rem, 2.6vw, 1.15rem);
+  }
+
+  body.combo-mode .player strong[id$="Score"] {
+    max-width: 100%;
+    font-size: clamp(1.6rem, 4.6vw, 2.55rem);
+    line-height: 1;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+
+  body.combo-mode .player span {
+    font-size: clamp(0.56rem, 1.75vw, 0.72rem);
+    line-height: 1.12;
+  }
+
+  body.combo-mode .wins {
+    width: min(100%, 112px);
+    min-height: 30px;
+    padding: 4px 6px;
+  }
+
+  body.combo-mode .wins span {
+    font-size: 0.54rem;
+  }
+
+  body.combo-mode .wins strong {
+    font-size: 0.9rem;
+  }
+}
+
