@@ -5125,15 +5125,15 @@ body.combo-mode .die .die-face i {
     align-self: end;
     justify-self: center;
     margin: 0 0 10px;
-    transform: translateY(34px) !important;
+    transform: translateY(-18px) !important;
   }
 
   body.combo-mode.combo-roll-ready .die:hover:not(:disabled) {
-    transform: translateY(31px) rotate(-1deg) !important;
+    transform: translateY(-21px) rotate(-1deg) !important;
   }
 
   body.combo-mode.combo-roll-ready .die:active:not(:disabled) {
-    transform: translateY(38px) scale(0.98) !important;
+    transform: translateY(-14px) scale(0.98) !important;
   }
 
   body.combo-mode .combo-panel {

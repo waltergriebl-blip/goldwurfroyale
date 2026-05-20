@@ -1,1 +1,1 @@
-globalThis.APP_VERSION = "1.55";
+globalThis.APP_VERSION = "1.56";
