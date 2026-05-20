@@ -11,7 +11,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="stylesheet" href="styles.css?v=1.39" />
+    <link rel="stylesheet" href="styles.css?v=1.48" />
   </head>
   <body class="dark">
     <main class="game">
@@ -72,6 +72,18 @@
                   </div>
                 </div>
 
+                <div class="setting">
+                  <span>Modi</span>
+                  <div class="theme-switcher" role="group" aria-label="Modus wählen">
+                    <button class="theme-option active" id="standardVariantButton" type="button" aria-pressed="true">
+                      Standard
+                    </button>
+                    <button class="theme-option" id="comboVariantButton" type="button" aria-pressed="false">
+                      Orakel
+                    </button>
+                  </div>
+                </div>
+
                 <div class="setting risk-setting">
                   <span>Risiko</span>
                   <div class="theme-switcher" role="group" aria-label="Risiko-Modus ein oder aus">
@@ -84,7 +96,7 @@
                   </div>
                 </div>
 
-                <div class="setting">
+                <div class="setting gamble-setting">
                   <span>Gamble</span>
                   <div class="theme-switcher" role="group" aria-label="Gamble-Modus ein oder aus">
                     <button class="theme-option" id="gambleOnButton" type="button" aria-pressed="false">
@@ -96,7 +108,7 @@
                   </div>
                 </div>
 
-                <div class="setting">
+                <div class="setting score-goal-setting">
                   <label for="winningScoreInput">Zielpunkte</label>
                   <div class="score-setting">
                     <input id="winningScoreInput" type="number" min="10" max="999" step="5" value="50" />
@@ -104,7 +116,7 @@
                   </div>
                 </div>
 
-                <div class="setting">
+                <div class="setting difficulty-setting">
                   <span>Schwierigkeit</span>
                   <div class="theme-switcher" role="group" aria-label="Schwierigkeit wählen">
                     <button class="theme-option active" id="normalModeButton" type="button" aria-pressed="true">
@@ -167,6 +179,7 @@
                     <li><strong>Schwer:</strong> Die Zielpunkte müssen genau getroffen werden.</li>
                     <li><strong>Risiko:</strong> Wenn eine 1 fällt, zählt der aktuelle Wurf nicht. Im schweren Modus endet das Spiel, wenn kein gültiger Siegwurf mehr möglich ist. Dann gewinnt die höhere Punktzahl.</li>
                     <li><strong>Gamble:</strong> Würfle mehrfach und sammle Zugpunkte. Mit Sichern werden sie übernommen. Bei einer 1 verfallen die Zugpunkte und der Zug endet. Im schweren Modus muss die Zielpunktzahl genau getroffen werden. Ist kein gültiger Siegwurf mehr möglich, bekommt der Gegner noch seine Chance.</li>
+                    <li><strong>Orakel:</strong> Beide Spieler wählen Zahlen. Danach wird gewürfelt. Nur eine vollständig getroffene Auswahl gewinnt, sonst endet die Runde unentschieden.</li>
                     <li><strong>Würfel:</strong> Wähle 1 oder 2 Würfel.</li>
                     <li><strong>Startspieler:</strong> Vor dem ersten Wurf auswählbar. Im Singleplayer kann auch die KI beginnen.</li>
                     <li><strong>Siege:</strong> Zählen gewonnene Runden bis zum Zurücksetzen.</li>
@@ -284,6 +297,48 @@
 
         <p class="dice-hint">Klicke oder tippe auf den Würfel, um zu würfeln.</p>
 
+        <div class="combo-panel" id="comboPanel" hidden>
+          <div class="combo-status-grid" aria-live="polite">
+            <div>
+              <span>Am Zug</span>
+              <strong id="comboTurnLabel">Spieler 1</strong>
+            </div>
+            <div>
+              <span>Spieler 1</span>
+              <strong id="comboHumanSelection">-</strong>
+            </div>
+            <div>
+              <span>Spieler 2</span>
+              <strong id="comboComputerSelection">-</strong>
+            </div>
+            <div>
+              <span>Ergebnis</span>
+              <strong id="comboRollResult">-</strong>
+            </div>
+          </div>
+
+          <div class="combo-dice-grid" id="comboDiceGrid" role="group" aria-label="Würfelzahlen für Orakel wählen">
+            <button class="combo-die-button" type="button" data-combo-value="1" aria-label="Zahl 1 wählen">
+              <span class="combo-die-face" data-value="1" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+            <button class="combo-die-button" type="button" data-combo-value="2" aria-label="Zahl 2 wählen">
+              <span class="combo-die-face" data-value="2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+            <button class="combo-die-button" type="button" data-combo-value="3" aria-label="Zahl 3 wählen">
+              <span class="combo-die-face" data-value="3" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+            <button class="combo-die-button" type="button" data-combo-value="4" aria-label="Zahl 4 wählen">
+              <span class="combo-die-face" data-value="4" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+            <button class="combo-die-button" type="button" data-combo-value="5" aria-label="Zahl 5 wählen">
+              <span class="combo-die-face" data-value="5" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+            <button class="combo-die-button" type="button" data-combo-value="6" aria-label="Zahl 6 wählen">
+              <span class="combo-die-face" data-value="6" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+          </div>
+        </div>
+
         <div class="dice-switcher" role="group" aria-label="Anzahl der Würfel wählen">
           <button class="theme-option active" id="oneDieButton" type="button" aria-pressed="true">
             1 Würfel
@@ -304,7 +359,8 @@
 
       <section class="rules" aria-label="Regeln">
         <h1>Goldwurf Royale</h1>
-        <p><span id="rulesDifficultyText">Erreiche zuerst</span> <strong id="rulesWinningScore">50</strong> Punkte. Im schweren Modus muss die Punktzahl genau getroffen werden.</p>
+        <p class="standard-rules-text"><span id="rulesDifficultyText">Erreiche zuerst</span> <strong id="rulesWinningScore">50</strong> Punkte. Im schweren Modus muss die Punktzahl genau getroffen werden.</p>
+        <p class="combo-rules-text">Wähle Orakel-Zahlen. Vollständig getroffene Zahlen gewinnen.</p>
       </section>
 
       <footer class="copyright">
@@ -312,8 +368,8 @@
       </footer>
     </main>
 
-    <script src="version.js?v=1.39"></script>
-    <script src="script.js?v=1.39"></script>
+    <script src="version.js?v=1.48"></script>
+    <script src="script.js?v=1.48"></script>
     <!-- Cloudflare Web Analytics -->
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"1603d1edbcff4645b15d8dd7f364bf60"}'></script>
     <!-- End Cloudflare Web Analytics -->

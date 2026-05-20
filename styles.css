@@ -662,6 +662,95 @@ body.gamble-mode .risk-setting {
   pointer-events: none;
 }
 
+body.combo-mode .risk-setting,
+body.combo-mode .gamble-setting,
+body.combo-mode .score-goal-setting,
+body.combo-mode .difficulty-setting {
+  display: none;
+}
+
+.combo-rules-text,
+body.combo-mode .standard-rules-text {
+  display: none;
+}
+
+body.combo-mode .combo-rules-text {
+  display: block;
+}
+
+@media (min-width: 721px) {
+  body.combo-mode .rules p {
+    max-width: none;
+    font-size: 0.92rem;
+    line-height: 1.22;
+  }
+}
+
+body.combo-mode .turn-score {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 721px) {
+  body.combo-mode .die {
+    transform: translateY(-102px);
+  }
+
+  body.combo-mode .die:hover:not(:disabled) {
+    transform: translateY(-105px) rotate(-1deg);
+  }
+
+  body.combo-mode .die:active:not(:disabled) {
+    transform: translateY(-98px) scale(0.98);
+  }
+
+  body.combo-mode .die[data-dice-count="1"] {
+    transform: translateY(-58px);
+  }
+
+  body.combo-mode .die[data-dice-count="1"]:hover:not(:disabled) {
+    transform: translateY(-61px) rotate(-1deg);
+  }
+
+  body.combo-mode .die[data-dice-count="1"]:active:not(:disabled) {
+    transform: translateY(-54px) scale(0.98);
+  }
+
+  body.combo-mode .combo-panel {
+    width: min(100% - 72px, 500px);
+    position: absolute;
+    left: 50%;
+    bottom: clamp(206px, 25vh, 244px);
+    z-index: 3;
+    transform: translateX(-50%);
+  }
+
+  body.combo-mode .dice-hint {
+    visibility: hidden;
+  }
+
+  body.combo-mode .combo-status-grid {
+    gap: 5px;
+  }
+
+  body.combo-mode .combo-status-grid span {
+    font-size: 0.58rem;
+  }
+
+  body.combo-mode .combo-status-grid strong {
+    font-size: 0.78rem;
+  }
+
+  body.combo-mode .combo-die-button {
+    border-radius: 7px;
+  }
+
+  body.combo-mode .combo-die-face {
+    width: min(100%, 42px);
+    border-radius: 11px;
+  }
+}
+
 .topbar span,
 .topbar label {
   color: var(--muted);
@@ -1657,6 +1746,189 @@ body.dark .message {
   text-shadow: none;
 }
 
+.combo-panel {
+  width: min(100%, 560px);
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255, 230, 150, 0.09), transparent 44%),
+    var(--card);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 180, 0.045),
+    0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.combo-panel[hidden] {
+  display: none;
+}
+
+.combo-status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.combo-status-grid div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  padding: 8px;
+  border: 1px solid rgba(211, 157, 53, 0.2);
+  border-radius: 7px;
+  background: rgba(255, 236, 174, 0.055);
+}
+
+.combo-status-grid span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.combo-status-grid strong {
+  min-height: 1.2em;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height: 1.2;
+}
+
+body.dark .combo-status-grid strong {
+  color: #fff1c9;
+}
+
+.combo-dice-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(44px, 1fr));
+  gap: 8px;
+}
+
+.combo-die-button {
+  min-width: 0;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(211, 157, 53, 0.25);
+  border-radius: 8px;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 231, 153, 0.08), transparent),
+    rgba(20, 14, 8, 0.28);
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    opacity 140ms ease;
+}
+
+.combo-die-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+}
+
+.combo-die-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.combo-die-button.selected-human {
+  border-color: var(--gold);
+  box-shadow:
+    inset 0 0 0 2px rgba(241, 200, 106, 0.36),
+    0 0 18px rgba(217, 168, 68, 0.18);
+}
+
+.combo-die-button.selected-computer {
+  border-color: #64d2ff;
+  box-shadow:
+    inset 0 0 0 2px rgba(100, 210, 255, 0.34),
+    0 0 18px rgba(100, 210, 255, 0.16);
+}
+
+.combo-die-button.selected-both {
+  background:
+    linear-gradient(135deg, rgba(241, 200, 106, 0.28) 0 50%, rgba(100, 210, 255, 0.28) 50% 100%),
+    rgba(20, 14, 8, 0.28);
+  border-color: #f2dc94;
+}
+
+.combo-die-face {
+  width: min(100%, 58px);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 12%;
+  padding: 14%;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.84), transparent 0 16%, transparent 28%),
+    linear-gradient(145deg, #fffaf0 0%, #f2d58e 38%, #c58c30 72%, #6c4212 100%);
+  color: #070604;
+  box-shadow:
+    inset 5px 5px 10px rgba(255, 255, 255, 0.45),
+    inset -7px -9px 10px rgba(48, 27, 5, 0.28),
+    0 8px 14px rgba(34, 19, 4, 0.18);
+}
+
+.combo-die-face::before {
+  content: "";
+  position: absolute;
+  inset: 9%;
+  border-radius: 18%;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.46), transparent 30%),
+    linear-gradient(315deg, rgba(0, 0, 0, 0.18), transparent 34%);
+  opacity: 0.62;
+}
+
+.combo-die-face i {
+  width: 100%;
+  aspect-ratio: 1;
+  align-self: center;
+  justify-self: center;
+  position: relative;
+  z-index: 1;
+  border-radius: 999px;
+  background: radial-gradient(circle at 34% 28%, #33312c, #050403 64%, #000 100%);
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.16),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.68);
+  opacity: 0;
+}
+
+.combo-die-face[data-value="1"] i:nth-child(5),
+.combo-die-face[data-value="2"] i:nth-child(1),
+.combo-die-face[data-value="2"] i:nth-child(9),
+.combo-die-face[data-value="3"] i:nth-child(1),
+.combo-die-face[data-value="3"] i:nth-child(5),
+.combo-die-face[data-value="3"] i:nth-child(9),
+.combo-die-face[data-value="4"] i:nth-child(1),
+.combo-die-face[data-value="4"] i:nth-child(3),
+.combo-die-face[data-value="4"] i:nth-child(7),
+.combo-die-face[data-value="4"] i:nth-child(9),
+.combo-die-face[data-value="5"] i:nth-child(1),
+.combo-die-face[data-value="5"] i:nth-child(3),
+.combo-die-face[data-value="5"] i:nth-child(5),
+.combo-die-face[data-value="5"] i:nth-child(7),
+.combo-die-face[data-value="5"] i:nth-child(9),
+.combo-die-face[data-value="6"] i:nth-child(1),
+.combo-die-face[data-value="6"] i:nth-child(3),
+.combo-die-face[data-value="6"] i:nth-child(4),
+.combo-die-face[data-value="6"] i:nth-child(6),
+.combo-die-face[data-value="6"] i:nth-child(7),
+.combo-die-face[data-value="6"] i:nth-child(9) {
+  opacity: 1;
+}
+
 .message.win-message {
   color: var(--gold);
   font-weight: 900;
@@ -1806,6 +2078,9 @@ body:not(.dark) #resetWinsButton {
 
 .rules {
   grid-column: 1 / -1;
+  min-height: 78px;
+  display: grid;
+  align-content: center;
   padding: 14px 18px;
   position: relative;
   overflow: hidden;
@@ -2136,6 +2411,22 @@ body:not(.dark) #resetWinsButton {
 }
 
 @media (max-width: 720px) {
+  .combo-panel {
+    padding: 10px;
+  }
+
+  .combo-status-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .combo-dice-grid {
+    grid-template-columns: repeat(3, minmax(54px, 1fr));
+  }
+
+  .combo-die-face {
+    width: min(100%, 64px);
+  }
+
   html {
     background: var(--bg-end);
   }
@@ -3995,7 +4286,7 @@ body:not(.dark) .table {
 .die[data-dice-count="1"] .primary {
   grid-column: 1 / -1;
   justify-self: center;
-  width: min(42vw, 188px);
+  width: min(31vw, 150px);
   transform: none;
 }
 
@@ -4038,7 +4329,7 @@ body.gamble-mode .die {
 }
 
 body.gamble-mode .die[data-dice-count="1"] .primary {
-  width: min(34vw, 154px);
+  width: min(31vw, 150px);
 }
 
 @media (max-width: 720px) {
@@ -4391,6 +4682,7 @@ body.gamble-mode .message {
   }
 
   .rules {
+    min-height: 78px;
     padding-block: 10px;
   }
 
@@ -4400,6 +4692,19 @@ body.gamble-mode .message {
 
   .rules p {
     font-size: 0.95rem;
+  }
+
+  body.combo-mode .combo-panel {
+    gap: 6px;
+    padding: 7px;
+  }
+
+  body.combo-mode .combo-status-grid div {
+    padding: 5px 7px;
+  }
+
+  body.combo-mode .combo-dice-grid {
+    gap: 5px;
   }
 }
 
@@ -4420,7 +4725,7 @@ body.gamble-mode .die {
 
 .die[data-dice-count="1"] .primary,
 body.gamble-mode .die[data-dice-count="1"] .primary {
-  width: min(34vw, 154px);
+  width: min(31vw, 150px);
 }
 
 .controls,
@@ -4597,7 +4902,7 @@ body:not(.gamble-mode) #bankButton {
 
   .die[data-dice-count="1"] .primary,
   body.gamble-mode .die[data-dice-count="1"] .primary {
-    width: min(22vw, 112px);
+    width: min(14vw, 90px);
   }
 
   .die[data-dice-count="2"] .primary,
@@ -4644,6 +4949,138 @@ body:not(.gamble-mode) #bankButton {
     min-height: 30px;
     padding: 0 5px;
     font-size: clamp(0.54rem, 1.6vw, 0.66rem);
+  }
+}
+
+/* Uniform dice faces: one- and two-dice modes use the same actual face box */
+:root {
+  --play-die-size: min(42vw, 188px);
+  --play-die-gap: 18px;
+  --play-die-pip-size: clamp(12px, 4.8vw, 21px);
+  --play-die-size-compact-landscape: min(18vw, 106px);
+  --play-die-gap-compact-landscape: 12px;
+  --play-die-pip-size-compact-landscape: clamp(8px, 2.2vw, 12px);
+}
+
+.die,
+body.gamble-mode .die {
+  grid-template-columns: var(--play-die-size) var(--play-die-size) !important;
+  column-gap: var(--play-die-gap) !important;
+  justify-content: center;
+}
+
+.die .die-face,
+.die[data-dice-count="1"] .primary,
+.die[data-dice-count="2"] .primary,
+.die[data-dice-count="2"] .secondary,
+body.gamble-mode .die .die-face,
+body.gamble-mode .die[data-dice-count="1"] .primary,
+body.gamble-mode .die[data-dice-count="2"] .primary,
+body.gamble-mode .die[data-dice-count="2"] .secondary {
+  box-sizing: border-box;
+  width: var(--play-die-size) !important;
+  max-width: var(--play-die-size) !important;
+  height: var(--play-die-size) !important;
+  max-height: var(--play-die-size) !important;
+  min-width: 0 !important;
+  transform: none !important;
+}
+
+@media (orientation: landscape) and (max-height: 560px) and (pointer: coarse) {
+  .die .die-face,
+  .die[data-dice-count="1"] .primary,
+  .die[data-dice-count="2"] .primary,
+  .die[data-dice-count="2"] .secondary,
+  body.gamble-mode .die .die-face,
+  body.gamble-mode .die[data-dice-count="1"] .primary,
+  body.gamble-mode .die[data-dice-count="2"] .primary,
+  body.gamble-mode .die[data-dice-count="2"] .secondary {
+    width: var(--play-die-size-compact-landscape) !important;
+    max-width: var(--play-die-size-compact-landscape) !important;
+    height: var(--play-die-size-compact-landscape) !important;
+    max-height: var(--play-die-size-compact-landscape) !important;
+  }
+
+  .die,
+  body.gamble-mode .die {
+    grid-template-columns: var(--play-die-size-compact-landscape) var(--play-die-size-compact-landscape) !important;
+    column-gap: var(--play-die-gap-compact-landscape) !important;
+  }
+}
+
+/* Final dice normalization: both modes use the exact single-die geometry */
+.die[data-dice-count="1"] .primary,
+.die[data-dice-count="2"] .primary,
+.die[data-dice-count="2"] .secondary,
+body.gamble-mode .die[data-dice-count="1"] .primary,
+body.gamble-mode .die[data-dice-count="2"] .primary,
+body.gamble-mode .die[data-dice-count="2"] .secondary,
+body.combo-mode .die[data-dice-count="1"] .primary,
+body.combo-mode .die[data-dice-count="2"] .primary,
+body.combo-mode .die[data-dice-count="2"] .secondary {
+  width: var(--play-die-size) !important;
+  height: var(--play-die-size) !important;
+  max-width: var(--play-die-size) !important;
+  max-height: var(--play-die-size) !important;
+  flex-basis: var(--play-die-size) !important;
+  padding: 14% !important;
+  border-radius: 30px !important;
+}
+
+.die[data-dice-count="2"] {
+  gap: var(--play-die-gap) !important;
+}
+
+@media (min-width: 721px) {
+  body.combo-mode .die,
+  body.combo-mode .die[data-dice-count="1"],
+  body.combo-mode .die[data-dice-count="2"] {
+    transform: translateY(-132px) !important;
+  }
+
+  body.combo-mode .die:hover:not(:disabled),
+  body.combo-mode .die[data-dice-count="1"]:hover:not(:disabled),
+  body.combo-mode .die[data-dice-count="2"]:hover:not(:disabled) {
+    transform: translateY(-135px) rotate(-1deg) !important;
+  }
+
+  body.combo-mode .die:active:not(:disabled),
+  body.combo-mode .die[data-dice-count="1"]:active:not(:disabled),
+  body.combo-mode .die[data-dice-count="2"]:active:not(:disabled) {
+    transform: translateY(-128px) scale(0.98) !important;
+  }
+}
+
+.die .die-face i,
+body.gamble-mode .die .die-face i,
+body.combo-mode .die .die-face i {
+  width: var(--play-die-pip-size) !important;
+  height: var(--play-die-pip-size) !important;
+  aspect-ratio: auto !important;
+}
+
+@media (orientation: landscape) and (max-height: 560px) and (pointer: coarse) {
+  .die[data-dice-count="1"] .primary,
+  .die[data-dice-count="2"] .primary,
+  .die[data-dice-count="2"] .secondary,
+  body.gamble-mode .die[data-dice-count="1"] .primary,
+  body.gamble-mode .die[data-dice-count="2"] .primary,
+  body.gamble-mode .die[data-dice-count="2"] .secondary,
+  body.combo-mode .die[data-dice-count="1"] .primary,
+  body.combo-mode .die[data-dice-count="2"] .primary,
+  body.combo-mode .die[data-dice-count="2"] .secondary {
+    width: var(--play-die-size-compact-landscape) !important;
+    height: var(--play-die-size-compact-landscape) !important;
+    max-width: var(--play-die-size-compact-landscape) !important;
+    max-height: var(--play-die-size-compact-landscape) !important;
+    flex-basis: var(--play-die-size-compact-landscape) !important;
+  }
+
+  .die .die-face i,
+  body.gamble-mode .die .die-face i,
+  body.combo-mode .die .die-face i {
+    width: var(--play-die-pip-size-compact-landscape) !important;
+    height: var(--play-die-pip-size-compact-landscape) !important;
   }
 }
 

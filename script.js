@@ -5,6 +5,7 @@ let difficulty = "normal";
 let playerName = "Du";
 let opponentName = "Spieler 2";
 let gameMode = "single";
+let gameVariant = "standard";
 let diceCount = 1;
 let startPlayer = "human";
 let soundEnabled = true;
@@ -23,6 +24,7 @@ let backgroundMusicLoadingPromise;
 let htmlBackgroundMusic;
 let musicIsPlaying = false;
 let musicStartPending = false;
+let comboComputerTimer;
 let rulesLockedByRematch = false;
 let royalMomentTimer;
 let winnerOverlayTimer;
@@ -42,6 +44,16 @@ const state = {
   hasRolled: false,
   goldAwarded: false,
   lastGoldReward: 0,
+};
+
+const comboState = {
+  phase: "select-human",
+  currentSelector: "human",
+  humanSelection: [],
+  computerSelection: [],
+  rollValues: [],
+  result: "",
+  winner: null,
 };
 
 const SHOP_SKINS = [
@@ -492,8 +504,16 @@ const opponentNameInput = document.querySelector("#opponentNameInput");
 const applyOpponentNameButton = document.querySelector("#applyOpponentNameButton");
 const singleModeButton = document.querySelector("#singleModeButton");
 const multiModeButton = document.querySelector("#multiModeButton");
+const standardVariantButton = document.querySelector("#standardVariantButton");
+const comboVariantButton = document.querySelector("#comboVariantButton");
 const oneDieButton = document.querySelector("#oneDieButton");
 const twoDiceButton = document.querySelector("#twoDiceButton");
+const comboPanel = document.querySelector("#comboPanel");
+const comboTurnLabel = document.querySelector("#comboTurnLabel");
+const comboHumanSelection = document.querySelector("#comboHumanSelection");
+const comboComputerSelection = document.querySelector("#comboComputerSelection");
+const comboRollResult = document.querySelector("#comboRollResult");
+const comboDiceGrid = document.querySelector("#comboDiceGrid");
 const humanPanel = document.querySelector("#humanPanel");
 const computerPanel = document.querySelector("#computerPanel");
 const humanStarterButton = document.querySelector("#humanStarterButton");
@@ -514,6 +534,8 @@ if (appVersion && APP_VERSION) {
 const lockedRuleControls = [
   singleModeButton,
   multiModeButton,
+  standardVariantButton,
+  comboVariantButton,
   riskOnButton,
   riskOffButton,
   gambleOnButton,
@@ -528,8 +550,11 @@ const lockedRuleControls = [
 const rollDie = () => Math.floor(Math.random() * 6) + 1;
 
 function render() {
-  humanScore.textContent = state.humanScore;
-  computerScore.textContent = state.computerScore;
+  const comboMode = isComboMode();
+  humanScore.textContent = comboMode ? formatComboSelection(comboState.humanSelection) : state.humanScore;
+  computerScore.textContent = comboMode ? formatComboSelection(comboState.computerSelection) : state.computerScore;
+  humanScore.nextElementSibling.textContent = comboMode ? "Gewählte Zahlen" : "Gesamtpunkte";
+  computerScore.nextElementSibling.textContent = comboMode ? "Gewählte Zahlen" : "Gesamtpunkte";
   humanWins.textContent = state.humanWins;
   computerWins.textContent = state.computerWins;
   roundScore.textContent = state.roundScore;
@@ -538,19 +563,22 @@ function render() {
   humanNameLabel.textContent = playerName;
   opponentNameLabel.textContent = getOpponentName();
   document.body.classList.toggle("gamble-mode", gambleMode);
+  document.body.classList.toggle("combo-mode", comboMode);
   rulesWinningScore.textContent = winningScore;
   rulesDifficultyText.textContent =
     difficulty === "normal" ? "Erreiche zuerst" : "Erreiche genau";
 
-  humanPanel.classList.toggle("active", state.currentPlayer === "human" && !state.isGameOver);
-  computerPanel.classList.toggle("active", state.currentPlayer === "computer" && !state.isGameOver);
-  humanPanel.classList.toggle("winner", hasWinningScore(state.humanScore));
-  computerPanel.classList.toggle("winner", hasWinningScore(state.computerScore));
+  const activePlayer = comboMode ? comboState.currentSelector : state.currentPlayer;
+  humanPanel.classList.toggle("active", activePlayer === "human" && !state.isGameOver);
+  computerPanel.classList.toggle("active", activePlayer === "computer" && !state.isGameOver);
+  humanPanel.classList.toggle("winner", comboMode ? comboState.winner === "human" : hasWinningScore(state.humanScore));
+  computerPanel.classList.toggle("winner", comboMode ? comboState.winner === "computer" : hasWinningScore(state.computerScore));
   opponentNameLabel.disabled = gameMode === "single";
+  if (newGameButton) newGameButton.textContent = comboMode ? "Neue Runde" : "Neues Spiel";
   if (humanStarterButton && computerStarterButton) {
-    const canChooseStarter = canChooseStartPlayer();
-    humanStarterButton.hidden = false;
-    computerStarterButton.hidden = false;
+    const canChooseStarter = !comboMode && canChooseStartPlayer();
+    humanStarterButton.hidden = comboMode;
+    computerStarterButton.hidden = comboMode;
     humanStarterButton.disabled = !canChooseStarter;
     computerStarterButton.disabled = !canChooseStarter;
     humanStarterButton.classList.toggle("active", state.currentPlayer === "human");
@@ -558,11 +586,15 @@ function render() {
     humanStarterButton.textContent = state.currentPlayer === "human" ? "Startet" : "Start";
     computerStarterButton.textContent = state.currentPlayer === "computer" ? "Startet" : "Start";
   }
-  rollButton.dataset.diceCount = String(getEffectiveDiceCount());
+  rollButton.dataset.diceCount = String(comboMode ? getRequiredComboPickCount() : getEffectiveDiceCount());
   oneDieButton.classList.toggle("active", diceCount === 1);
   twoDiceButton.classList.toggle("active", diceCount === 2);
   oneDieButton.setAttribute("aria-pressed", String(diceCount === 1));
   twoDiceButton.setAttribute("aria-pressed", String(diceCount === 2));
+  standardVariantButton?.classList.toggle("active", !comboMode);
+  comboVariantButton?.classList.toggle("active", comboMode);
+  standardVariantButton?.setAttribute("aria-pressed", String(!comboMode));
+  comboVariantButton?.setAttribute("aria-pressed", String(comboMode));
   riskOnButton?.classList.toggle("active", riskMode);
   riskOffButton?.classList.toggle("active", !riskMode);
   riskOnButton?.setAttribute("aria-pressed", String(riskMode));
@@ -576,8 +608,10 @@ function render() {
   gambleOnButton?.setAttribute("aria-pressed", String(gambleMode));
   gambleOffButton?.setAttribute("aria-pressed", String(!gambleMode));
   updateRuleControlsLock();
+  renderComboMode();
   bankButton.hidden = false;
   bankButton.disabled =
+    comboMode ||
     !gambleMode ||
     state.turnScore <= 0 ||
     state.isGameOver ||
@@ -587,7 +621,8 @@ function render() {
 
   rollButton.disabled =
     state.isGameOver ||
-    (gameMode === "single" && state.currentPlayer !== "human") ||
+    (comboMode && !canRollCombo()) ||
+    (!comboMode && gameMode === "single" && state.currentPlayer !== "human") ||
     state.isComputerThinking ||
     state.isRolling;
   renderGold();
@@ -666,6 +701,20 @@ function awardHumanWinGold() {
 function getSpecialMomentGoldReward(moment) {
   if (!moment || moment.type === "dark") return 0;
   return moment.reward ?? 50;
+}
+
+function calculateHumanComboGoldReward() {
+  return getRequiredComboPickCount() === 2 ? 500 : 100;
+}
+
+function awardHumanComboGold() {
+  if (state.goldAwarded) return 0;
+
+  const reward = calculateHumanComboGoldReward();
+  state.goldAwarded = true;
+  state.lastGoldReward = reward;
+  addGold(reward, "combo");
+  return reward;
 }
 
 function loadShopState() {
@@ -799,6 +848,10 @@ function applyActiveSkin() {
   applySkinPreviewStyles(document.body, skin);
 }
 
+function isComboMode() {
+  return gameVariant === "combo";
+}
+
 function areRuleControlsLocked() {
   return rulesLockedByRematch || state.hasRolled || state.isRolling || state.isComputerThinking;
 }
@@ -807,7 +860,17 @@ function updateRuleControlsLock() {
   const isLocked = areRuleControlsLocked();
   lockedRuleControls.forEach((control) => {
     const isRiskControl = control === riskOnButton || control === riskOffButton;
-    const shouldLock = isLocked || (gambleMode && isRiskControl);
+    const isStandardOnlyControl = [
+      riskOnButton,
+      riskOffButton,
+      gambleOnButton,
+      gambleOffButton,
+      winningScoreInput,
+      applyScoreButton,
+      normalModeButton,
+      hardModeButton,
+    ].includes(control);
+    const shouldLock = isLocked || (gambleMode && isRiskControl) || (isComboMode() && isStandardOnlyControl);
     control.disabled = shouldLock;
     control.closest(".setting")?.classList.toggle("locked", shouldLock);
   });
@@ -819,6 +882,241 @@ function setMessage(text, isBadRoll = false) {
   message.classList.toggle("bad-roll", isBadRoll);
 }
 
+function getRequiredComboPickCount() {
+  return diceCount === 2 ? 2 : 1;
+}
+
+function getComboSelection(player) {
+  return player === "computer" ? comboState.computerSelection : comboState.humanSelection;
+}
+
+function formatComboSelection(selection) {
+  return selection.length ? selection.slice().sort((a, b) => a - b).join(" + ") : "-";
+}
+
+function getComboPlayerName(player) {
+  return player === "human" ? playerName : getOpponentName();
+}
+
+function resetComboState() {
+  comboState.phase = "select-human";
+  comboState.currentSelector = "human";
+  comboState.humanSelection = [];
+  comboState.computerSelection = [];
+  comboState.rollValues = [];
+  comboState.result = "";
+  comboState.winner = null;
+}
+
+function canRollCombo() {
+  return (
+    isComboMode() &&
+    comboState.phase === "ready" &&
+    comboState.humanSelection.length === getRequiredComboPickCount() &&
+    comboState.computerSelection.length === getRequiredComboPickCount()
+  );
+}
+
+function renderComboMode() {
+  if (!comboPanel) return;
+
+  comboPanel.hidden = !isComboMode();
+  if (!isComboMode()) return;
+
+  if (comboTurnLabel) {
+    comboTurnLabel.textContent =
+      comboState.phase === "ready"
+        ? "Bereit zum Würfeln"
+        : comboState.phase === "result"
+          ? "Runde beendet"
+          : getComboPlayerName(comboState.currentSelector);
+  }
+  if (comboHumanSelection) comboHumanSelection.textContent = formatComboSelection(comboState.humanSelection);
+  if (comboComputerSelection) comboComputerSelection.textContent = formatComboSelection(comboState.computerSelection);
+  if (comboRollResult) comboRollResult.textContent = comboState.rollValues.length ? formatRoll(comboState.rollValues) : "-";
+
+  comboDiceGrid?.querySelectorAll(".combo-die-button").forEach((button) => {
+    const value = Number(button.dataset.comboValue);
+    const isHumanSelected = comboState.humanSelection.includes(value);
+    const isComputerSelected = comboState.computerSelection.includes(value);
+    const canSelect =
+      !state.isGameOver &&
+      !state.isRolling &&
+      (comboState.phase === "select-human" || comboState.phase === "select-computer");
+    button.classList.toggle("selected-human", isHumanSelected);
+    button.classList.toggle("selected-computer", isComputerSelected);
+    button.classList.toggle("selected-both", isHumanSelected && isComputerSelected);
+    button.classList.toggle("current-selectable", canSelect);
+    button.disabled = !canSelect || (gameMode === "single" && comboState.currentSelector === "computer");
+    button.setAttribute("aria-pressed", String(isHumanSelected || isComputerSelected));
+  });
+}
+
+function getComboStartMessage() {
+  return `Orakel: ${playerName} wählt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`;
+}
+
+function autoSelectComboForComputer() {
+  if (!isComboMode() || gameMode !== "single" || comboState.phase !== "select-computer") return;
+
+  state.isComputerThinking = true;
+  setMessage("KI wählt ihre Orakel-Zahlen...");
+  render();
+
+  window.clearTimeout(comboComputerTimer);
+  comboComputerTimer = window.setTimeout(() => {
+    comboComputerTimer = undefined;
+    if (!isComboMode() || gameMode !== "single" || comboState.phase !== "select-computer") return;
+
+    const values = [1, 2, 3, 4, 5, 6].sort(() => Math.random() - 0.5);
+    comboState.computerSelection = values.slice(0, getRequiredComboPickCount()).sort((a, b) => a - b);
+    comboState.phase = "ready";
+    comboState.currentSelector = "human";
+    state.isComputerThinking = false;
+    setMessage("KI hat gewählt. Jetzt würfeln.");
+    render();
+  }, 650);
+}
+
+function completeComboSelectionIfReady() {
+  const required = getRequiredComboPickCount();
+  if (comboState.phase === "select-human" && comboState.humanSelection.length === required) {
+    comboState.phase = "select-computer";
+    comboState.currentSelector = "computer";
+    if (gameMode === "single") {
+      autoSelectComboForComputer();
+    } else {
+      setMessage(`${getOpponentName()} wählt ${required} Zahl${required === 1 ? "" : "en"}.`);
+    }
+  } else if (comboState.phase === "select-computer" && comboState.computerSelection.length === required) {
+    comboState.phase = "ready";
+    comboState.currentSelector = "human";
+    setMessage("Beide Orakel-Auswahlen stehen. Jetzt würfeln.");
+  }
+}
+
+function selectComboNumber(value) {
+  if (!isComboMode() || state.isRolling || state.isGameOver) return;
+  if (comboState.phase !== "select-human" && comboState.phase !== "select-computer") return;
+  if (gameMode === "single" && comboState.currentSelector === "computer") return;
+
+  const selection = getComboSelection(comboState.currentSelector);
+  const selectedIndex = selection.indexOf(value);
+  if (selectedIndex >= 0) {
+    selection.splice(selectedIndex, 1);
+  } else if (selection.length < getRequiredComboPickCount()) {
+    selection.push(value);
+    selection.sort((a, b) => a - b);
+  } else {
+    playInvalidSound();
+    setMessage(`Du kannst nur ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"} wählen.`, true);
+    render();
+    return;
+  }
+
+  playClickSound();
+  completeComboSelectionIfReady();
+  if (comboState.phase === "select-human") {
+    setMessage(`${playerName} wählt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`);
+  } else if (comboState.phase === "select-computer" && gameMode === "multi") {
+    setMessage(`${getOpponentName()} wählt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`);
+  }
+  render();
+}
+
+function selectionMatchesRoll(selection, values) {
+  if (selection.length !== getRequiredComboPickCount()) return false;
+  if (values.length !== getRequiredComboPickCount()) return false;
+  return selection.every((value) => values.includes(value));
+}
+
+function getComboWinMessage(player) {
+  const selectionText = formatComboSelection(getComboSelection(player));
+  if (player === "human" && playerName === "Du") {
+    return `Du triffst ${selectionText} und gewinnst die Orakel-Runde.`;
+  }
+  return `${getComboPlayerName(player)} trifft ${selectionText} und gewinnt die Orakel-Runde.`;
+}
+
+function finishComboRoll(values) {
+  const humanHit = selectionMatchesRoll(comboState.humanSelection, values);
+  const computerHit = selectionMatchesRoll(comboState.computerSelection, values);
+  const humanGoldReward = gameMode === "single" && humanHit ? awardHumanComboGold() : 0;
+
+  comboState.rollValues = values;
+  comboState.phase = "result";
+  state.isGameOver = true;
+
+  if (humanHit && !computerHit) {
+    comboState.winner = "human";
+    state.humanWins += 1;
+    playWinSound();
+    playWinAnimation("human");
+    setMessage(`${getComboWinMessage("human")}${humanGoldReward > 0 ? ` +${humanGoldReward} Gold.` : ""}`);
+  } else if (computerHit && !humanHit) {
+    comboState.winner = "computer";
+    state.computerWins += 1;
+    playWinSound();
+    playWinAnimation("computer");
+    setMessage(getComboWinMessage("computer"));
+  } else {
+    comboState.winner = null;
+    setMessage(`Gewürfelt: ${formatRoll(values)}. Unentschieden.${humanGoldReward > 0 ? ` Dein Orakel war richtig: +${humanGoldReward} Gold.` : ""}`);
+    playDrawAnimation();
+  }
+
+  saveWins();
+  render();
+}
+
+function playComboWinAnimation(winner) {
+  const winnerPanel = winner === "human" ? humanPanel : computerPanel;
+  winnerPanel.classList.remove("win-pop");
+  void winnerPanel.offsetWidth;
+  winnerPanel.classList.add("win-pop");
+  tablePanel.classList.remove("win-flash");
+  void tablePanel.offsetWidth;
+  tablePanel.classList.add("win-flash");
+  window.setTimeout(() => {
+    winnerPanel.classList.remove("win-pop");
+    tablePanel.classList.remove("win-flash");
+  }, 950);
+}
+
+function showDrawOverlay() {
+  if (!winnerOverlay || !winnerTitle || !winnerScoreLine) return;
+  window.clearTimeout(winnerOverlayTimer);
+
+  winnerTitle.textContent = "Unentschieden";
+  winnerScoreLine.textContent = `Orakel | Wurf ${formatRoll(comboState.rollValues)}`;
+  if (winnerGoldReward) {
+    winnerGoldReward.hidden = true;
+  }
+  winnerOverlay.hidden = false;
+  winnerOverlay.classList.remove("show");
+
+  requestAnimationFrame(() => {
+    winnerOverlay.classList.add("show");
+  });
+}
+
+function playDrawAnimation() {
+  tablePanel?.classList.remove("win-flash");
+  message.classList.remove("win-message");
+  victoryBurst?.classList.remove("show");
+
+  requestAnimationFrame(() => {
+    tablePanel?.classList.add("win-flash");
+    message.classList.add("win-message");
+    showDrawOverlay();
+  });
+
+  window.setTimeout(() => {
+    tablePanel?.classList.remove("win-flash");
+    message.classList.remove("win-message");
+  }, 1500);
+}
+
 function getWinnerName(winner) {
   return winner === "human" ? playerName : getOpponentName();
 }
@@ -828,7 +1126,9 @@ function showWinnerOverlay(winner) {
   window.clearTimeout(winnerOverlayTimer);
 
   winnerTitle.textContent = `${getWinnerName(winner)} gewinnt`;
-  winnerScoreLine.textContent = `Endstand ${state.humanScore} zu ${state.computerScore}`;
+  winnerScoreLine.textContent = isComboMode()
+    ? `Orakel ${formatComboSelection(getComboSelection(winner))} | Wurf ${formatRoll(comboState.rollValues)}`
+    : `Endstand ${state.humanScore} zu ${state.computerScore}`;
   if (winnerGoldReward) {
     const reward = winner === "human" ? state.lastGoldReward : 0;
     winnerGoldReward.hidden = reward <= 0;
@@ -1124,6 +1424,20 @@ function bankTurn() {
 
 async function rollForCurrentPlayer() {
   if (state.isGameOver || state.isRolling) return;
+  if (isComboMode()) {
+    if (!canRollCombo()) return;
+
+    state.hasRolled = true;
+    const values = Array.from({ length: getRequiredComboPickCount() }, rollDie);
+    const value = values.reduce((total, nextValue) => total + nextValue, 0);
+    playRollSound();
+    setMessage("Orakel rollt...");
+    await rollWithSuspense(values);
+    state.roundScore = value;
+    finishComboRoll(values);
+    return;
+  }
+
   if (checkCurrentPlayerRiskDeadEnd()) return;
 
   state.hasRolled = true;
@@ -1303,8 +1617,11 @@ function scheduleComputerStart(delay = 2200) {
 
 function newGame(keepRulesLocked = false) {
   clearComputerStartTimer();
+  window.clearTimeout(comboComputerTimer);
+  comboComputerTimer = undefined;
   hideWinnerOverlay();
   rulesLockedByRematch = keepRulesLocked;
+  resetComboState();
   state.humanScore = 0;
   state.computerScore = 0;
   state.roundScore = 0;
@@ -1320,10 +1637,10 @@ function newGame(keepRulesLocked = false) {
   dieFaceTwo.dataset.value = "1";
   rollButton.classList.remove("rolling", "shake");
   rollButton.setAttribute("aria-label", "Würfeln");
-  setMessage(getStartMessage());
+  setMessage(isComboMode() ? getComboStartMessage() : getStartMessage());
   render();
 
-  if (gameMode === "single" && state.currentPlayer === "computer") {
+  if (!isComboMode() && gameMode === "single" && state.currentPlayer === "computer") {
     scheduleComputerStart();
   }
 }
@@ -1576,6 +1893,15 @@ function setGameMode(nextMode) {
   singleModeButton.setAttribute("aria-pressed", String(!isMulti));
   multiModeButton.setAttribute("aria-pressed", String(isMulti));
   localStorage.setItem("wuerfelduell-game-mode", gameMode);
+  closeOpponentNameEditor();
+  newGame();
+}
+
+function setGameVariant(nextVariant) {
+  if (areRuleControlsLocked()) return;
+
+  gameVariant = nextVariant === "combo" ? "combo" : "standard";
+  localStorage.setItem("wuerfelduell-game-variant", gameVariant);
   closeOpponentNameEditor();
   newGame();
 }
@@ -1981,9 +2307,15 @@ opponentNameInput.value = opponentName;
 const savedGameMode = localStorage.getItem("wuerfelduell-game-mode");
 setGameMode(savedGameMode === "multi" ? "multi" : "single");
 
+const savedGameVariant = localStorage.getItem("wuerfelduell-game-variant");
+setGameVariant(savedGameVariant === "combo" ? "combo" : "standard");
+
 const savedDiceCount = Number(localStorage.getItem("wuerfelduell-dice-count"));
 if (savedDiceCount === 2) {
   diceCount = 2;
+}
+if (isComboMode()) {
+  setMessage(getComboStartMessage());
 }
 render();
 
@@ -2073,6 +2405,14 @@ multiModeButton.addEventListener("click", () => {
   playClickSound();
   setGameMode("multi");
 });
+standardVariantButton?.addEventListener("click", () => {
+  playClickSound();
+  setGameVariant("standard");
+});
+comboVariantButton?.addEventListener("click", () => {
+  playClickSound();
+  setGameVariant("combo");
+});
 riskOnButton?.addEventListener("click", () => {
   playClickSound();
   setRiskMode(true);
@@ -2091,6 +2431,11 @@ gambleOffButton?.addEventListener("click", () => {
 });
 oneDieButton.addEventListener("click", () => setDiceCount(1));
 twoDiceButton.addEventListener("click", () => setDiceCount(2));
+comboDiceGrid?.addEventListener("click", (event) => {
+  const button = event.target.closest(".combo-die-button");
+  if (!button) return;
+  selectComboNumber(Number(button.dataset.comboValue));
+});
 humanStarterButton?.addEventListener("click", () => setStartPlayer("human"));
 computerStarterButton?.addEventListener("click", () => setStartPlayer("computer"));
 menuTrigger?.addEventListener("click", (event) => {
