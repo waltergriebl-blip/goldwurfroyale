@@ -139,7 +139,6 @@
             <div class="menu-panel shop-panel">
               <div class="shop-rollup">
                 <div class="shop-heading">
-                  <span>Shop</span>
                   <div class="shop-gold-pill">
                     <span aria-hidden="true">👑</span>
                     <strong id="goldBalance">0</strong>
@@ -147,10 +146,12 @@
                     <em class="gold-gain-toast" id="goldGainToast" hidden>+0 Gold</em>
                   </div>
                 </div>
-                <div class="shop-category">
-                  <span>Würfel-Skins</span>
+                <details class="shop-category" id="shopSkinsCategory">
+                  <summary>
+                    <span>Würfel-Skins</span>
+                  </summary>
                   <div class="shop-items" id="shopItems"></div>
-                </div>
+                </details>
               </div>
             </div>
           </div>

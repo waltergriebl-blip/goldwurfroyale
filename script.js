@@ -522,6 +522,7 @@ const menuShell = document.querySelector("#settingsShell");
 const menuTrigger = document.querySelector("#menuTrigger");
 const shopShell = document.querySelector("#shopShell");
 const shopTrigger = document.querySelector("#shopTrigger");
+const shopSkinsCategory = document.querySelector("#shopSkinsCategory");
 const shopItems = document.querySelector("#shopItems");
 const goldBalance = document.querySelector("#goldBalance");
 const goldGainToast = document.querySelector("#goldGainToast");
@@ -2266,6 +2267,9 @@ function togglePanel(shell, trigger) {
 
   const shouldOpen = !shell.classList.contains("menu-open");
   closePanels();
+  if (shell === shopShell && shouldOpen) {
+    shopSkinsCategory?.removeAttribute("open");
+  }
   setMenuOpen(shell, trigger, shouldOpen);
 }
 

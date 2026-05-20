@@ -352,19 +352,18 @@ button {
     0 16px 42px var(--shadow);
 }
 
-.shop-heading,
-.shop-category {
+.shop-heading {
   display: grid;
   gap: 8px;
 }
 
 .shop-heading {
-  grid-template-columns: 1fr auto 1fr;
+  justify-items: center;
   align-items: center;
 }
 
 .shop-heading span,
-.shop-category > span {
+.shop-category summary span {
   color: var(--gold);
   font-weight: 950;
   letter-spacing: 0.06em;
@@ -374,6 +373,54 @@ button {
 .shop-heading strong {
   color: var(--ink);
   font-size: 0.95rem;
+}
+
+.shop-category {
+  display: block;
+  border: 1px solid rgba(241, 200, 106, 0.5);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 231, 153, 0.08), rgba(0, 0, 0, 0.08)),
+    rgba(0, 0, 0, 0.08);
+  padding: 8px;
+}
+
+.shop-category summary {
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  justify-items: center;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.shop-category summary::-webkit-details-marker {
+  display: none;
+}
+
+.shop-category summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 180ms ease;
+}
+
+.shop-category summary span {
+  grid-column: 2;
+}
+
+.shop-category[open] summary::after {
+  transform: rotate(225deg) translate(-2px, -2px);
+}
+
+.shop-category[open] .shop-items {
+  margin-top: 8px;
 }
 
 
