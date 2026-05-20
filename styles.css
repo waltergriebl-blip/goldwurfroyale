@@ -5125,15 +5125,15 @@ body.combo-mode .die .die-face i {
     align-self: end;
     justify-self: center;
     margin: 0 0 10px;
-    transform: translateY(82px) !important;
+    transform: translateY(54px) !important;
   }
 
   body.combo-mode.combo-roll-ready .die:hover:not(:disabled) {
-    transform: translateY(79px) rotate(-1deg) !important;
+    transform: translateY(51px) rotate(-1deg) !important;
   }
 
   body.combo-mode.combo-roll-ready .die:active:not(:disabled) {
-    transform: translateY(86px) scale(0.98) !important;
+    transform: translateY(58px) scale(0.98) !important;
   }
 
   body.combo-mode .combo-panel {
@@ -5213,6 +5213,26 @@ body.combo-mode .die .die-face i {
     grid-area: switcher;
     width: min(100%, 430px);
     margin: 0;
+  }
+
+  body.combo-mode.combo-roll-ready .dice-switcher {
+    opacity: 1;
+    filter: none;
+    background:
+      linear-gradient(180deg, rgba(255, 226, 142, 0.08), rgba(0, 0, 0, 0.14)),
+      rgba(8, 7, 5, 0.9);
+    z-index: 4;
+  }
+
+  body.combo-mode.combo-roll-ready .dice-switcher.locked {
+    opacity: 1;
+    filter: none;
+    pointer-events: none;
+  }
+
+  body.combo-mode.combo-roll-ready .dice-switcher .theme-option {
+    color: #ead9ad;
+    opacity: 1;
   }
 
   body.combo-mode .message {
