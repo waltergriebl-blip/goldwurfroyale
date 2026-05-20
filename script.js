@@ -577,15 +577,16 @@ function render() {
   opponentNameLabel.disabled = gameMode === "single";
   if (newGameButton) newGameButton.textContent = comboMode ? "Neue Runde" : "Neues Spiel";
   if (humanStarterButton && computerStarterButton) {
-    const canChooseStarter = !comboMode && canChooseStartPlayer();
-    humanStarterButton.hidden = comboMode;
-    computerStarterButton.hidden = comboMode;
+    const canChooseStarter = canChooseStartPlayer();
+    const selectedStarter = comboMode ? startPlayer : state.currentPlayer;
+    humanStarterButton.hidden = false;
+    computerStarterButton.hidden = false;
     humanStarterButton.disabled = !canChooseStarter;
     computerStarterButton.disabled = !canChooseStarter;
-    humanStarterButton.classList.toggle("active", state.currentPlayer === "human");
-    computerStarterButton.classList.toggle("active", state.currentPlayer === "computer");
-    humanStarterButton.textContent = state.currentPlayer === "human" ? "Startet" : "Start";
-    computerStarterButton.textContent = state.currentPlayer === "computer" ? "Startet" : "Start";
+    humanStarterButton.classList.toggle("active", selectedStarter === "human");
+    computerStarterButton.classList.toggle("active", selectedStarter === "computer");
+    humanStarterButton.textContent = selectedStarter === "human" ? "Startet" : "Start";
+    computerStarterButton.textContent = selectedStarter === "computer" ? "Startet" : "Start";
   }
   rollButton.dataset.diceCount = String(comboMode ? getRequiredComboPickCount() : getEffectiveDiceCount());
   oneDieButton.classList.toggle("active", diceCount === 1);
@@ -854,7 +855,7 @@ function isComboMode() {
 }
 
 function areRuleControlsLocked() {
-  return rulesLockedByRematch || state.hasRolled || state.isRolling || state.isComputerThinking;
+  return rulesLockedByRematch || state.hasRolled || hasComboSelectionStarted() || state.isRolling || state.isComputerThinking;
 }
 
 function updateRuleControlsLock() {
@@ -899,9 +900,21 @@ function getComboPlayerName(player) {
   return player === "human" ? playerName : getOpponentName();
 }
 
+function getOtherComboPlayer(player) {
+  return player === "human" ? "computer" : "human";
+}
+
+function getComboPhaseForPlayer(player) {
+  return player === "computer" ? "select-computer" : "select-human";
+}
+
+function hasComboSelectionStarted() {
+  return isComboMode() && (comboState.humanSelection.length > 0 || comboState.computerSelection.length > 0);
+}
+
 function resetComboState() {
-  comboState.phase = "select-human";
-  comboState.currentSelector = "human";
+  comboState.currentSelector = startPlayer;
+  comboState.phase = getComboPhaseForPlayer(comboState.currentSelector);
   comboState.humanSelection = [];
   comboState.computerSelection = [];
   comboState.rollValues = [];
@@ -954,7 +967,7 @@ function renderComboMode() {
 }
 
 function getComboStartMessage() {
-  return `Orakel: ${playerName} wählt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`;
+  return `Orakel: ${getComboPlayerName(comboState.currentSelector)} wählt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`;
 }
 
 function autoSelectComboForComputer() {
@@ -971,28 +984,35 @@ function autoSelectComboForComputer() {
 
     const values = [1, 2, 3, 4, 5, 6].sort(() => Math.random() - 0.5);
     comboState.computerSelection = values.slice(0, getRequiredComboPickCount()).sort((a, b) => a - b);
-    comboState.phase = "ready";
-    comboState.currentSelector = "human";
     state.isComputerThinking = false;
-    setMessage("KI hat gewählt. Jetzt würfeln.");
+    completeComboSelectionIfReady();
+    if (comboState.phase === "ready") {
+      setMessage("KI hat gewählt. Jetzt würfeln.");
+    }
     render();
   }, 650);
 }
 
 function completeComboSelectionIfReady() {
   const required = getRequiredComboPickCount();
-  if (comboState.phase === "select-human" && comboState.humanSelection.length === required) {
-    comboState.phase = "select-computer";
-    comboState.currentSelector = "computer";
-    if (gameMode === "single") {
-      autoSelectComboForComputer();
-    } else {
-      setMessage(`${getOpponentName()} wählt ${required} Zahl${required === 1 ? "" : "en"}.`);
-    }
-  } else if (comboState.phase === "select-computer" && comboState.computerSelection.length === required) {
+
+  if (getComboSelection(comboState.currentSelector).length !== required) return;
+
+  const nextSelector = getOtherComboPlayer(comboState.currentSelector);
+  if (getComboSelection(nextSelector).length === required) {
     comboState.phase = "ready";
-    comboState.currentSelector = "human";
+    comboState.currentSelector = startPlayer;
     setMessage("Beide Orakel-Auswahlen stehen. Jetzt würfeln.");
+    return;
+  }
+
+  comboState.currentSelector = nextSelector;
+  comboState.phase = getComboPhaseForPlayer(nextSelector);
+
+  if (nextSelector === "computer" && gameMode === "single") {
+      autoSelectComboForComputer();
+  } else {
+    setMessage(`${getComboPlayerName(nextSelector)} wählt ${required} Zahl${required === 1 ? "" : "en"}.`);
   }
 }
 
@@ -1641,7 +1661,9 @@ function newGame(keepRulesLocked = false) {
   setMessage(isComboMode() ? getComboStartMessage() : getStartMessage());
   render();
 
-  if (!isComboMode() && gameMode === "single" && state.currentPlayer === "computer") {
+  if (isComboMode() && gameMode === "single" && comboState.currentSelector === "computer") {
+    autoSelectComboForComputer();
+  } else if (!isComboMode() && gameMode === "single" && state.currentPlayer === "computer") {
     scheduleComputerStart();
   }
 }
@@ -1851,19 +1873,29 @@ function getStartMessage() {
 }
 
 function canChooseStartPlayer() {
-  return !state.hasRolled && !state.isRolling && !state.isGameOver && !state.isComputerThinking;
+  return !state.hasRolled && !hasComboSelectionStarted() && !state.isRolling && !state.isGameOver && !state.isComputerThinking;
 }
 
 function setStartPlayer(player) {
   if (!canChooseStartPlayer()) return;
 
   clearComputerStartTimer();
+  window.clearTimeout(comboComputerTimer);
+  comboComputerTimer = undefined;
   startPlayer = player === "computer" ? "computer" : "human";
   state.currentPlayer = startPlayer;
-  setMessage(`Startspieler: ${getCurrentPlayerName()}.`);
+
+  if (isComboMode()) {
+    resetComboState();
+    setMessage(getComboStartMessage());
+  } else {
+    setMessage(`Startspieler: ${getCurrentPlayerName()}.`);
+  }
   render();
 
-  if (gameMode === "single" && state.currentPlayer === "computer") {
+  if (isComboMode() && gameMode === "single" && comboState.currentSelector === "computer") {
+    autoSelectComboForComputer();
+  } else if (gameMode === "single" && state.currentPlayer === "computer") {
     scheduleComputerStart();
   }
 }

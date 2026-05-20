@@ -5084,6 +5084,200 @@ body.combo-mode .die .die-face i {
   }
 }
 
+/* Phone portrait fit: tighten the play field without affecting desktop or landscape */
+@media (orientation: portrait) and (max-width: 720px) {
+  :root {
+    --play-die-size: min(35vw, 142px);
+    --play-die-gap: 12px;
+    --play-die-pip-size: clamp(9px, 3.4vw, 15px);
+  }
+
+  .game {
+    gap: 7px;
+  }
+
+  .scoreboard {
+    gap: 7px;
+    padding: 7px;
+  }
+
+  .player {
+    min-height: 118px;
+    padding: 9px 7px;
+    gap: 4px;
+  }
+
+  .player strong[id$="Score"] {
+    font-size: clamp(2.5rem, 13vw, 3.75rem);
+  }
+
+  .player span {
+    font-size: clamp(0.78rem, 3.6vw, 0.98rem);
+  }
+
+  .wins {
+    width: min(100%, 138px);
+    min-height: 46px;
+    padding: 7px 9px;
+  }
+
+  .table,
+  body.gamble-mode .table,
+  body.combo-mode .table {
+    gap: 7px;
+    padding: 12px 9px 11px;
+  }
+
+  .table::before {
+    inset: 8px;
+  }
+
+  .round {
+    gap: 1px;
+  }
+
+  .round span {
+    font-size: clamp(0.9rem, 4.4vw, 1.14rem);
+  }
+
+  .round strong {
+    font-size: clamp(2.1rem, 10vw, 2.8rem);
+  }
+
+  .turn-score,
+  body.gamble-mode .turn-score {
+    min-width: 96px;
+    min-height: 48px;
+    margin-bottom: 4px;
+    padding: 5px 10px;
+  }
+
+  .turn-score strong {
+    font-size: clamp(1.35rem, 6vw, 1.75rem);
+  }
+
+  .die,
+  body.gamble-mode .die,
+  body.combo-mode .die {
+    width: min(100%, 330px);
+    min-height: clamp(96px, 16vh, 126px);
+    height: clamp(108px, 17vh, 150px) !important;
+    margin-top: 3px;
+    gap: var(--play-die-gap) !important;
+  }
+
+  .dice-hint {
+    margin-top: -2px;
+    font-size: clamp(0.82rem, 3.6vw, 0.96rem);
+    line-height: 1.25;
+  }
+
+  .dice-switcher,
+  .controls {
+    width: min(100%, 360px);
+  }
+
+  .theme-option,
+  .dice-switcher .theme-option {
+    min-height: 38px;
+  }
+
+  .message,
+  body.gamble-mode .message {
+    height: 54px;
+    min-height: 54px;
+    padding: 7px 10px;
+    font-size: clamp(0.82rem, 3.5vw, 0.96rem);
+    line-height: 1.22;
+  }
+
+  .controls {
+    gap: 7px;
+  }
+
+  .controls button {
+    min-height: 40px;
+    padding: 0 8px;
+    font-size: clamp(0.8rem, 3.5vw, 0.96rem);
+  }
+
+  body.combo-mode .combo-panel {
+    width: min(100%, 380px);
+    gap: 6px;
+    padding: 7px;
+  }
+
+  body.combo-mode .combo-status-grid {
+    gap: 5px;
+  }
+
+  body.combo-mode .combo-status-grid div {
+    min-height: 50px;
+    gap: 1px;
+    padding: 5px 6px;
+  }
+
+  body.combo-mode .combo-status-grid span {
+    font-size: clamp(0.54rem, 2.5vw, 0.64rem);
+    letter-spacing: 0.04em;
+  }
+
+  body.combo-mode .combo-status-grid strong {
+    font-size: clamp(0.78rem, 3.5vw, 0.95rem);
+  }
+
+  body.combo-mode .combo-dice-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  body.combo-mode .combo-die-button {
+    min-height: 44px;
+    border-radius: 7px;
+  }
+
+  body.combo-mode .combo-die-face {
+    width: min(100%, 46px);
+    border-radius: 10px;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 420px) {
+  :root {
+    --play-die-size: min(33vw, 128px);
+    --play-die-gap: 10px;
+    --play-die-pip-size: clamp(8px, 3.2vw, 13px);
+  }
+
+  .table,
+  body.gamble-mode .table,
+  body.combo-mode .table {
+    gap: 6px;
+    padding: 10px 7px 9px;
+  }
+
+  .die,
+  body.gamble-mode .die,
+  body.combo-mode .die {
+    min-height: clamp(88px, 14vh, 112px);
+    height: clamp(100px, 16vh, 136px) !important;
+  }
+
+  body.combo-mode .combo-panel {
+    gap: 5px;
+    padding: 6px;
+  }
+
+  body.combo-mode .combo-status-grid div {
+    min-height: 46px;
+    padding: 4px 5px;
+  }
+
+  body.combo-mode .combo-die-button {
+    min-height: 40px;
+  }
+}
+
 /* Orakel on phone landscape: override desktop combo layout only on touch devices */
 @media (orientation: landscape) and (max-height: 560px) and (pointer: coarse) {
   body.combo-mode .table {
