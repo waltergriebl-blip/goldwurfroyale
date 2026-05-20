@@ -564,6 +564,7 @@ function render() {
   opponentNameLabel.textContent = getOpponentName();
   document.body.classList.toggle("gamble-mode", gambleMode);
   document.body.classList.toggle("combo-mode", comboMode);
+  document.body.classList.toggle("combo-roll-ready", comboMode && (comboState.phase === "ready" || comboState.phase === "result"));
   rulesWinningScore.textContent = winningScore;
   rulesDifficultyText.textContent =
     difficulty === "normal" ? "Erreiche zuerst" : "Erreiche genau";

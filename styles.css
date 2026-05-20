@@ -5106,6 +5106,27 @@ body.combo-mode .die .die-face i {
     display: none !important;
   }
 
+  body.combo-mode.combo-roll-ready .table {
+    grid-template-rows: auto minmax(70px, 1fr) auto 42px auto;
+    grid-template-areas:
+      "combo combo"
+      "dice dice"
+      "switcher switcher"
+      "message message"
+      "controls controls";
+  }
+
+  body.combo-mode.combo-roll-ready .die {
+    grid-area: dice;
+    width: min(100%, 250px);
+    height: clamp(64px, 17vh, 88px);
+    min-height: 0;
+    display: grid !important;
+    align-self: center;
+    justify-self: center;
+    margin: 0;
+  }
+
   body.combo-mode .combo-panel {
     grid-area: dice;
     position: relative !important;
@@ -5117,6 +5138,15 @@ body.combo-mode .die .die-face i {
     gap: 5px;
     padding: 5px;
     transform: none !important;
+  }
+
+  body.combo-mode.combo-roll-ready .combo-panel {
+    grid-area: combo;
+    width: min(100%, 500px);
+  }
+
+  body.combo-mode.combo-roll-ready .combo-dice-grid {
+    display: none;
   }
 
   body.combo-mode .combo-status-grid {
@@ -5158,6 +5188,16 @@ body.combo-mode .die .die-face i {
     width: clamp(5px, 1.25vw, 8px);
     height: clamp(5px, 1.25vw, 8px);
     aspect-ratio: auto;
+  }
+
+  body.combo-mode.combo-roll-ready .die[data-dice-count="1"] .primary,
+  body.combo-mode.combo-roll-ready .die[data-dice-count="2"] .primary,
+  body.combo-mode.combo-roll-ready .die[data-dice-count="2"] .secondary {
+    width: min(14vw, 76px) !important;
+    height: min(14vw, 76px) !important;
+    max-width: min(14vw, 76px) !important;
+    max-height: min(14vw, 76px) !important;
+    flex-basis: min(14vw, 76px) !important;
   }
 
   body.combo-mode .dice-switcher {
