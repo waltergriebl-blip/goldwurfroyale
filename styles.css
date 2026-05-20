@@ -5084,3 +5084,109 @@ body.combo-mode .die .die-face i {
   }
 }
 
+/* Orakel on phone landscape: override desktop combo layout only on touch devices */
+@media (orientation: landscape) and (max-height: 560px) and (pointer: coarse) {
+  body.combo-mode .table {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(112px, 1fr) auto 42px auto;
+    grid-template-areas:
+      "dice dice"
+      "switcher switcher"
+      "message message"
+      "controls controls";
+    gap: 4px 8px;
+    padding: 5px 7px 6px;
+    align-content: stretch;
+  }
+
+  body.combo-mode .round,
+  body.combo-mode .turn-score,
+  body.combo-mode .die,
+  body.combo-mode .dice-hint {
+    display: none !important;
+  }
+
+  body.combo-mode .combo-panel {
+    grid-area: dice;
+    position: relative !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: min(100%, 500px);
+    align-self: start;
+    justify-self: center;
+    gap: 5px;
+    padding: 5px;
+    transform: none !important;
+  }
+
+  body.combo-mode .combo-status-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  body.combo-mode .combo-status-grid div {
+    min-height: 34px;
+    gap: 1px;
+    padding: 4px 5px;
+  }
+
+  body.combo-mode .combo-status-grid span {
+    font-size: clamp(0.48rem, 1.35vw, 0.58rem);
+    letter-spacing: 0.04em;
+  }
+
+  body.combo-mode .combo-status-grid strong {
+    font-size: clamp(0.6rem, 1.6vw, 0.78rem);
+  }
+
+  body.combo-mode .combo-dice-grid {
+    grid-template-columns: repeat(6, minmax(34px, 1fr));
+    gap: 4px;
+  }
+
+  body.combo-mode .combo-die-button {
+    min-height: 42px;
+    border-radius: 7px;
+  }
+
+  body.combo-mode .combo-die-face {
+    width: min(100%, 42px);
+    border-radius: 10px;
+  }
+
+  body.combo-mode .combo-die-face i {
+    width: clamp(5px, 1.25vw, 8px);
+    height: clamp(5px, 1.25vw, 8px);
+    aspect-ratio: auto;
+  }
+
+  body.combo-mode .dice-switcher {
+    grid-area: switcher;
+    width: min(100%, 430px);
+    margin: 0;
+  }
+
+  body.combo-mode .message {
+    grid-area: message;
+    width: min(100%, 430px);
+    height: 42px;
+    min-height: 42px;
+    padding: 5px 10px;
+    font-size: clamp(0.58rem, 1.75vw, 0.76rem);
+    line-height: 1.15;
+  }
+
+  body.combo-mode .controls {
+    grid-area: controls;
+    width: min(100%, 430px);
+    gap: 5px;
+    margin-top: 0;
+  }
+
+  body.combo-mode .controls button {
+    min-height: 30px;
+    padding: 0 5px;
+    font-size: clamp(0.54rem, 1.6vw, 0.66rem);
+  }
+}
+
