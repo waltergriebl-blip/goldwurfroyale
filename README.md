@@ -1,6 +1,6 @@
 # Goldwurf Royale
 
-**Version 1.48**
+**Version 1.61**
 
 Ein kleines, mobiles Wuerfelspiel fuer Web und Smartphone.
 Spiele alleine gegen die KI oder lokal zu zweit am selben Geraet.
@@ -12,14 +12,18 @@ Spiele alleine gegen die KI oder lokal zu zweit am selben Geraet.
 - Singleplayer gegen KI
 - Multiplayer am selben Geraet
 - Startspieler auswaehlbar
+- frei waehlbare Zielpunkte von 10 bis 999
 - 1 oder 2 Wuerfel
 - Normal- und Schwer-Modus
 - Risiko-Modus
 - Gamble-Modus mit Zugpunkten und Sichern
+- Orakel-Modus mit Zahlenauswahl vor dem Wurf
+- Goldbelohnungen und Shop fuer kosmetische Wuerfel-Skins
 - Soundeffekte und optionale Hintergrundmusik
 - Hell-/Dunkelmodus
 - gespeicherte Einstellungen, Spielernamen, Siege, Gold und Shop-Freischaltungen
 - optimiert fuer Web und Mobile
+- optimierte Breitbild-Ansicht im Querformat
 - installierbar als PWA
 - nach dem ersten Besuch offline startbar
 
@@ -42,7 +46,7 @@ Das Spiel ist eine statische Webseite ohne npm-, Build- oder Framework-Abhaengig
 - `styles.css` - Layout, Themes und Animationen
 - `script.js` - Spiellogik, Einstellungen, Audio und Service-Worker-Registrierung
 - `version.js` - zentrale Versionsquelle (`APP_VERSION`)
-- `service-worker.js` - Offline-Cache fuer die PWA
+- `sw.js` - Offline-Cache fuer die PWA
 - `manifest.webmanifest` - Installationsdaten und App-Icons
 - `assets/` und Icons - lokale Bild- und App-Assets
 
