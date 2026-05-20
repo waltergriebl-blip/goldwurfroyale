@@ -5207,18 +5207,87 @@ body.combo-mode .die .die-face i {
     max-width: min(14vw, 76px) !important;
     max-height: min(14vw, 76px) !important;
     flex-basis: min(14vw, 76px) !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    grid-template-rows: repeat(3, 1fr) !important;
-    gap: 10% !important;
-    padding: 17% !important;
+    display: block !important;
+    padding: 0 !important;
   }
 
   body.combo-mode.combo-roll-ready .die .die-face i {
     width: clamp(5px, 1.25vw, 8px) !important;
     height: clamp(5px, 1.25vw, 8px) !important;
-    align-self: center !important;
-    justify-self: center !important;
+    position: absolute !important;
+    margin: 0 !important;
+    transform: translate(-50%, -50%) !important;
     aspect-ratio: auto !important;
+    opacity: 0 !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i:nth-child(1) {
+    left: 28% !important;
+    top: 28% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i:nth-child(2) {
+    left: 50% !important;
+    top: 28% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i:nth-child(3) {
+    left: 72% !important;
+    top: 28% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i:nth-child(4) {
+    left: 28% !important;
+    top: 50% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i:nth-child(5) {
+    left: 50% !important;
+    top: 50% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i:nth-child(6) {
+    left: 72% !important;
+    top: 50% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i:nth-child(7) {
+    left: 28% !important;
+    top: 72% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i:nth-child(8) {
+    left: 50% !important;
+    top: 72% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i:nth-child(9) {
+    left: 72% !important;
+    top: 72% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="1"] i:nth-child(5),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="2"] i:nth-child(1),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="2"] i:nth-child(9),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="3"] i:nth-child(1),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="3"] i:nth-child(5),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="3"] i:nth-child(9),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="4"] i:nth-child(1),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="4"] i:nth-child(3),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="4"] i:nth-child(7),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="4"] i:nth-child(9),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="5"] i:nth-child(1),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="5"] i:nth-child(3),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="5"] i:nth-child(5),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="5"] i:nth-child(7),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="5"] i:nth-child(9),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="6"] i:nth-child(1),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="6"] i:nth-child(3),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="6"] i:nth-child(4),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="6"] i:nth-child(6),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="6"] i:nth-child(7),
+  body.combo-mode.combo-roll-ready .die .die-face[data-value="6"] i:nth-child(9) {
+    opacity: 1 !important;
   }
 
   body.combo-mode .dice-switcher {
