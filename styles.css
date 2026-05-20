@@ -5207,6 +5207,18 @@ body.combo-mode .die .die-face i {
     max-width: min(14vw, 76px) !important;
     max-height: min(14vw, 76px) !important;
     flex-basis: min(14vw, 76px) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-template-rows: repeat(3, 1fr) !important;
+    gap: 10% !important;
+    padding: 17% !important;
+  }
+
+  body.combo-mode.combo-roll-ready .die .die-face i {
+    width: clamp(5px, 1.25vw, 8px) !important;
+    height: clamp(5px, 1.25vw, 8px) !important;
+    align-self: center !important;
+    justify-self: center !important;
+    aspect-ratio: auto !important;
   }
 
   body.combo-mode .dice-switcher {
