@@ -28,7 +28,8 @@ Spiele alleine gegen die KI oder lokal zu zweit am selben Geraet.
 - nach dem ersten Besuch offline startbar
 
 ## Online Spielen
-https://waltergriebl-blip.github.io/goldwurfroyale/
+
+https://waltergriebl-blip.github.io/wuerfelduell/
 
 ## Als App Nutzen
 

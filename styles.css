@@ -2735,7 +2735,50 @@ body:not(.dark) #resetWinsButton {
 
 @media (max-width: 360px) {
   .scoreboard {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    padding: 6px;
+  }
+
+  .player {
+    min-height: 108px;
+    padding: 7px 5px;
+    gap: 3px;
+  }
+
+  .label,
+  .name-button {
+    font-size: clamp(0.82rem, 4.7vw, 1.12rem);
+    letter-spacing: 0.05em;
+  }
+
+  .starter-button {
+    min-height: 27px;
+    padding: 3px 8px;
+    font-size: 0.62rem;
+  }
+
+  .player strong[id$="Score"] {
+    font-size: clamp(2.25rem, 12vw, 3.25rem);
+  }
+
+  .player span {
+    font-size: clamp(0.72rem, 3.5vw, 0.9rem);
+  }
+
+  .wins {
+    width: min(100%, 126px);
+    min-height: 40px;
+    padding: 6px 7px;
+  }
+
+  .wins span {
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+  }
+
+  .wins strong {
+    font-size: clamp(1.35rem, 7.2vw, 2rem);
   }
 
   .setting {
