@@ -6130,13 +6130,13 @@ body:not(.dark) .player-avatar-frame {
 @media (orientation: landscape) and (max-height: 560px) and (pointer: coarse) {
   .player {
     --player-avatar-size: clamp(80px, 8.8vw, 100px);
-    --player-details-offset: clamp(128px, 13vw, 154px);
+    --player-details-offset: clamp(116px, 11.8vw, 140px);
   }
 
   .player-avatar-frame {
     width: var(--player-avatar-size);
     height: var(--player-avatar-size);
-    top: clamp(50px, 5.6vw, 68px);
+    top: clamp(28px, 3.6vw, 44px);
   }
 }
 

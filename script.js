@@ -103,7 +103,7 @@ const SHOP_SKINS = [
     name: "Glutkern",
     rarity: "Legendary",
     price: 150,
-    description: "Ein feuriger KristallwÃ¼rfel mit flÃ¼ssiger Lava-Aura.",
+    description: "Ein feuriger Kristallwürfel mit flüssiger Lava-Aura.",
     unlockCondition: { type: "none" },
     preview: {
       background: "radial-gradient(circle at 20% 20%, rgba(255, 207, 82, 0.95), transparent 0 16%, transparent 34%), radial-gradient(circle at 80% 20%, rgba(255, 145, 20, 0.9), transparent 0 15%, transparent 32%), radial-gradient(circle at 20% 80%, rgba(255, 174, 37, 0.85), transparent 0 15%, transparent 32%), radial-gradient(circle at 80% 80%, rgba(255, 126, 14, 0.9), transparent 0 16%, transparent 34%), radial-gradient(circle at 50% 50%, rgba(255, 91, 0, 0.34), transparent 0 28%, transparent 56%), linear-gradient(145deg, #3b0b02 0%, #170503 42%, #5b1605 68%, #ff8a12 100%)",
@@ -119,7 +119,7 @@ const SHOP_SKINS = [
     name: "Kronenglut",
     rarity: "Legendary",
     price: 150,
-    description: "Goldene Dornen, Sternenfunken und kÃ¶nigliche Glut.",
+    description: "Goldene Dornen, Sternenfunken und königliche Glut.",
     unlockCondition: { type: "none" },
     preview: {
       background: "radial-gradient(circle at 50% 18%, rgba(255, 224, 116, 0.88), transparent 0 18%, transparent 38%), radial-gradient(circle at 50% 50%, rgba(255, 153, 18, 0.32), transparent 0 30%, transparent 58%), linear-gradient(145deg, #3a1604 0%, #120704 42%, #5a2506 70%, #ffc449 100%)",
@@ -167,7 +167,7 @@ const SHOP_SKINS = [
     name: "Himmelskrone",
     rarity: "Legendary",
     price: 150,
-    description: "Strahlender Diamantglanz in kÃ¶niglichem Gold.",
+    description: "Strahlender Diamantglanz in königlichem Gold.",
     unlockCondition: { type: "none" },
     preview: {
       background: "radial-gradient(circle at 50% 22%, rgba(255, 255, 255, 0.94), transparent 0 20%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(255, 222, 114, 0.34), transparent 0 32%, transparent 60%), linear-gradient(145deg, #fffaf0 0%, #f6dda0 38%, #dba83a 68%, #5f3605 100%)",
@@ -209,28 +209,28 @@ const AVATAR_SKINS = [
     name: "Sonnenk\u00f6nig",
     assetPath: "assets/avatars/avatar_sun_king.png",
     price: 150,
-    description: "Ein erhabener Herrscher aus Licht, Gold und gÃ¶ttlicher Glut.",
+    description: "Ein erhabener Herrscher aus Licht, Gold und göttlicher Glut.",
   },
   {
     id: "demon",
     name: "D\u00e4monenf\u00fcrst",
     assetPath: "assets/avatars/avatar_demon.png",
     price: 250,
-    description: "Ein finsterer Royal-Avatar im goldenen HÃ¶llenfeuer.",
+    description: "Ein finsterer Royal-Avatar im goldenen Höllenfeuer.",
   },
   {
     id: "ice-skeleton",
     name: "Eisskelett",
     assetPath: "assets/avatars/avatar_ice_skeleton.png",
     price: 250,
-    description: "Ein frostiger KnochenkÃ¶nig aus Eis, Schatten und blauer Magie.",
+    description: "Ein frostiger Knochenkönig aus Eis, Schatten und blauer Magie.",
   },
   {
     id: "card-master",
     name: "Kartenbaron",
     assetPath: "assets/avatars/avatar_card_master.png",
     price: 250,
-    description: "Ein eleganter GlÃ¼cksritter mit Karten, WÃ¼rfeln und goldener Aura.",
+    description: "Ein eleganter Glücksritter mit Karten, Würfeln und goldener Aura.",
   },
   {
     id: "fortune-dealer",
@@ -244,14 +244,14 @@ const AVATAR_SKINS = [
     name: "W\u00fcrfeldealer",
     assetPath: "assets/avatars/avatar_dice_dealer.png",
     price: 250,
-    description: "Der KI-Gegner am goldenen Spieltisch, mit WÃ¼rfeln und Siegesblick.",
+    description: "Der KI-Gegner am goldenen Spieltisch, mit Würfeln und Siegesblick.",
   },
   {
     id: "demon-gambler",
     name: "D\u00e4monenspieler",
     assetPath: "assets/avatars/avatar_demon_gambler.png",
     price: 250,
-    description: "Ein finsterer WÃ¼rfelherr mit roten Augen, Feuer und dÃ¤monischem GlÃ¼ck.",
+    description: "Ein finsterer Würfelherr mit roten Augen, Feuer und dämonischem Glück.",
   },
 ];
 
@@ -444,8 +444,8 @@ function render() {
   const comboMode = isComboMode();
   humanScore.textContent = comboMode ? formatComboSelection(comboState.humanSelection) : state.humanScore;
   computerScore.textContent = comboMode ? formatComboSelection(comboState.computerSelection) : state.computerScore;
-  humanScore.nextElementSibling.textContent = comboMode ? "GewÃ¤hlte Zahlen" : "Gesamtpunkte";
-  computerScore.nextElementSibling.textContent = comboMode ? "GewÃ¤hlte Zahlen" : "Gesamtpunkte";
+  humanScore.nextElementSibling.textContent = comboMode ? "Gewählte Zahlen" : "Gesamtpunkte";
+  computerScore.nextElementSibling.textContent = comboMode ? "Gewählte Zahlen" : "Gesamtpunkte";
   humanWins.textContent = state.humanWins;
   computerWins.textContent = state.computerWins;
   roundScore.textContent = state.roundScore;
@@ -582,7 +582,7 @@ function calculateHumanWinGold() {
   if (riskMode && !gambleMode) reward += 10;
   if (gambleMode) reward += 15;
   if (diceCount === 2) reward += 5;
-  // Bewusst zusÃ¤tzlicher Bonus: Im schweren Modus ist jeder Sieg exakt, dieser Moment soll trotzdem extra belohnt werden.
+  // Bewusst zusätzlicher Bonus: Im schweren Modus ist jeder Sieg exakt, dieser Moment soll trotzdem extra belohnt werden.
   if (difficulty === "hard" && state.humanScore === winningScore) reward += 10;
   return reward;
 }
@@ -1071,6 +1071,12 @@ function getComboPlayerName(player) {
   return player === "human" ? playerName : getOpponentName();
 }
 
+function getComboSelectionInstruction(player, required = getRequiredComboPickCount()) {
+  const name = getComboPlayerName(player);
+  const verb = name.trim().toLowerCase() === "du" ? "wählst" : "wählt";
+  return `${name} ${verb} ${required} Zahl${required === 1 ? "" : "en"}.`;
+}
+
 function getOtherComboPlayer(player) {
   return player === "human" ? "computer" : "human";
 }
@@ -1111,7 +1117,7 @@ function renderComboMode() {
   if (comboTurnLabel) {
     comboTurnLabel.textContent =
       comboState.phase === "ready"
-        ? "Bereit zum WÃ¼rfeln"
+        ? "Bereit zum Würfeln"
         : comboState.phase === "result"
           ? "Runde beendet"
           : getComboPlayerName(comboState.currentSelector);
@@ -1138,14 +1144,14 @@ function renderComboMode() {
 }
 
 function getComboStartMessage() {
-  return `Orakel: ${getComboPlayerName(comboState.currentSelector)} wÃ¤hlt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`;
+  return `Orakel: ${getComboSelectionInstruction(comboState.currentSelector)}`;
 }
 
 function autoSelectComboForComputer() {
   if (!isComboMode() || gameMode !== "single" || comboState.phase !== "select-computer") return;
 
   state.isComputerThinking = true;
-  setMessage("KI wÃ¤hlt ihre Orakel-Zahlen...");
+  setMessage("KI wählt ihre Orakel-Zahlen...");
   render();
 
   window.clearTimeout(comboComputerTimer);
@@ -1158,7 +1164,7 @@ function autoSelectComboForComputer() {
     state.isComputerThinking = false;
     completeComboSelectionIfReady();
     if (comboState.phase === "ready") {
-      setMessage("KI hat gewÃ¤hlt. Jetzt wÃ¼rfeln.");
+      setMessage("KI hat gewählt. Jetzt würfeln.");
     }
     render();
   }, 650);
@@ -1173,7 +1179,7 @@ function completeComboSelectionIfReady() {
   if (getComboSelection(nextSelector).length === required) {
     comboState.phase = "ready";
     comboState.currentSelector = startPlayer;
-    setMessage("Beide Orakel-Auswahlen stehen. Jetzt wÃ¼rfeln.");
+    setMessage("Beide Orakel-Auswahlen stehen. Jetzt würfeln.");
     return;
   }
 
@@ -1183,7 +1189,7 @@ function completeComboSelectionIfReady() {
   if (nextSelector === "computer" && gameMode === "single") {
       autoSelectComboForComputer();
   } else {
-    setMessage(`${getComboPlayerName(nextSelector)} wÃ¤hlt ${required} Zahl${required === 1 ? "" : "en"}.`);
+    setMessage(getComboSelectionInstruction(nextSelector, required));
   }
 }
 
@@ -1201,7 +1207,7 @@ function selectComboNumber(value) {
     selection.sort((a, b) => a - b);
   } else {
     playInvalidSound();
-    setMessage(`Du kannst nur ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"} wÃ¤hlen.`, true);
+    setMessage(`Du kannst nur ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"} wählen.`, true);
     render();
     return;
   }
@@ -1209,9 +1215,9 @@ function selectComboNumber(value) {
   playClickSound();
   completeComboSelectionIfReady();
   if (comboState.phase === "select-human") {
-    setMessage(`${playerName} wÃ¤hlt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`);
+    setMessage(getComboSelectionInstruction("human"));
   } else if (comboState.phase === "select-computer" && gameMode === "multi") {
-    setMessage(`${getOpponentName()} wÃ¤hlt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`);
+    setMessage(getComboSelectionInstruction("computer"));
   }
   render();
 }
@@ -1253,7 +1259,7 @@ function finishComboRoll(values) {
     setMessage(getComboWinMessage("computer"));
   } else {
     comboState.winner = null;
-    setMessage(`GewÃ¼rfelt: ${formatRoll(values)}. Unentschieden.${humanGoldReward > 0 ? ` Dein Orakel war richtig: +${humanGoldReward} Gold.` : ""}`);
+    setMessage(`Gewürfelt: ${formatRoll(values)}. Unentschieden.${humanGoldReward > 0 ? ` Dein Orakel war richtig: +${humanGoldReward} Gold.` : ""}`);
     playDrawAnimation();
   }
 
@@ -1536,7 +1542,7 @@ async function rollWithSuspense(finalValues) {
 
   dieFace.dataset.value = String(finalValues[0]);
   dieFaceTwo.dataset.value = String(finalValues[1] ?? 1);
-  rollButton.setAttribute("aria-label", `${formatRoll(finalValues)} gewÃ¼rfelt`);
+  rollButton.setAttribute("aria-label", `${formatRoll(finalValues)} gewürfelt`);
   rollButton.classList.remove("rolling");
   rollButton.classList.remove("shake");
   void rollButton.offsetWidth;
@@ -1636,7 +1642,7 @@ async function rollForCurrentPlayer() {
   const values = Array.from({ length: getEffectiveDiceCount() }, rollDie);
   const value = values.reduce((total, nextValue) => total + nextValue, 0);
   playRollSound();
-  setMessage(`${getCurrentPlayerName()} wÃ¼rfelt...`);
+  setMessage(`${getCurrentPlayerName()} würfelt...`);
   await rollWithSuspense(values);
   state.roundScore = value;
   const currentScore = state.currentPlayer === "human" ? state.humanScore : state.computerScore;
@@ -1649,37 +1655,37 @@ async function rollForCurrentPlayer() {
     playInvalidSound();
     state.turnScore = 0;
     gambleTurnLost = true;
-    setMessage(`${getCurrentPlayerName()} wÃ¼rfelt ${formatRoll(values)}. Gamble verloren, die Zugpunkte verfallen.`, true);
+    setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Gamble verloren, die Zugpunkte verfallen.`, true);
   } else if (gambleMode) {
     const nextTurnScore = state.turnScore + value;
     if (difficulty === "hard" && currentScore + nextTurnScore > winningScore) {
       playInvalidSound();
       state.turnScore = 0;
       gambleTurnLost = true;
-      setMessage(`${getCurrentPlayerName()} wÃ¼rfelt ${formatRoll(values)}. Zu viel fÃ¼r genau ${winningScore}, die Zugpunkte verfallen.`, true);
+      setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Zu viel für genau ${winningScore}, die Zugpunkte verfallen.`, true);
     } else {
       state.turnScore = nextTurnScore;
-      setMessage(`${getCurrentPlayerName()} wÃ¼rfelt ${formatRoll(values)}. Zugpunkte: ${state.turnScore}.`);
+      setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Zugpunkte: ${state.turnScore}.`);
     }
   } else if (riskMode && values.includes(1)) {
     playInvalidSound();
     riskInvalid = true;
-    setMessage(`${getCurrentPlayerName()} wÃ¼rfelt ${formatRoll(values)}. Risiko! Eine 1 macht den Wurf ungÃ¼ltig.`, true);
+    setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Risiko! Eine 1 macht den Wurf ungültig.`, true);
   } else if (difficulty === "hard" && nextScore > winningScore) {
     playInvalidSound();
     setMessage(
       state.currentPlayer === "human"
-        ? `${playerName} hat ${formatRoll(values)} gewÃ¼rfelt. Zu viel fÃ¼r genau ${winningScore}, der Wurf zÃ¤hlt nicht.`
-        : `${getOpponentName()} wÃ¼rfelt ${formatRoll(values)}. Zu viel fÃ¼r genau ${winningScore}, der Wurf zÃ¤hlt nicht.`,
+        ? `${playerName} hat ${formatRoll(values)} gewürfelt. Zu viel für genau ${winningScore}, der Wurf zählt nicht.`
+        : `${getOpponentName()} würfelt ${formatRoll(values)}. Zu viel für genau ${winningScore}, der Wurf zählt nicht.`,
     );
   } else if (state.currentPlayer === "human") {
     state.humanScore = nextScore;
     scoreApplied = true;
-    setMessage(`${playerName} hat ${formatRoll(values)} gewÃ¼rfelt. ${getOpponentName()} ist dran.`);
+    setMessage(`${playerName} hat ${formatRoll(values)} gewürfelt. ${getOpponentName()} ist dran.`);
   } else {
     state.computerScore = nextScore;
     scoreApplied = true;
-    setMessage(`${getOpponentName()} wÃ¼rfelt ${formatRoll(values)}. ${playerName} ist dran.`);
+    setMessage(`${getOpponentName()} würfelt ${formatRoll(values)}. ${playerName} ist dran.`);
   }
 
   triggerSpecialMoment(values, {
@@ -1828,7 +1834,7 @@ function newGame(keepRulesLocked = false) {
   dieFace.dataset.value = "1";
   dieFaceTwo.dataset.value = "1";
   rollButton.classList.remove("rolling", "shake");
-  rollButton.setAttribute("aria-label", "WÃ¼rfeln");
+  rollButton.setAttribute("aria-label", "Würfeln");
   setMessage(isComboMode() ? getComboStartMessage() : getStartMessage());
   render();
 
@@ -1969,14 +1975,14 @@ function checkCurrentPlayerRiskDeadEnd() {
   if (humanFinalScore > computerFinalScore) {
     state.humanWins += 1;
     awardHumanWinGold();
-    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gÃ¼ltiger Siegwurf ist mÃ¶glich. ${playerName} gewinnt mit ${humanFinalScore} zu ${computerFinalScore}.`);
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. ${playerName} gewinnt mit ${humanFinalScore} zu ${computerFinalScore}.`);
     playWinAnimation("human");
   } else if (computerFinalScore > humanFinalScore) {
     state.computerWins += 1;
-    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gÃ¼ltiger Siegwurf ist mÃ¶glich. ${getOpponentName()} gewinnt mit ${computerFinalScore} zu ${humanFinalScore}.`);
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. ${getOpponentName()} gewinnt mit ${computerFinalScore} zu ${humanFinalScore}.`);
     playWinAnimation("computer");
   } else {
-    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gÃ¼ltiger Siegwurf ist mÃ¶glich. Gleichstand mit ${humanFinalScore} zu ${computerFinalScore}.`);
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. Gleichstand mit ${humanFinalScore} zu ${computerFinalScore}.`);
   }
 
   saveWins();
@@ -2019,19 +2025,19 @@ function checkCurrentPlayerGambleDeadEnd(currentScore) {
   if (opponentCanStillWin) {
     const blockedName = getCurrentPlayerName();
     switchTurn();
-    setMessage(`${blockedName} braucht noch 1 Punkt. Im Gamble-Modus ist das nicht gÃ¼ltig mÃ¶glich. ${getCurrentPlayerName()} bekommt noch die Chance.`);
+    setMessage(`${blockedName} braucht noch 1 Punkt. Im Gamble-Modus ist das nicht gültig möglich. ${getCurrentPlayerName()} bekommt noch die Chance.`);
     return true;
   }
 
-  finishDeadEndByScore("Gamble-Ende: Beide kÃ¶nnen keinen gÃ¼ltigen Siegwurf mehr schaffen.");
+  finishDeadEndByScore("Gamble-Ende: Beide können keinen gültigen Siegwurf mehr schaffen.");
   return true;
 }
 
 function getStartMessage() {
   if (gambleMode) {
     return difficulty === "hard"
-      ? `Gamble: WÃ¼rfle weiter oder sichere genau bei ${winningScore} Punkten.`
-      : "Gamble: WÃ¼rfle weiter oder sichere deine Zugpunkte.";
+      ? `Gamble: Würfle weiter oder sichere genau bei ${winningScore} Punkten.`
+      : "Gamble: Würfle weiter oder sichere deine Zugpunkte.";
   }
 
   if (gameMode === "multi") {
@@ -2039,8 +2045,8 @@ function getStartMessage() {
   }
 
   return difficulty === "hard"
-    ? `WÃ¼rfle einmal. Wer genau ${winningScore} Punkte erreicht, gewinnt.`
-    : `WÃ¼rfle einmal. Wer zuerst ${winningScore} Punkte erreicht, gewinnt.`;
+    ? `Würfle einmal. Wer genau ${winningScore} Punkte erreicht, gewinnt.`
+    : `Würfle einmal. Wer zuerst ${winningScore} Punkte erreicht, gewinnt.`;
 }
 
 function canChooseStartPlayer() {
@@ -2229,7 +2235,7 @@ function loadBackgroundMusic() {
       .then((data) => {
         const context = ensureAudioContext();
         if (!context) {
-          throw new Error("Audio wird nicht unterstÃ¼tzt.");
+          throw new Error("Audio wird nicht unterstützt.");
         }
         return context.decodeAudioData(data);
       })
