@@ -1,6 +1,6 @@
 # Goldwurf Royale
 
-**Version 2.09**
+**Version 2.21**
 
 Ein kleines, mobiles Wuerfelspiel fuer Web und Smartphone.
 Spiele alleine gegen die KI oder lokal zu zweit am selben Geraet.
@@ -20,10 +20,12 @@ Spiele alleine gegen die KI oder lokal zu zweit am selben Geraet.
 - Orakel-Modus mit Zahlenauswahl vor dem Wurf
 - Goldbelohnungen und Shop fuer kosmetische Items oder Sounds
 - Avatar-Skins fuer das Spielerfeld
+- Wuerfel-Skins mit Bild-Assets
 - Jukebox mit freischaltbaren Hintergrundsounds
+- optimierte Shop-Karten fuer Avatar-Skins, Wuerfel-Skins und Jukebox
 - Soundeffekte und optionale Hintergrundmusik
 - Hell-/Dunkelmodus
-- gespeicherte Einstellungen, Spielernamen, Siege, Gold, Avatar, Sounds und Shop-Freischaltungen
+- gespeicherte Einstellungen, Spielernamen, Siege, Gold, Avatar, Wuerfel-Skins, Sounds und Shop-Freischaltungen
 - optimiert fuer Web und Mobile
 - optimierte Breitbild-Ansicht im Querformat
 - installierbar als PWA
@@ -48,9 +50,14 @@ Das Spiel ist eine statische Webseite ohne npm-, Build- oder Framework-Abhaengig
 - `styles.css` - Layout, Themes und Animationen
 - `script.js` - Spiellogik, Einstellungen, Audio und Service-Worker-Registrierung
 - `version.js` - zentrale Versionsquelle (`APP_VERSION`)
-- `sw.js` - Offline-Cache fuer die PWA
+- `service-worker.js` - Offline-Cache fuer App-Dateien, Icons, Musik und Assets
+- `sw.js` - Weiterleitung auf den Service Worker fuer alte Registrierungen
 - `manifest.webmanifest` - Installationsdaten und App-Icons
-- `assets/` und Icons - lokale Bild- und App-Assets
+- `CHANGELOG.md` - Versionshistorie
+- `assets/skins/` - Wuerfel-Skins als Bild-Assets
+- `assets/avatars/` - Avatar-Bilder fuer das Spielerfeld
+- `assets/music/` - Jukebox-Tracks
+- Icons und weitere `assets/` - lokale Bild- und App-Assets
 
 ## Rechte
 
