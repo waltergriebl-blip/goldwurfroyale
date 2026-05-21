@@ -2,7 +2,10 @@
 
 ## Version 2.21 - 2026-05-21
 
-- Mobile Jukebox-Karten separat optimiert, ohne Avatar- oder Wuerfel-Store zu veraendern.
+- Mobile Jukebox-Karten separat optimiert, ohne Avatar- oder Würfel-Store zu verändern.
+- README-Link auf die Goldwurf-Royale-GitHub-Pages-Adresse korrigiert.
+- Cache-Busting-Parameter in `index.html` auf Version 2.21 aktualisiert.
+- Manifest-Beschreibung modernisiert und Orientation auf `any` gesetzt.
 
 ## Version 2.20 - 2026-05-21
 
@@ -10,15 +13,15 @@
 
 ## Version 2.19 - 2026-05-21
 
-- Jukebox-Karten auf die Hoehe der anderen Store-Karten angehoben.
+- Jukebox-Karten auf die Höhe der anderen Store-Karten angehoben.
 
 ## Version 2.18 - 2026-05-21
 
-- Jukebox-Icon-Spalte korrigiert, damit Songtitel nicht mehr mit dem Musik-Icon ueberlappen.
+- Jukebox-Icon-Spalte korrigiert, damit Songtitel nicht mehr mit dem Musik-Icon überlappen.
 
 ## Version 2.17 - 2026-05-21
 
-- Kompakte Jukebox-Spalten optimiert, damit Icon, Titel, Preis und Button nicht ueberlappen.
+- Kompakte Jukebox-Spalten optimiert, damit Icon, Titel, Preis und Button nicht überlappen.
 
 ## Version 2.16 - 2026-05-21
 
@@ -30,12 +33,12 @@
 
 ## Version 2.14 - 2026-05-21
 
-- Neuen Jukebox-Track "Ashen Oath" fuer 100 Gold ergaenzt.
+- Neuen Jukebox-Track "Ashen Oath" für 100 Gold ergänzt.
 - Ashen Oath in den Musikordner und Service-Worker-Cache aufgenommen.
 
 ## Version 2.12 - 2026-05-21
 
-- Neuen Bild-Wuerfel-Skin "Smaragdzahn" fuer 250 Gold ergaenzt.
+- Neuen Bild-Würfel-Skin "Smaragdzahn" für 250 Gold ergänzt.
 - Smaragdzahn in den Service-Worker-Cache aufgenommen.
 
 ## Version 2.11 - 2026-05-21
@@ -45,30 +48,30 @@
 
 ## Version 2.01 - 2026-05-21
 
-- Gold-Fehlbetrag-Buttons im Avatar- und Wuerfel-Store mit kleinerer Schrift stabilisiert.
+- Gold-Fehlbetrag-Buttons im Avatar- und Würfel-Store mit kleinerer Schrift stabilisiert.
 
 ## Version 2.00 - 2026-05-21
 
-- Shop-Vorschauen fest in die linke Spalte gesetzt, damit Avatar- und Wuerfelkarten korrekt zentrieren.
+- Shop-Vorschauen fest in die linke Spalte gesetzt, damit Avatar- und Würfelkarten korrekt zentrieren.
 
 ## Version 1.99 - 2026-05-21
 
-- Aktionsbuttons und Vorschauen im Avatar- und Wuerfel-Store vertikal in der Karte zentriert.
+- Aktionsbuttons und Vorschauen im Avatar- und Würfel-Store vertikal in der Karte zentriert.
 
 ## Version 1.98 - 2026-05-21
 
-- Shop-Buttons in Avatar- und Wuerfel-Store breiter und mittig ausgerichtet.
+- Shop-Buttons in Avatar- und Würfel-Store breiter und mittig ausgerichtet.
 - Button-Texte wie "Noch 150 Gold" optisch stabilisiert.
 
 ## Version 1.97 - 2026-05-21
 
-- Jukebox-Zeichendarstellung fuer Musiknote, Trenner und Auswahlbuttons korrigiert.
+- Jukebox-Zeichendarstellung für Musiknote, Trenner und Auswahlbuttons korrigiert.
 - Jukebox-Buttons gegen Wortumbruch mitten im Text stabilisiert.
 
 ## Version 1.96 - 2026-05-21
 
-- Jukebox-Freischaltungen ergaenzt: "Classic" bleibt frei, alle weiteren Songs kosten 100 Gold.
-- Gekaufte Audio-Tracks werden gespeichert und koennen danach ausgewaehlt werden.
+- Jukebox-Freischaltungen ergänzt: "Classic" bleibt frei, alle weiteren Songs kosten 100 Gold.
+- Gekaufte Audio-Tracks werden gespeichert und können danach ausgewählt werden.
 
 ## Version 1.95 - 2026-05-21
 
@@ -77,13 +80,13 @@
 
 ## Version 1.92 - 2026-05-21
 
-- Drei neue Jukebox-Tracks ergaenzt: "High Roller", "Black Iron Sky" und "Black Velvet Rain".
-- Musikdateien in den neuen Ordner `assets/music/` aufgenommen und fuer den Offline-Cache registriert.
+- Drei neue Jukebox-Tracks ergänzt: "High Roller", "Black Iron Sky" und "Black Velvet Rain".
+- Musikdateien in den neuen Ordner `assets/music/` aufgenommen und für den Offline-Cache registriert.
 
 ## Version 1.91 - 2026-05-21
 
-- Store-Kategorie "Jukebox" ergaenzt.
-- Vorhandene Hintergrundmusik als kostenlosen auswaehlbaren Track "Classic" registriert.
+- Store-Kategorie "Jukebox" ergänzt.
+- Vorhandene Hintergrundmusik als kostenlosen auswählbaren Track "Classic" registriert.
 
 ## Version 1.89 - 2026-05-21
 
@@ -187,5 +190,5 @@
 
 - Zentrale Versionsquelle in `version.js` festgelegt.
 - Info-Panel zeigt die Version automatisch aus `APP_VERSION` an.
-- PWA-Unterstuetzung verbessert: neuer Service Worker mit Offline-Cache fuer App-Dateien, Icons, Musik und lokale Assets.
+- PWA-Unterstützung verbessert: neuer Service Worker mit Offline-Cache für App-Dateien, Icons, Musik und lokale Assets.
 - README mit PWA-/Offline-Hinweisen und kurzer Dateistruktur aktualisiert.

@@ -1,12 +1,12 @@
 {
   "name": "Goldwurf Royale",
   "short_name": "Goldwurf",
-  "description": "Ein mobiles Würfelspiel mit Singleplayer, Multiplayer, Zielpunkten und Schwierigkeitsgrad.",
+  "description": "Mobiles Würfelspiel mit Orakel-Modus, Skins, Jukebox, Goldsystem und Offline-PWA.",
   "lang": "de",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#070604",
   "theme_color": "#080604",
   "icons": [

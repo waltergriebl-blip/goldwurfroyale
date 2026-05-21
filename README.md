@@ -2,60 +2,60 @@
 
 **Version 2.21**
 
-Ein kleines, mobiles Wuerfelspiel fuer Web und Smartphone.
-Spiele alleine gegen die KI oder lokal zu zweit am selben Geraet.
+Ein kleines, mobiles Würfelspiel für Web und Smartphone.
+Spiele alleine gegen die KI oder lokal zu zweit am selben Gerät.
 
 ![Screenshot von Goldwurf Royale](screenshot.png)
 
 ## Features
 
 - Singleplayer gegen KI
-- Multiplayer am selben Geraet
-- Startspieler auswaehlbar
-- frei waehlbare Zielpunkte von 10 bis 999
-- 1 oder 2 Wuerfel
+- Multiplayer am selben Gerät
+- Startspieler auswählbar
+- frei wählbare Zielpunkte von 10 bis 999
+- 1 oder 2 Würfel
 - Normal- und Schwer-Modus
 - Risiko-Modus
 - Gamble-Modus mit Zugpunkten und Sichern
 - Orakel-Modus mit Zahlenauswahl vor dem Wurf
-- Goldbelohnungen und Shop fuer kosmetische Items oder Sounds
-- Avatar-Skins fuer das Spielerfeld
-- Wuerfel-Skins mit Bild-Assets
+- Goldbelohnungen und Shop für kosmetische Items oder Sounds
+- Avatar-Skins für das Spielerfeld
+- Würfel-Skins mit Bild-Assets
 - Jukebox mit freischaltbaren Hintergrundsounds
-- optimierte Shop-Karten fuer Avatar-Skins, Wuerfel-Skins und Jukebox
+- optimierte Shop-Karten für Avatar-Skins, Würfel-Skins und Jukebox
 - Soundeffekte und optionale Hintergrundmusik
 - Hell-/Dunkelmodus
-- gespeicherte Einstellungen, Spielernamen, Siege, Gold, Avatar, Wuerfel-Skins, Sounds und Shop-Freischaltungen
-- optimiert fuer Web und Mobile
+- gespeicherte Einstellungen, Spielernamen, Siege, Gold, Avatar, Würfel-Skins, Sounds und Shop-Freischaltungen
+- optimiert für Web und Mobile
 - optimierte Breitbild-Ansicht im Querformat
 - installierbar als PWA
 - nach dem ersten Besuch offline startbar
 
 ## Online Spielen
 
-https://waltergriebl-blip.github.io/wuerfelduell/
+https://waltergriebl-blip.github.io/goldwurfroyale/
 
 ## Als App Nutzen
 
-Die Webseite kann auf dem Smartphone zum Home-Bildschirm hinzugefuegt werden. Nach dem ersten erfolgreichen Laden speichert der Service Worker die wichtigen App-Dateien, Icons und Assets fuer die Offline-Nutzung.
+Die Webseite kann auf dem Smartphone zum Home-Bildschirm hinzugefügt werden. Nach dem ersten erfolgreichen Laden speichert der Service Worker die wichtigen App-Dateien, Icons und Assets für die Offline-Nutzung.
 
 **iPhone:** Teilen -> Zum Home-Bildschirm  
-**Android:** Browser-Menue -> Zum Startbildschirm
+**Android:** Browser-Menü -> Zum Startbildschirm
 
 ## Entwicklung und Dateien
 
-Das Spiel ist eine statische Webseite ohne npm-, Build- oder Framework-Abhaengigkeiten.
+Das Spiel ist eine statische Webseite ohne npm-, Build- oder Framework-Abhängigkeiten.
 
-- `index.html` - Spieloberflaeche und PWA-Metadaten
+- `index.html` - Spieloberfläche und PWA-Metadaten
 - `styles.css` - Layout, Themes und Animationen
 - `script.js` - Spiellogik, Einstellungen, Audio und Service-Worker-Registrierung
 - `version.js` - zentrale Versionsquelle (`APP_VERSION`)
-- `service-worker.js` - Offline-Cache fuer App-Dateien, Icons, Musik und Assets
-- `sw.js` - Weiterleitung auf den Service Worker fuer alte Registrierungen
+- `service-worker.js` - Offline-Cache für App-Dateien, Icons, Musik und Assets
+- `sw.js` - Weiterleitung auf den Service Worker für alte Registrierungen
 - `manifest.webmanifest` - Installationsdaten und App-Icons
 - `CHANGELOG.md` - Versionshistorie
-- `assets/skins/` - Wuerfel-Skins als Bild-Assets
-- `assets/avatars/` - Avatar-Bilder fuer das Spielerfeld
+- `assets/skins/` - Würfel-Skins als Bild-Assets
+- `assets/avatars/` - Avatar-Bilder für das Spielerfeld
 - `assets/music/` - Jukebox-Tracks
 - Icons und weitere `assets/` - lokale Bild- und App-Assets
 
