@@ -1,5 +1,20 @@
 # Changelog
 
+## Version 2.14 - 2026-05-21
+
+- Neuen Jukebox-Track "Ashen Oath" fuer 100 Gold ergaenzt.
+- Ashen Oath in den Musikordner und Service-Worker-Cache aufgenommen.
+
+## Version 2.12 - 2026-05-21
+
+- Neuen Bild-Wuerfel-Skin "Smaragdzahn" fuer 250 Gold ergaenzt.
+- Smaragdzahn in den Service-Worker-Cache aufgenommen.
+
+## Version 2.11 - 2026-05-21
+
+- Neuen Bild-Würfel-Skin "Goldmatrix" für 250 Gold ergänzt.
+- Goldmatrix in den Service-Worker-Cache aufgenommen.
+
 ## Version 2.01 - 2026-05-21
 
 - Gold-Fehlbetrag-Buttons im Avatar- und Wuerfel-Store mit kleinerer Schrift stabilisiert.

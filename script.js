@@ -194,6 +194,38 @@ const SHOP_SKINS = [
     assetRef: "assets/skins/meereskrone.png",
     useImageAsset: true,
   },
+  {
+    id: "goldmatrix",
+    name: "Goldmatrix",
+    rarity: "Legendary",
+    price: 250,
+    description: "Schwarzer Goldrahmen mit funkelnden Matrix-Kristallen.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 50% 20%, rgba(255, 221, 92, 0.88), transparent 0 18%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(218, 156, 42, 0.3), transparent 0 32%, transparent 60%), linear-gradient(145deg, #1c1308 0%, #080604 42%, #6b450b 72%, #ffd45e 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fff8d7, #ffc52e 50%, #2e1a02 100%)",
+      glow: "rgba(255, 194, 46, 0.7)",
+      text: "#ffe8a8",
+    },
+    assetRef: "assets/skins/goldmatrix.png",
+    useImageAsset: true,
+  },
+  {
+    id: "smaragdzahn",
+    name: "Smaragdzahn",
+    rarity: "Legendary",
+    price: 250,
+    description: "Smaragdschlangen, goldene Fassung und lebendige Wasserfunken.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 50% 20%, rgba(44, 226, 159, 0.82), transparent 0 18%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(14, 150, 103, 0.34), transparent 0 32%, transparent 60%), linear-gradient(145deg, #072a1e 0%, #03120d 42%, #0e6048 70%, #ffc45a 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #f6fff7, #2ce29f 50%, #031f17 100%)",
+      glow: "rgba(44, 226, 159, 0.68)",
+      text: "#dfffee",
+    },
+    assetRef: "assets/skins/smaragdzahn.png",
+    useImageAsset: true,
+  },
 ];
 
 const AVATAR_SKINS = [
@@ -253,6 +285,20 @@ const AVATAR_SKINS = [
     price: 250,
     description: "Ein finsterer Würfelherr mit roten Augen, Feuer und dämonischem Glück.",
   },
+  {
+    id: "meerjungfrauen",
+    name: "Meeresköniginnen",
+    assetPath: "assets/avatars/avatar_meerjungfrauen.png",
+    price: 250,
+    description: "Zwei royale Sirenen aus Gold, Smaragdlicht und Tiefseezauber.",
+  },
+  {
+    id: "lichtkoenigin",
+    name: "Lichtkönigin",
+    assetPath: "assets/avatars/avatar_lichtkoenigin.png",
+    price: 250,
+    description: "Eine strahlende Königin aus Gold, Licht und eisblauen Kristallen.",
+  },
 ];
 
 const COMPUTER_AVATAR_SKIN_ID = "dice-dealer";
@@ -278,6 +324,13 @@ const AUDIO_TRACKS = [
     assetPath: "assets/music/black-velvet-rain.mp3",
     price: 100,
     description: "Ein samtiger Regen aus Casino-Stimmung und Nachtglanz.",
+  },
+  {
+    id: "ashen-oath",
+    name: "Ashen Oath",
+    assetPath: "assets/music/ashen-oath.mp3",
+    price: 100,
+    description: "Ein dunkler Schwur aus Asche, Spannung und Spieltisch-Drama.",
   },
   {
     id: "high-roller",

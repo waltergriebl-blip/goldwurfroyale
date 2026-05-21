@@ -3729,7 +3729,9 @@ body.skin-kronenglut .die-face,
 body.skin-drachenasche .die-face,
 body.skin-astrallicht .die-face,
 body.skin-himmelskrone .die-face,
-body.skin-meereskrone .die-face {
+body.skin-meereskrone .die-face,
+body.skin-goldmatrix .die-face,
+body.skin-smaragdzahn .die-face {
   background-image: var(--skin-image);
   background-size: 154%;
   background-position: center 50%;
@@ -3770,11 +3772,27 @@ body.skin-meereskrone .die-face {
     0 0 60px rgba(72, 213, 255, 0.66);
 }
 
+body.skin-goldmatrix .die-face {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 224, 116, 0.66),
+    0 24px 42px rgba(0, 0, 0, 0.42),
+    0 0 60px rgba(255, 194, 46, 0.66);
+}
+
+body.skin-smaragdzahn .die-face {
+  box-shadow:
+    inset 0 0 0 1px rgba(116, 255, 206, 0.64),
+    0 24px 42px rgba(0, 0, 0, 0.42),
+    0 0 60px rgba(44, 226, 159, 0.66);
+}
+
 body.skin-kronenglut .die-face::before,
 body.skin-drachenasche .die-face::before,
 body.skin-astrallicht .die-face::before,
 body.skin-himmelskrone .die-face::before,
-body.skin-meereskrone .die-face::before {
+body.skin-meereskrone .die-face::before,
+body.skin-goldmatrix .die-face::before,
+body.skin-smaragdzahn .die-face::before {
   opacity: 0.08;
 }
 
@@ -3782,7 +3800,9 @@ body.skin-kronenglut .die-face::after,
 body.skin-drachenasche .die-face::after,
 body.skin-astrallicht .die-face::after,
 body.skin-himmelskrone .die-face::after,
-body.skin-meereskrone .die-face::after {
+body.skin-meereskrone .die-face::after,
+body.skin-goldmatrix .die-face::after,
+body.skin-smaragdzahn .die-face::after {
   box-shadow:
     inset 0 2px 2px rgba(255, 244, 198, 0.24),
     inset 0 -5px 8px rgba(0, 0, 0, 0.16);
@@ -3826,6 +3846,22 @@ body.skin-meereskrone .die-face i {
     inset 0 3px 5px rgba(255, 255, 255, 0.46),
     inset 0 -3px 4px rgba(0, 35, 52, 0.58),
     0 0 8px rgba(72, 213, 255, 0.82);
+}
+
+body.skin-goldmatrix .die-face i {
+  background: radial-gradient(circle at 34% 28%, #fff8d7, #ffc52e 48%, #2e1a02 100%);
+  box-shadow:
+    inset 0 3px 5px rgba(255, 255, 255, 0.46),
+    inset 0 -3px 4px rgba(45, 25, 2, 0.58),
+    0 0 8px rgba(255, 194, 46, 0.82);
+}
+
+body.skin-smaragdzahn .die-face i {
+  background: radial-gradient(circle at 34% 28%, #f6fff7, #2ce29f 48%, #031f17 100%);
+  box-shadow:
+    inset 0 3px 5px rgba(255, 255, 255, 0.46),
+    inset 0 -3px 4px rgba(0, 35, 24, 0.58),
+    0 0 8px rgba(44, 226, 159, 0.82);
 }
 
 body:not(.dark) .topbar,
