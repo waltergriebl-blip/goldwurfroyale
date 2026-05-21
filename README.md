@@ -1,6 +1,6 @@
 # Goldwurf Royale
 
-**Version 1.61**
+**Version 2.09**
 
 Ein kleines, mobiles Wuerfelspiel fuer Web und Smartphone.
 Spiele alleine gegen die KI oder lokal zu zweit am selben Geraet.
@@ -18,10 +18,12 @@ Spiele alleine gegen die KI oder lokal zu zweit am selben Geraet.
 - Risiko-Modus
 - Gamble-Modus mit Zugpunkten und Sichern
 - Orakel-Modus mit Zahlenauswahl vor dem Wurf
-- Goldbelohnungen und Shop fuer kosmetische Wuerfel-Skins
+- Goldbelohnungen und Shop fuer kosmetische Items oder Sounds
+- Avatar-Skins fuer das Spielerfeld
+- Jukebox mit freischaltbaren Hintergrundsounds
 - Soundeffekte und optionale Hintergrundmusik
 - Hell-/Dunkelmodus
-- gespeicherte Einstellungen, Spielernamen, Siege, Gold und Shop-Freischaltungen
+- gespeicherte Einstellungen, Spielernamen, Siege, Gold, Avatar, Sounds und Shop-Freischaltungen
 - optimiert fuer Web und Mobile
 - optimierte Breitbild-Ansicht im Querformat
 - installierbar als PWA
