@@ -69,7 +69,7 @@ const comboState = {
 const SHOP_SKINS = [
   {
     id: "gold",
-    name: "Standard GoldwÃ¼rfel",
+    name: "Standard Goldw\u00fcrfel",
     rarity: "Common",
     price: 0,
     description: "Der klassische Goldwurf-Look.",
@@ -206,14 +206,14 @@ const AVATAR_SKINS = [
   },
   {
     id: "sun-king",
-    name: "SonnenkÃ¶nig",
+    name: "Sonnenk\u00f6nig",
     assetPath: "assets/avatars/avatar_sun_king.png",
     price: 150,
     description: "Ein erhabener Herrscher aus Licht, Gold und gÃ¶ttlicher Glut.",
   },
   {
     id: "demon",
-    name: "DÃ¤monenfÃ¼rst",
+    name: "D\u00e4monenf\u00fcrst",
     assetPath: "assets/avatars/avatar_demon.png",
     price: 250,
     description: "Ein finsterer Royal-Avatar im goldenen HÃ¶llenfeuer.",
@@ -234,21 +234,21 @@ const AVATAR_SKINS = [
   },
   {
     id: "fortune-dealer",
-    name: "GlÃ¼cksdealer",
+    name: "Gl\u00fccksdealer",
     assetPath: "assets/avatars/avatar_fortune_dealer.png",
     price: 250,
     description: "Ein charmanter Spieltisch-Meister mit Karten, Chips und sicherem Blick.",
   },
   {
     id: "dice-dealer",
-    name: "WÃ¼rfeldealer",
+    name: "W\u00fcrfeldealer",
     assetPath: "assets/avatars/avatar_dice_dealer.png",
     price: 250,
     description: "Der KI-Gegner am goldenen Spieltisch, mit WÃ¼rfeln und Siegesblick.",
   },
   {
     id: "demon-gambler",
-    name: "DÃ¤monenspieler",
+    name: "D\u00e4monenspieler",
     assetPath: "assets/avatars/avatar_demon_gambler.png",
     price: 250,
     description: "Ein finsterer WÃ¼rfelherr mit roten Augen, Feuer und dÃ¤monischem GlÃ¼ck.",
@@ -810,19 +810,12 @@ function renderShop() {
     }
 
     const meta = document.createElement("span");
-    meta.className = `shop-item-meta rarity-${skin.rarity.toLowerCase()}`;
-    meta.textContent = `${skin.rarity} \u00b7 ${getUnlockText(skin)}`;
+    meta.className = "shop-item-meta shop-item-inline-price";
+    meta.textContent = isOwned ? "Freigeschaltet" : `${skin.price} Gold`;
 
     const title = document.createElement("strong");
+    title.className = `shop-item-title rarity-${skin.rarity.toLowerCase()}`;
     title.textContent = skin.name;
-
-    const description = document.createElement("p");
-    description.className = "shop-item-description";
-    description.textContent = skin.description;
-
-    const price = document.createElement("span");
-    price.className = "shop-item-price";
-    price.textContent = isOwned ? "Freigeschaltet" : `${skin.price} Gold`;
 
     const action = document.createElement("button");
     action.type = "button";
@@ -845,7 +838,7 @@ function renderShop() {
       action.disabled = true;
     }
 
-    item.append(preview, meta, title, description, price, action);
+    item.append(preview, meta, title, action);
     shopItems.append(item);
   });
 }
@@ -873,19 +866,12 @@ function renderAvatarShop() {
     preview.append(image);
 
     const meta = document.createElement("span");
-    meta.className = "shop-item-meta rarity-legendary";
-    meta.textContent = "Avatar \u00b7 Royal";
+    meta.className = "shop-item-meta shop-item-inline-price";
+    meta.textContent = isOwned ? "Freigeschaltet" : `${skin.price} Gold`;
 
     const title = document.createElement("strong");
+    title.className = "shop-item-title rarity-legendary";
     title.textContent = skin.name;
-
-    const description = document.createElement("p");
-    description.className = "shop-item-description";
-    description.textContent = skin.description;
-
-    const price = document.createElement("span");
-    price.className = "shop-item-price";
-    price.textContent = isOwned ? "Freigeschaltet" : `${skin.price} Gold`;
 
     const action = document.createElement("button");
     action.type = "button";
@@ -905,7 +891,7 @@ function renderAvatarShop() {
       action.disabled = true;
     }
 
-    item.append(preview, meta, title, description, price, action);
+    item.append(preview, meta, title, action);
     avatarShopItems.append(item);
   });
 }

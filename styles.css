@@ -433,9 +433,10 @@ button {
 .shop-item {
   width: min(100%, 420px);
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) minmax(132px, auto);
-  gap: 3px 10px;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(132px, auto);
+  gap: 6px 12px;
   align-items: center;
+  min-height: 84px;
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -494,7 +495,7 @@ button {
 }
 
 .skin-preview-die.skin-preview-image {
-  width: 56px;
+  width: 58px;
   border-radius: 10px;
   display: block;
   padding: 0;
@@ -535,6 +536,13 @@ button {
   line-height: 1.1;
 }
 
+.shop-item-title {
+  align-self: end;
+  font-size: 0.98rem;
+  letter-spacing: 0.015em;
+  overflow-wrap: anywhere;
+}
+
 .shop-item span,
 .shop-item-description {
   grid-column: 2;
@@ -544,11 +552,17 @@ button {
 }
 
 .shop-item-meta {
-  align-self: end;
+  align-self: start;
   font-size: 0.68rem;
   letter-spacing: 0.08em;
   line-height: 1;
   text-transform: uppercase;
+}
+
+.shop-item-inline-price {
+  color: var(--gold);
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
 }
 
 .shop-item-description {
@@ -569,7 +583,7 @@ button {
 
 .shop-item button {
   grid-column: 3;
-  grid-row: 1 / span 4;
+  grid-row: 1 / span 2;
   align-self: center;
   justify-self: center;
   display: grid;
@@ -5718,7 +5732,8 @@ body.combo-mode .wins strong {
 
 /* Avatar skins */
 .avatar-shop-item {
-  grid-template-columns: 58px minmax(0, 1fr) minmax(132px, auto);
+  grid-template-columns: 64px minmax(0, 1fr) minmax(132px, auto);
+  min-height: 78px;
 }
 
 .avatar-preview-frame {
@@ -5912,6 +5927,14 @@ body:not(.dark) .player-avatar-frame {
     height: var(--player-avatar-size);
     top: clamp(54px, 14.5vw, 70px);
   }
+}
+
+/* Store preview alignment: keep avatar and dice thumbnails in the left column only */
+.shop-item > .skin-preview-die,
+.shop-item > .avatar-preview-frame {
+  grid-column: 1 !important;
+  grid-row: 1 / span 4;
+  justify-self: center;
 }
 
 @media (orientation: landscape) and (max-height: 560px) and (pointer: coarse) {
