@@ -1,5 +1,29 @@
 # Changelog
 
+## Version 2.20 - 2026-05-21
+
+- Jukebox-Karten an die Shop-Kartenstruktur angepasst: Icon links, Preis oben, Titel darunter, Aktion rechts.
+
+## Version 2.19 - 2026-05-21
+
+- Jukebox-Karten auf die Hoehe der anderen Store-Karten angehoben.
+
+## Version 2.18 - 2026-05-21
+
+- Jukebox-Icon-Spalte korrigiert, damit Songtitel nicht mehr mit dem Musik-Icon ueberlappen.
+
+## Version 2.17 - 2026-05-21
+
+- Kompakte Jukebox-Spalten optimiert, damit Icon, Titel, Preis und Button nicht ueberlappen.
+
+## Version 2.16 - 2026-05-21
+
+- Musik-Icon in der kompakten Jukebox wieder eingeblendet, passend zu den Store-Karten.
+
+## Version 2.15 - 2026-05-21
+
+- Jukebox-Karten kompakter gemacht: nur Titel, Preis/Status und Aktion bleiben sichtbar.
+
 ## Version 2.14 - 2026-05-21
 
 - Neuen Jukebox-Track "Ashen Oath" fuer 100 Gold ergaenzt.

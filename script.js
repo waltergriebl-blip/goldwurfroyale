@@ -967,20 +967,13 @@ function renderJukebox() {
     preview.setAttribute("aria-hidden", "true");
     preview.textContent = "\u266a";
 
-    const meta = document.createElement("span");
-    meta.className = "shop-item-meta rarity-legendary";
-    meta.textContent = "Audio \u00b7 Jukebox";
+    const price = document.createElement("span");
+    price.className = "shop-item-meta shop-item-inline-price";
+    price.textContent = isOwned ? "Freigeschaltet" : `${track.price} Gold`;
 
     const title = document.createElement("strong");
+    title.className = "shop-item-title";
     title.textContent = track.name;
-
-    const description = document.createElement("p");
-    description.className = "shop-item-description";
-    description.textContent = track.description;
-
-    const price = document.createElement("span");
-    price.className = "shop-item-price";
-    price.textContent = isOwned ? "Freigeschaltet" : `${track.price} Gold`;
 
     const action = document.createElement("button");
     action.type = "button";
@@ -999,7 +992,7 @@ function renderJukebox() {
       action.disabled = true;
     }
 
-    item.append(preview, meta, title, description, price, action);
+    item.append(preview, price, title, action);
     jukeboxItems.append(item);
   });
 }

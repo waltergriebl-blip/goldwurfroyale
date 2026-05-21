@@ -5798,20 +5798,45 @@ body.combo-mode .wins strong {
 }
 
 .jukebox-shop-item {
-  grid-template-columns: 42px minmax(0, 1fr) minmax(128px, auto);
-  min-height: 82px;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(132px, auto);
+  min-height: 84px;
+  gap: 6px 12px;
+}
+
+.jukebox-shop-item .shop-item-inline-price {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+.jukebox-shop-item .shop-item-title {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  font-size: 0.98rem;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
 }
 
 .jukebox-shop-item button {
-  width: 142px;
-  max-width: 142px;
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  min-height: 54px;
+  width: 132px;
+  min-width: 124px;
+  max-width: 136px;
+  padding: 0 12px;
 }
 
-.jukebox-preview-frame {
-  width: 42px;
+.shop-item .jukebox-preview-frame {
+  width: 58px;
   aspect-ratio: 1;
   grid-column: 1;
-  grid-row: 1 / span 4;
+  grid-row: 1 / span 2;
+  align-self: center;
+  justify-self: center;
   display: grid;
   place-items: center;
   border-radius: 10px;
@@ -5820,7 +5845,7 @@ body.combo-mode .wins strong {
     radial-gradient(circle at 32% 24%, rgba(255, 246, 196, 0.36), transparent 0 32%),
     linear-gradient(145deg, rgba(241, 200, 106, 0.28), rgba(51, 27, 6, 0.58));
   color: var(--gold);
-  font-size: 1.45rem;
+  font-size: 1.7rem;
   font-weight: 950;
   line-height: 1;
   box-shadow:
