@@ -1,5 +1,98 @@
 # Changelog
 
+## Version 2.01 - 2026-05-21
+
+- Gold-Fehlbetrag-Buttons im Avatar- und Wuerfel-Store mit kleinerer Schrift stabilisiert.
+
+## Version 2.00 - 2026-05-21
+
+- Shop-Vorschauen fest in die linke Spalte gesetzt, damit Avatar- und Wuerfelkarten korrekt zentrieren.
+
+## Version 1.99 - 2026-05-21
+
+- Aktionsbuttons und Vorschauen im Avatar- und Wuerfel-Store vertikal in der Karte zentriert.
+
+## Version 1.98 - 2026-05-21
+
+- Shop-Buttons in Avatar- und Wuerfel-Store breiter und mittig ausgerichtet.
+- Button-Texte wie "Noch 150 Gold" optisch stabilisiert.
+
+## Version 1.97 - 2026-05-21
+
+- Jukebox-Zeichendarstellung fuer Musiknote, Trenner und Auswahlbuttons korrigiert.
+- Jukebox-Buttons gegen Wortumbruch mitten im Text stabilisiert.
+
+## Version 1.96 - 2026-05-21
+
+- Jukebox-Freischaltungen ergaenzt: "Classic" bleibt frei, alle weiteren Songs kosten 100 Gold.
+- Gekaufte Audio-Tracks werden gespeichert und koennen danach ausgewaehlt werden.
+
+## Version 1.95 - 2026-05-21
+
+- Würfel-Testfreischaltungen zurückgesetzt: Nur der Standard Goldwürfel bleibt automatisch freigeschaltet.
+- Alle anderen Würfel-Skins kosten jetzt 150 Gold und müssen wieder im Shop gekauft werden.
+
+## Version 1.92 - 2026-05-21
+
+- Drei neue Jukebox-Tracks ergaenzt: "High Roller", "Black Iron Sky" und "Black Velvet Rain".
+- Musikdateien in den neuen Ordner `assets/music/` aufgenommen und fuer den Offline-Cache registriert.
+
+## Version 1.91 - 2026-05-21
+
+- Store-Kategorie "Jukebox" ergaenzt.
+- Vorhandene Hintergrundmusik als kostenlosen auswaehlbaren Track "Classic" registriert.
+
+## Version 1.89 - 2026-05-21
+
+- Neuen kostenlosen Bild-Würfel-Skin "Meereskrone" ergänzt.
+- Meereskrone in Standard-Freischaltungen und Service-Worker-Cache aufgenommen.
+
+## Version 1.88 - 2026-05-21
+
+- Neuen kostenlosen Bild-Würfel-Skin "Himmelskrone" ergänzt.
+- Himmelskrone in Standard-Freischaltungen und Service-Worker-Cache aufgenommen.
+
+## Version 1.87 - 2026-05-21
+
+- Drei kostenlose Bild-Würfel-Skins ergänzt: Kronenglut, Drachenasche und Astrallicht.
+- Neue Skin-Bilder in Standard-Freischaltungen und Service-Worker-Cache aufgenommen.
+
+## Version 1.86 - 2026-05-21
+
+- Neuen kostenlosen Bild-Würfel-Skin "Glutkern" ergänzt.
+- Glutkern in Standard-Freischaltungen und Service-Worker-Cache aufgenommen.
+
+## Version 1.85 - 2026-05-21
+
+- Würfel-Shop und Würfel-Skin-CSS auf Standard Goldwürfel und Sternenfrost reduziert.
+- Alte CSS-Platzhalter-Würfel aus dem Shop entfernt; Avatar-Skins bleiben unverändert.
+
+## Version 1.84 - 2026-05-20
+
+- Sternenfrost-Shopbild feiner zugeschnitten, damit der dunkle Rand in der Vorschau ausgefüllt wird.
+
+## Version 1.83 - 2026-05-20
+
+- Sternenfrost-Vorschau im Shop vergrößert, damit das Bild besser erkennbar ist.
+
+## Version 1.82 - 2026-05-20
+
+- Sternenfrost-Bildtextur am Spielwürfel herangezoomt, damit die sichtbare Würfelgröße besser zu den Original-Würfeln passt.
+
+## Version 1.81 - 2026-05-20
+
+- Sternenfrost-Würfel direkt freigeschaltet und als kostenlos auswählbarer Standard-Skin ergänzt.
+
+## Version 1.80 - 2026-05-20
+
+- Sternenfrost-Würfel als echtes Bild-Asset eingebunden und im Shop als Bildvorschau dargestellt.
+- Service-Worker-Cache um das neue Sternenfrost-Bild ergänzt.
+
+## Version 1.79 - 2026-05-20
+
+- Neuer Würfel-Skin "Sternenfrost" ergänzt, inspiriert vom blau leuchtenden Kristall-/Sternenwürfel.
+- Cache-Busting-Version aktualisiert, damit Browser und PWA den neuen Shop-Skin laden.
+
 ## Version 1.48 - 2026-05-20
 
 - Orakel-Würfel etwas weiter nach oben positioniert.

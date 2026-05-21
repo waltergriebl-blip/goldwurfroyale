@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Standard Gold Avatar">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="64%">
+      <stop offset="0" stop-color="#fff2a8"/>
+      <stop offset="0.42" stop-color="#d9a338"/>
+      <stop offset="0.76" stop-color="#6d3e08"/>
+      <stop offset="1" stop-color="#130a02"/>
+    </radialGradient>
+    <linearGradient id="rim" x1="14%" y1="8%" x2="86%" y2="92%">
+      <stop offset="0" stop-color="#fff7c8"/>
+      <stop offset="0.26" stop-color="#f2c85b"/>
+      <stop offset="0.52" stop-color="#9d5f12"/>
+      <stop offset="0.74" stop-color="#ffe68d"/>
+      <stop offset="1" stop-color="#5d3308"/>
+    </linearGradient>
+    <filter id="glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 1  0 0.72 0 0 0.54  0 0 0.18 0 0.08  0 0 0 0.72 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="none"/>
+  <circle cx="512" cy="512" r="398" fill="url(#rim)" filter="url(#glow)"/>
+  <circle cx="512" cy="512" r="340" fill="url(#bg)" stroke="#fff0a6" stroke-width="8"/>
+  <path d="M512 186l45 122 128-10-94 87 49 119-128-64-128 64 49-119-94-87 128 10z" fill="#fff2a8" opacity="0.95"/>
+  <path d="M266 704c104-42 169-120 246-252 77 132 142 210 246 252-111 18-183 57-246 134-63-77-135-116-246-134z" fill="#3b2106" opacity="0.46"/>
+  <path d="M512 362c59 90 109 145 183 181-73 29-127 74-183 137-56-63-110-108-183-137 74-36 124-91 183-181z" fill="#ffe27a"/>
+  <circle cx="512" cy="512" r="86" fill="#7a480c" opacity="0.35"/>
+  <path d="M512 468l22 44 49 7-35 34 8 49-44-23-44 23 8-49-35-34 49-7z" fill="#fff6c8"/>
+</svg>

@@ -1,4 +1,4 @@
-const APP_VERSION = String(globalThis.APP_VERSION || "");
+﻿const APP_VERSION = String(globalThis.APP_VERSION || "");
 
 let winningScore = 50;
 let difficulty = "normal";
@@ -13,8 +13,18 @@ let musicEnabled = false;
 let riskMode = false;
 let gambleMode = false;
 let gold = 0;
-let ownedSkins = new Set(["gold"]);
+const DEFAULT_OWNED_SKINS = ["gold"];
+const DICE_PURCHASE_RESET_KEY = "goldwurf-royale-dice-purchases-reset-v1";
+let ownedSkins = new Set(DEFAULT_OWNED_SKINS);
 let activeSkin = "gold";
+const DEFAULT_AVATAR_SKIN = "standard-gold";
+const AVATAR_PURCHASE_RESET_KEY = "goldwurf-royale-avatar-purchases-reset-v1";
+let ownedAvatarSkins = new Set([DEFAULT_AVATAR_SKIN]);
+let activeAvatarSkin = DEFAULT_AVATAR_SKIN;
+const DEFAULT_AUDIO_TRACK = "classic";
+const DEFAULT_OWNED_AUDIO_TRACKS = [DEFAULT_AUDIO_TRACK];
+let ownedAudioTracks = new Set(DEFAULT_OWNED_AUDIO_TRACKS);
+let activeAudioTrack = DEFAULT_AUDIO_TRACK;
 let audioContext;
 let computerStartTimer;
 let backgroundMusicBuffer;
@@ -59,7 +69,7 @@ const comboState = {
 const SHOP_SKINS = [
   {
     id: "gold",
-    name: "Standard Goldwürfel",
+    name: "Standard GoldwÃ¼rfel",
     rarity: "Common",
     price: 0,
     description: "Der klassische Goldwurf-Look.",
@@ -73,354 +83,221 @@ const SHOP_SKINS = [
     assetRef: "assets/skins/gold.png",
   },
   {
-    id: "obsidian",
-    name: "Obsidian-Würfel",
-    rarity: "Rare",
-    price: 100,
-    description: "Dunkler Stein mit warmer Goldkante.",
+    id: "starfrost",
+    name: "Sternenfrost",
+    rarity: "Legendary",
+    price: 150,
+    description: "Gefrorenes Sternenlicht in blauem Kristall.",
     unlockCondition: { type: "none" },
     preview: {
-      background: "linear-gradient(145deg, #777068 0%, #24211e 42%, #030303 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #ffd76f, #1a1204 68%, #000 100%)",
-      glow: "rgba(255, 190, 52, 0.2)",
-      text: "#ffd76f",
+      background: "radial-gradient(circle at 20% 20%, rgba(160, 245, 255, 0.95), transparent 0 16%, transparent 34%), radial-gradient(circle at 80% 20%, rgba(160, 245, 255, 0.9), transparent 0 15%, transparent 32%), radial-gradient(circle at 20% 80%, rgba(130, 235, 255, 0.85), transparent 0 15%, transparent 32%), radial-gradient(circle at 80% 80%, rgba(130, 235, 255, 0.9), transparent 0 16%, transparent 34%), radial-gradient(circle at 50% 50%, rgba(45, 196, 255, 0.26), transparent 0 28%, transparent 56%), linear-gradient(145deg, #102d45 0%, #061827 42%, #05283e 68%, #8eeeff 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #ecfbff, #4edfff 52%, #062437 100%)",
+      glow: "rgba(95, 223, 255, 0.66)",
+      text: "#d7f8ff",
     },
-    assetRef: "assets/skins/obsidian.png",
+    assetRef: "assets/skins/starfrost.png",
+    useImageAsset: true,
   },
   {
-    id: "ruby",
-    name: "Rubin-Würfel",
-    rarity: "Rare",
+    id: "glutkern",
+    name: "Glutkern",
+    rarity: "Legendary",
+    price: 150,
+    description: "Ein feuriger KristallwÃ¼rfel mit flÃ¼ssiger Lava-Aura.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 20% 20%, rgba(255, 207, 82, 0.95), transparent 0 16%, transparent 34%), radial-gradient(circle at 80% 20%, rgba(255, 145, 20, 0.9), transparent 0 15%, transparent 32%), radial-gradient(circle at 20% 80%, rgba(255, 174, 37, 0.85), transparent 0 15%, transparent 32%), radial-gradient(circle at 80% 80%, rgba(255, 126, 14, 0.9), transparent 0 16%, transparent 34%), radial-gradient(circle at 50% 50%, rgba(255, 91, 0, 0.34), transparent 0 28%, transparent 56%), linear-gradient(145deg, #3b0b02 0%, #170503 42%, #5b1605 68%, #ff8a12 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fff3c2, #ff8a12 52%, #3b0900 100%)",
+      glow: "rgba(255, 105, 10, 0.68)",
+      text: "#ffe1a8",
+    },
+    assetRef: "assets/skins/glutkern.png",
+    useImageAsset: true,
+  },
+  {
+    id: "kronenglut",
+    name: "Kronenglut",
+    rarity: "Legendary",
+    price: 150,
+    description: "Goldene Dornen, Sternenfunken und kÃ¶nigliche Glut.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 50% 18%, rgba(255, 224, 116, 0.88), transparent 0 18%, transparent 38%), radial-gradient(circle at 50% 50%, rgba(255, 153, 18, 0.32), transparent 0 30%, transparent 58%), linear-gradient(145deg, #3a1604 0%, #120704 42%, #5a2506 70%, #ffc449 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fff5c8, #ffb21e 52%, #3a1200 100%)",
+      glow: "rgba(255, 178, 30, 0.7)",
+      text: "#ffe6a8",
+    },
+    assetRef: "assets/skins/kronenglut.png",
+    useImageAsset: true,
+  },
+  {
+    id: "drachenasche",
+    name: "Drachenasche",
+    rarity: "Legendary",
+    price: 150,
+    description: "Schwarze Drachenschuppen und brodelnde Lava-Risse.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 20% 24%, rgba(255, 83, 12, 0.65), transparent 0 18%, transparent 38%), radial-gradient(circle at 80% 24%, rgba(255, 83, 12, 0.65), transparent 0 18%, transparent 38%), radial-gradient(circle at 50% 50%, rgba(255, 45, 8, 0.28), transparent 0 32%, transparent 60%), linear-gradient(145deg, #1a0804 0%, #070303 44%, #4b1006 72%, #ff4b12 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #ffe2b6, #ff5a13 52%, #290300 100%)",
+      glow: "rgba(255, 74, 18, 0.72)",
+      text: "#ffd2a8",
+    },
+    assetRef: "assets/skins/drachenasche.png",
+    useImageAsset: true,
+  },
+  {
+    id: "astrallicht",
+    name: "Astrallicht",
+    rarity: "Legendary",
+    price: 150,
+    description: "Kosmisches Eis mit goldenen Sternenflammen.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 18% 20%, rgba(255, 200, 86, 0.82), transparent 0 18%, transparent 36%), radial-gradient(circle at 82% 20%, rgba(255, 200, 86, 0.82), transparent 0 18%, transparent 36%), radial-gradient(circle at 50% 50%, rgba(104, 191, 255, 0.28), transparent 0 30%, transparent 58%), linear-gradient(145deg, #0f1728 0%, #05070d 44%, #1c2b42 70%, #f5f8ff 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fff8df, #8bcfff 50%, #07111f 100%)",
+      glow: "rgba(161, 212, 255, 0.66)",
+      text: "#edf7ff",
+    },
+    assetRef: "assets/skins/astrallicht.png",
+    useImageAsset: true,
+  },
+  {
+    id: "himmelskrone",
+    name: "Himmelskrone",
+    rarity: "Legendary",
+    price: 150,
+    description: "Strahlender Diamantglanz in kÃ¶niglichem Gold.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 50% 22%, rgba(255, 255, 255, 0.94), transparent 0 20%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(255, 222, 114, 0.34), transparent 0 32%, transparent 60%), linear-gradient(145deg, #fffaf0 0%, #f6dda0 38%, #dba83a 68%, #5f3605 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #fffdf4, #ffd65f 50%, #5b3100 100%)",
+      glow: "rgba(255, 216, 95, 0.68)",
+      text: "#4d2b00",
+    },
+    assetRef: "assets/skins/himmelskrone.png",
+    useImageAsset: true,
+  },
+  {
+    id: "meereskrone",
+    name: "Meereskrone",
+    rarity: "Legendary",
+    price: 150,
+    description: "Tiefsee-Kristall mit goldener Krone und Wasserwirbeln.",
+    unlockCondition: { type: "none" },
+    preview: {
+      background: "radial-gradient(circle at 50% 20%, rgba(66, 210, 255, 0.82), transparent 0 20%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(20, 159, 210, 0.34), transparent 0 32%, transparent 60%), linear-gradient(145deg, #082332 0%, #031017 42%, #0f4f68 70%, #ffbc4a 100%)",
+      pip: "radial-gradient(circle at 34% 28%, #f7fdff, #47d7ff 50%, #032434 100%)",
+      glow: "rgba(72, 213, 255, 0.68)",
+      text: "#dff9ff",
+    },
+    assetRef: "assets/skins/meereskrone.png",
+    useImageAsset: true,
+  },
+];
+
+const AVATAR_SKINS = [
+  {
+    id: "standard-gold",
+    name: "Standard Gold",
+    assetPath: "assets/avatars/avatar_standard_gold.svg",
+    price: 0,
+    description: "Ein schlichtes goldenes Feld als klassischer Standard-Avatar.",
+  },
+  {
+    id: "sun-king",
+    name: "SonnenkÃ¶nig",
+    assetPath: "assets/avatars/avatar_sun_king.png",
+    price: 150,
+    description: "Ein erhabener Herrscher aus Licht, Gold und gÃ¶ttlicher Glut.",
+  },
+  {
+    id: "demon",
+    name: "DÃ¤monenfÃ¼rst",
+    assetPath: "assets/avatars/avatar_demon.png",
     price: 250,
-    description: "Rot geschliffen, heiß belohnt.",
-    unlockCondition: { type: "none" },
-    preview: {
-      background: "linear-gradient(145deg, #ffe4dc 0%, #e12a48 42%, #5a0615 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #fff0d0, #4a0611 68%, #1a0205 100%)",
-      glow: "rgba(255, 68, 96, 0.28)",
-      text: "#ffe8b6",
-    },
-    assetRef: "assets/skins/ruby.png",
+    description: "Ein finsterer Royal-Avatar im goldenen HÃ¶llenfeuer.",
   },
   {
-    id: "diamond",
-    name: "Diamant-Würfel",
-    rarity: "Epic",
-    price: 500,
-    description: "Klar, kalt und funkelnd.",
-    unlockCondition: { type: "none" },
-    preview: {
-      background: "linear-gradient(145deg, #ffffff 0%, #dbf8ff 38%, #6ed1ff 72%, #315b7d 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #0a2432, #02070a 68%, #000 100%)",
-      glow: "rgba(150, 229, 255, 0.34)",
-      text: "#081722",
-    },
-    assetRef: "assets/skins/diamond.png",
+    id: "ice-skeleton",
+    name: "Eisskelett",
+    assetPath: "assets/avatars/avatar_ice_skeleton.png",
+    price: 250,
+    description: "Ein frostiger KnochenkÃ¶nig aus Eis, Schatten und blauer Magie.",
   },
   {
-    id: "royal",
-    name: "Royal-Würfel",
-    rarity: "Epic",
-    price: 1000,
-    description: "Macht, Reichtum, Ehre.",
-    unlockCondition: { type: "none" },
-    preview: {
-      background: "linear-gradient(145deg, #fff7b8 0%, #ffc83f 36%, #c47a0c 72%, #5e3202 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #2c1702, #050301 68%, #000 100%)",
-      glow: "rgba(255, 203, 73, 0.48)",
-      text: "#070604",
-    },
-    assetRef: "assets/skins/royal.png",
+    id: "card-master",
+    name: "Kartenbaron",
+    assetPath: "assets/avatars/avatar_card_master.png",
+    price: 250,
+    description: "Ein eleganter GlÃ¼cksritter mit Karten, WÃ¼rfeln und goldener Aura.",
   },
   {
-    id: "diamond-deluxe",
-    name: "Diamant Deluxe",
-    rarity: "Legendary",
-    price: 2500,
-    description: "Luxus aus Licht und Eis.",
-    unlockCondition: { type: "none" },
-    preview: {
-      background: "conic-gradient(from 215deg at 50% 50%, #ffffff, #9de9ff, #8767ff, #ffffff, #dff9ff, #ffffff)",
-      pip: "radial-gradient(circle at 34% 28%, #0a2432, #02070a 68%, #000 100%)",
-      glow: "rgba(174, 231, 255, 0.46)",
-      text: "#081722",
-    },
-    assetRef: "assets/skins/diamond-deluxe.png",
+    id: "fortune-dealer",
+    name: "GlÃ¼cksdealer",
+    assetPath: "assets/avatars/avatar_fortune_dealer.png",
+    price: 250,
+    description: "Ein charmanter Spieltisch-Meister mit Karten, Chips und sicherem Blick.",
   },
   {
-    id: "dragonfire",
-    name: "Drachenfeuer",
-    rarity: "Legendary",
-    price: 3000,
-    description: "Geboren aus Feuer und Zorn.",
-    unlockCondition: { type: "wins", value: 10 },
-    preview: {
-      background: "radial-gradient(circle at 62% 70%, rgba(255, 196, 62, 0.55), transparent 0 18%, transparent 42%), linear-gradient(145deg, #1b1512 0%, #4b1307 42%, #ff5b16 74%, #140704 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #ffd871, #ff4a13 54%, #140300 100%)",
-      glow: "rgba(255, 92, 22, 0.52)",
-      text: "#ffd871",
-    },
-    assetRef: "assets/skins/dragonfire.png",
+    id: "dice-dealer",
+    name: "WÃ¼rfeldealer",
+    assetPath: "assets/avatars/avatar_dice_dealer.png",
+    price: 250,
+    description: "Der KI-Gegner am goldenen Spieltisch, mit WÃ¼rfeln und Siegesblick.",
   },
   {
-    id: "void-eclipse",
-    name: "Void Eclipse",
-    rarity: "Legendary",
-    price: 3600,
-    description: "Verschlungen von der Leere.",
-    unlockCondition: { type: "wins", value: 15 },
-    preview: {
-      background: "radial-gradient(circle at 70% 28%, rgba(183, 73, 255, 0.55), transparent 0 24%, transparent 48%), linear-gradient(145deg, #27113c 0%, #09040f 52%, #000 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #f0d7ff, #8d35ff 58%, #100018 100%)",
-      glow: "rgba(154, 64, 255, 0.48)",
-      text: "#ecd7ff",
-    },
-    assetRef: "assets/skins/void-eclipse.png",
+    id: "demon-gambler",
+    name: "DÃ¤monenspieler",
+    assetPath: "assets/avatars/avatar_demon_gambler.png",
+    price: 250,
+    description: "Ein finsterer WÃ¼rfelherr mit roten Augen, Feuer und dÃ¤monischem GlÃ¼ck.",
+  },
+];
+
+const COMPUTER_AVATAR_SKIN_ID = "dice-dealer";
+
+const AUDIO_TRACKS = [
+  {
+    id: "classic",
+    name: "Classic",
+    assetPath: "background-music.wav",
+    price: 0,
+    description: "Der klassische Hintergrundtrack von Goldwurf Royale.",
   },
   {
-    id: "lightbringer",
-    name: "Lichtbringer",
-    rarity: "Legendary",
-    price: 4200,
-    description: "Segen des Himmels.",
-    unlockCondition: { type: "wins", value: 20 },
-    preview: {
-      background: "radial-gradient(circle at 45% 35%, rgba(255, 255, 255, 0.96), transparent 0 22%, transparent 44%), linear-gradient(145deg, #ffffff 0%, #ffe8a7 42%, #d69a1f 74%, #70460b 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #7a4500, #231202 68%, #000 100%)",
-      glow: "rgba(255, 230, 142, 0.58)",
-      text: "#4a2700",
-    },
-    assetRef: "assets/skins/lightbringer.png",
+    id: "black-iron-sky",
+    name: "Black Iron Sky",
+    assetPath: "assets/music/black-iron-sky.mp3",
+    price: 100,
+    description: "Dunkle Spannung fuer dramatische Runden am Spieltisch.",
   },
   {
-    id: "chaos-core",
-    name: "Chaos Core",
-    rarity: "Mythic",
-    price: 5000,
-    description: "Instabil. Unberechenbar. Mächtig.",
-    unlockCondition: { type: "wins", value: 25 },
-    preview: {
-      background: "radial-gradient(circle at 50% 50%, rgba(255, 35, 20, 0.86), transparent 0 16%, transparent 38%), linear-gradient(145deg, #30201d 0%, #080504 45%, #b61610 70%, #030101 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #ffedc8, #ff2115 54%, #120000 100%)",
-      glow: "rgba(255, 35, 20, 0.62)",
-      text: "#ffb29c",
-    },
-    assetRef: "assets/skins/chaos-core.png",
+    id: "black-velvet-rain",
+    name: "Black Velvet Rain",
+    assetPath: "assets/music/black-velvet-rain.mp3",
+    price: 100,
+    description: "Ein samtiger Regen aus Casino-Stimmung und Nachtglanz.",
   },
   {
-    id: "timekeeper",
-    name: "Zeitwächter",
-    rarity: "Mythic",
-    price: 5500,
-    description: "Herrscher über Sekunden.",
-    unlockCondition: { type: "wins", value: 30 },
-    preview: {
-      background: "radial-gradient(circle at 50% 50%, rgba(41, 219, 255, 0.42), transparent 0 24%, transparent 48%), linear-gradient(145deg, #a76f22 0%, #2f2111 44%, #062d3c 72%, #02080b 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #bdf6ff, #19b9e6 58%, #031116 100%)",
-      glow: "rgba(41, 219, 255, 0.48)",
-      text: "#8eeeff",
-    },
-    assetRef: "assets/skins/timekeeper.png",
-  },
-  {
-    id: "god-dice",
-    name: "Götter Würfel",
-    rarity: "Mythic",
-    price: 7500,
-    description: "Nur für Auserwählte.",
-    unlockCondition: { type: "wins", value: 50 },
-    preview: {
-      background: "radial-gradient(circle at 72% 22%, rgba(108, 215, 255, 0.5), transparent 0 20%, transparent 42%), linear-gradient(145deg, #ffffff 0%, #d7d1c4 36%, #d7a53a 64%, #5f3a0c 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #7b4a00, #1b1203 68%, #000 100%)",
-      glow: "rgba(255, 232, 170, 0.62)",
-      text: "#5c3700",
-    },
-    assetRef: "assets/skins/god-dice.png",
-  },
-  {
-    id: "halloween",
-    name: "Halloween",
-    rarity: "Epic",
-    price: 1200,
-    description: "Schaurig schön.",
-    unlockCondition: { type: "none" },
-    preview: {
-      background: "radial-gradient(circle at 45% 28%, rgba(255, 183, 64, 0.58), transparent 0 20%, transparent 42%), linear-gradient(145deg, #2b1608 0%, #f5821f 42%, #1a0a04 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #fff0a8, #ff7b00 58%, #140400 100%)",
-      glow: "rgba(255, 130, 31, 0.5)",
-      text: "#ffe1a3",
-    },
-    assetRef: "assets/skins/halloween.png",
-  },
-  {
-    id: "christmas",
-    name: "Weihnachten",
-    rarity: "Epic",
-    price: 1200,
-    description: "Festlich. Fröhlich. Goldwurf.",
-    unlockCondition: { type: "none" },
-    preview: {
-      background: "radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.85), transparent 0 18%, transparent 34%), linear-gradient(145deg, #fff8e8 0%, #d93030 34%, #1f7d3d 70%, #0d321b 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #fff4cf, #b80d1e 58%, #180204 100%)",
-      glow: "rgba(255, 244, 207, 0.44)",
-      text: "#fff4cf",
-    },
-    assetRef: "assets/skins/christmas.png",
-  },
-  {
-    id: "pirate-gold",
-    name: "Piraten Gold",
-    rarity: "Epic",
-    price: 1800,
-    description: "Techdreh und gewinnen.",
-    unlockCondition: { type: "wins", value: 5 },
-    preview: {
-      background: "linear-gradient(145deg, #21160b 0%, #050403 42%, #d19b2a 70%, #3e2606 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #ffe2a0, #9b6712 58%, #050201 100%)",
-      glow: "rgba(209, 155, 42, 0.42)",
-      text: "#ffe2a0",
-    },
-    assetRef: "assets/skins/pirate-gold.png",
-  },
-  {
-    id: "oktoberfest",
-    name: "Oktoberfest",
-    rarity: "Rare",
-    price: 900,
-    description: "O'zapft is!",
-    unlockCondition: { type: "none" },
-    preview: {
-      background: "linear-gradient(145deg, #f8fbff 0%, #267ec8 42%, #d69b2c 72%, #102d4b 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #ffe4a3, #0e4f8d 62%, #020b13 100%)",
-      glow: "rgba(55, 153, 230, 0.4)",
-      text: "#ffe4a3",
-    },
-    assetRef: "assets/skins/oktoberfest.png",
-  },
-  {
-    id: "spring-magic",
-    name: "Frühlingszauber",
-    rarity: "Rare",
-    price: 900,
-    description: "Blumen, Glück und Gold.",
-    unlockCondition: { type: "none" },
-    preview: {
-      background: "radial-gradient(circle at 72% 28%, rgba(255, 162, 203, 0.75), transparent 0 18%, transparent 38%), linear-gradient(145deg, #e6ffd4 0%, #4e9d3d 44%, #17451a 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #fff0f8, #ff83b8 58%, #16320e 100%)",
-      glow: "rgba(154, 229, 112, 0.42)",
-      text: "#fff0f8",
-    },
-    assetRef: "assets/skins/spring-magic.png",
-  },
-  {
-    id: "summer-vibes",
-    name: "Sommer Vibes",
-    rarity: "Rare",
-    price: 900,
-    description: "Sonne. Strand. Gewinnen.",
-    unlockCondition: { type: "none" },
-    preview: {
-      background: "linear-gradient(145deg, #fff0a6 0%, #40d4d4 42%, #1a90b2 70%, #b57728 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #fff1a8, #d27913 60%, #062f38 100%)",
-      glow: "rgba(64, 212, 212, 0.44)",
-      text: "#fff1a8",
-    },
-    assetRef: "assets/skins/summer-vibes.png",
-  },
-  {
-    id: "cyber-neon",
-    name: "Cyber Neon",
-    rarity: "Legendary",
-    price: 2800,
-    description: "Plug in. Level up.",
-    unlockCondition: { type: "wins", value: 8 },
-    preview: {
-      background: "linear-gradient(145deg, #10131b 0%, #081122 42%, #00d8ff 58%, #ff3bce 82%, #13031b 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #d8fbff, #00c8ff 48%, #ff39d2 82%, #06020a 100%)",
-      glow: "rgba(0, 216, 255, 0.56)",
-      text: "#bff8ff",
-    },
-    assetRef: "assets/skins/cyber-neon.png",
-  },
-  {
-    id: "hologram",
-    name: "Hologramm",
-    rarity: "Legendary",
-    price: 3200,
-    description: "Nichts ist, wie es scheint.",
-    unlockCondition: { type: "wins", value: 12 },
-    preview: {
-      background: "conic-gradient(from 180deg at 50% 50%, rgba(255, 255, 255, 0.9), #8ff4ff, #f09cff, #ffe7a8, #9affd6, rgba(255, 255, 255, 0.9))",
-      pip: "radial-gradient(circle at 34% 28%, #08242a, #5b34a8 58%, #010407 100%)",
-      glow: "rgba(196, 244, 255, 0.58)",
-      text: "#092129",
-    },
-    assetRef: "assets/skins/hologram.png",
-  },
-  {
-    id: "titan-core",
-    name: "Titan Core",
-    rarity: "Legendary",
-    price: 3400,
-    description: "Technologie der Titanen.",
-    unlockCondition: { type: "wins", value: 14 },
-    preview: {
-      background: "radial-gradient(circle at 50% 50%, rgba(0, 194, 255, 0.44), transparent 0 22%, transparent 48%), linear-gradient(145deg, #2e3b42 0%, #0b1015 46%, #00aee8 70%, #02060a 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #d6f8ff, #00aee8 58%, #02060a 100%)",
-      glow: "rgba(0, 174, 232, 0.48)",
-      text: "#b8f2ff",
-    },
-    assetRef: "assets/skins/titan-core.png",
-  },
-  {
-    id: "quantum-shift",
-    name: "Quantum Shift",
-    rarity: "Legendary",
-    price: 3800,
-    description: "Zukunft. Jetzt.",
-    unlockCondition: { type: "wins", value: 18 },
-    preview: {
-      background: "linear-gradient(145deg, #151021 0%, #6c27d9 40%, #13d6ff 64%, #1d062e 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #ebd8ff, #8a35ff 48%, #05c6ff 80%, #05020a 100%)",
-      glow: "rgba(128, 67, 255, 0.52)",
-      text: "#eadcff",
-    },
-    assetRef: "assets/skins/quantum-shift.png",
-  },
-  {
-    id: "robotic-steel",
-    name: "Robotic Steel",
-    rarity: "Epic",
-    price: 2200,
-    description: "Kalt. Präzise. Dominant.",
-    unlockCondition: { type: "wins", value: 7 },
-    preview: {
-      background: "linear-gradient(145deg, #d9e4ea 0%, #6d8794 36%, #1f2c35 68%, #071017 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #e7f8ff, #4bb8ff 58%, #061018 100%)",
-      glow: "rgba(96, 188, 255, 0.38)",
-      text: "#d8f4ff",
-    },
-    assetRef: "assets/skins/robotic-steel.png",
-  },
-  {
-    id: "plasma-drive",
-    name: "Plasma Drive",
-    rarity: "Legendary",
-    price: 4000,
-    description: "Energie ohne Grenzen.",
-    unlockCondition: { type: "wins", value: 22 },
-    preview: {
-      background: "radial-gradient(circle at 50% 64%, rgba(255, 123, 21, 0.68), transparent 0 20%, transparent 42%), linear-gradient(145deg, #16110d 0%, #050403 42%, #ff7a15 70%, #220802 100%)",
-      pip: "radial-gradient(circle at 34% 28%, #ffe2a0, #ff7814 58%, #120300 100%)",
-      glow: "rgba(255, 122, 21, 0.56)",
-      text: "#ffd99a",
-    },
-    assetRef: "assets/skins/plasma-drive.png",
+    id: "high-roller",
+    name: "High Roller",
+    assetPath: "assets/music/high-roller.mp3",
+    price: 100,
+    description: "Ein schwungvoller Track fuer riskante Wuerfe und grosse Gewinne.",
   },
 ];
 
 function getSkinById(skinId) {
   return SHOP_SKINS.find((skin) => skin.id === skinId);
+}
+
+function getAvatarSkinById(skinId) {
+  return AVATAR_SKINS.find((skin) => skin.id === skinId);
+}
+
+function getAudioTrackById(trackId) {
+  return AUDIO_TRACKS.find((track) => track.id === trackId);
 }
 
 function getSkinClassName(skinId) {
@@ -436,7 +313,7 @@ function isSkinUnlocked(skin) {
 }
 
 function getUnlockText(skin) {
-  if (!skin?.unlockCondition || skin.unlockCondition.type === "none") return "Sofort verfügbar";
+  if (!skin?.unlockCondition || skin.unlockCondition.type === "none") return "Sofort verf\u00fcgbar";
   if (skin.unlockCondition.type === "wins") {
     const wins = skin.unlockCondition.value;
     return `Ab ${wins} ${wins === 1 ? "Sieg" : "Siegen"}`;
@@ -451,6 +328,11 @@ function applySkinPreviewStyles(element, skin) {
   element.style.setProperty("--skin-pip-bg", skin.preview.pip);
   element.style.setProperty("--skin-glow", skin.preview.glow);
   element.style.setProperty("--skin-die-text", skin.preview.text);
+  if (skin.useImageAsset && skin.assetRef) {
+    element.style.setProperty("--skin-image", `url("${skin.assetRef}")`);
+  } else {
+    element.style.removeProperty("--skin-image");
+  }
 }
 
 const humanScore = document.querySelector("#humanScore");
@@ -524,11 +406,19 @@ const shopShell = document.querySelector("#shopShell");
 const shopTrigger = document.querySelector("#shopTrigger");
 const shopSkinsCategory = document.querySelector("#shopSkinsCategory");
 const shopItems = document.querySelector("#shopItems");
+const jukeboxCategory = document.querySelector("#jukeboxCategory");
+const jukeboxItems = document.querySelector("#jukeboxItems");
+const avatarSkinsCategory = document.querySelector("#avatarSkinsCategory");
+const avatarShopItems = document.querySelector("#avatarShopItems");
 const goldBalance = document.querySelector("#goldBalance");
 const goldGainToast = document.querySelector("#goldGainToast");
 const infoShell = document.querySelector("#infoShell");
 const infoTrigger = document.querySelector("#infoTrigger");
 const appVersion = document.querySelector("#appVersion");
+const humanAvatarFrame = document.querySelector("#humanAvatarFrame");
+const humanAvatarImage = document.querySelector("#humanAvatarImage");
+const computerAvatarFrame = document.querySelector("#computerAvatarFrame");
+const computerAvatarImage = document.querySelector("#computerAvatarImage");
 if (appVersion && APP_VERSION) {
   appVersion.textContent = APP_VERSION;
 }
@@ -554,8 +444,8 @@ function render() {
   const comboMode = isComboMode();
   humanScore.textContent = comboMode ? formatComboSelection(comboState.humanSelection) : state.humanScore;
   computerScore.textContent = comboMode ? formatComboSelection(comboState.computerSelection) : state.computerScore;
-  humanScore.nextElementSibling.textContent = comboMode ? "Gewählte Zahlen" : "Gesamtpunkte";
-  computerScore.nextElementSibling.textContent = comboMode ? "Gewählte Zahlen" : "Gesamtpunkte";
+  humanScore.nextElementSibling.textContent = comboMode ? "GewÃ¤hlte Zahlen" : "Gesamtpunkte";
+  computerScore.nextElementSibling.textContent = comboMode ? "GewÃ¤hlte Zahlen" : "Gesamtpunkte";
   humanWins.textContent = state.humanWins;
   computerWins.textContent = state.computerWins;
   roundScore.textContent = state.roundScore;
@@ -630,12 +520,15 @@ function render() {
     state.isRolling;
   renderGold();
   renderShop();
+  renderAvatarShop();
+  renderJukebox();
 }
 
 function loadGold() {
   const savedGold = Number(localStorage.getItem("goldwurf-royale-gold"));
   gold = Number.isFinite(savedGold) && savedGold >= 0 ? Math.floor(savedGold) : 0;
   renderGold();
+  renderJukebox();
 }
 
 function saveGold() {
@@ -650,6 +543,8 @@ function addGold(amount, reason = "") {
   saveGold();
   renderGold();
   renderShop();
+  renderAvatarShop();
+  renderJukebox();
   showGoldGain(cleanAmount, reason);
 }
 
@@ -687,7 +582,7 @@ function calculateHumanWinGold() {
   if (riskMode && !gambleMode) reward += 10;
   if (gambleMode) reward += 15;
   if (diceCount === 2) reward += 5;
-  // Bewusst zusätzlicher Bonus: Im schweren Modus ist jeder Sieg exakt, dieser Moment soll trotzdem extra belohnt werden.
+  // Bewusst zusÃ¤tzlicher Bonus: Im schweren Modus ist jeder Sieg exakt, dieser Moment soll trotzdem extra belohnt werden.
   if (difficulty === "hard" && state.humanScore === winningScore) reward += 10;
   return reward;
 }
@@ -721,13 +616,19 @@ function awardHumanComboGold() {
 }
 
 function loadShopState() {
+  if (localStorage.getItem(DICE_PURCHASE_RESET_KEY) !== "done") {
+    localStorage.removeItem("goldwurf-royale-owned-skins");
+    localStorage.removeItem("goldwurf-royale-active-skin");
+    localStorage.setItem(DICE_PURCHASE_RESET_KEY, "done");
+  }
+
   try {
     const savedOwned = JSON.parse(localStorage.getItem("goldwurf-royale-owned-skins") || "[]");
     if (Array.isArray(savedOwned)) {
-      ownedSkins = new Set(["gold", ...savedOwned.filter((skinId) => getSkinById(skinId))]);
+      ownedSkins = new Set([...DEFAULT_OWNED_SKINS, ...savedOwned.filter((skinId) => getSkinById(skinId))]);
     }
   } catch {
-    ownedSkins = new Set(["gold"]);
+    ownedSkins = new Set(DEFAULT_OWNED_SKINS);
   }
 
   const savedActiveSkin = localStorage.getItem("goldwurf-royale-active-skin");
@@ -754,6 +655,7 @@ function buySkin(skinId) {
   applyActiveSkin();
   renderGold();
   renderShop();
+  renderAvatarShop();
   showGoldSpend(skin.price, skin.id);
   playShopPurchaseSound();
 }
@@ -765,6 +667,115 @@ function selectSkin(skinId) {
   saveShopState();
   applyActiveSkin();
   renderShop();
+}
+
+function loadAvatarShopState() {
+  if (localStorage.getItem(AVATAR_PURCHASE_RESET_KEY) !== "done") {
+    localStorage.removeItem("goldwurf-royale-owned-avatar-skins");
+    localStorage.removeItem("goldwurf-royale-active-avatar-skin");
+    localStorage.setItem(AVATAR_PURCHASE_RESET_KEY, "done");
+  }
+
+  try {
+    const savedOwned = JSON.parse(localStorage.getItem("goldwurf-royale-owned-avatar-skins") || "[]");
+    if (Array.isArray(savedOwned)) {
+      ownedAvatarSkins = new Set([DEFAULT_AVATAR_SKIN, ...savedOwned.filter((skinId) => getAvatarSkinById(skinId))]);
+    }
+  } catch {
+    ownedAvatarSkins = new Set([DEFAULT_AVATAR_SKIN]);
+  }
+
+  const savedActiveAvatar = localStorage.getItem("goldwurf-royale-active-avatar-skin");
+  activeAvatarSkin = ownedAvatarSkins.has(savedActiveAvatar) ? savedActiveAvatar : DEFAULT_AVATAR_SKIN;
+  saveAvatarShopState();
+  applyActiveAvatar();
+  applyComputerAvatar();
+  renderAvatarShop();
+}
+
+function saveAvatarShopState() {
+  localStorage.setItem("goldwurf-royale-owned-avatar-skins", JSON.stringify(Array.from(ownedAvatarSkins)));
+  localStorage.setItem("goldwurf-royale-active-avatar-skin", activeAvatarSkin);
+}
+
+function buyAvatarSkin(skinId) {
+  const skin = getAvatarSkinById(skinId);
+  if (!skin || ownedAvatarSkins.has(skin.id) || gold < skin.price) return;
+
+  gold -= skin.price;
+  ownedAvatarSkins.add(skin.id);
+  activeAvatarSkin = skin.id;
+  saveGold();
+  saveAvatarShopState();
+  applyActiveAvatar();
+  renderGold();
+  renderAvatarShop();
+  showAvatarGoldSpend(skin.price, skin.id);
+  playShopPurchaseSound();
+}
+
+function selectAvatarSkin(skinId) {
+  if (!ownedAvatarSkins.has(skinId)) return;
+
+  activeAvatarSkin = skinId;
+  saveAvatarShopState();
+  applyActiveAvatar();
+  renderAvatarShop();
+}
+
+function loadJukeboxState() {
+  try {
+    const savedOwned = JSON.parse(localStorage.getItem("goldwurf-royale-owned-audio-tracks") || "[]");
+    if (Array.isArray(savedOwned)) {
+      ownedAudioTracks = new Set([
+        ...DEFAULT_OWNED_AUDIO_TRACKS,
+        ...savedOwned.filter((trackId) => getAudioTrackById(trackId)),
+      ]);
+    }
+  } catch {
+    ownedAudioTracks = new Set(DEFAULT_OWNED_AUDIO_TRACKS);
+  }
+
+  const savedActiveAudio = localStorage.getItem("goldwurf-royale-active-audio");
+  activeAudioTrack = ownedAudioTracks.has(savedActiveAudio) ? savedActiveAudio : DEFAULT_AUDIO_TRACK;
+  saveJukeboxState();
+  renderJukebox();
+}
+
+function saveJukeboxState() {
+  localStorage.setItem("goldwurf-royale-owned-audio-tracks", JSON.stringify(Array.from(ownedAudioTracks)));
+  localStorage.setItem("goldwurf-royale-active-audio", activeAudioTrack);
+}
+
+function buyAudioTrack(trackId) {
+  const track = getAudioTrackById(trackId);
+  if (!track || ownedAudioTracks.has(track.id) || gold < track.price) return;
+
+  gold -= track.price;
+  ownedAudioTracks.add(track.id);
+  activeAudioTrack = track.id;
+  saveGold();
+  saveJukeboxState();
+  resetBackgroundMusicTrack();
+  renderGold();
+  renderJukebox();
+  showJukeboxGoldSpend(track.price, track.id);
+  playShopPurchaseSound();
+  if (musicEnabled) {
+    startBackgroundMusic(true);
+  }
+}
+
+function selectAudioTrack(trackId) {
+  if (!ownedAudioTracks.has(trackId) || activeAudioTrack === trackId) return;
+
+  activeAudioTrack = trackId;
+  saveJukeboxState();
+  resetBackgroundMusicTrack();
+  renderJukebox();
+  if (musicEnabled) {
+    startBackgroundMusic(true);
+  }
 }
 
 function renderShop() {
@@ -786,13 +797,21 @@ function renderShop() {
     preview.className = "skin-preview-die";
     preview.setAttribute("aria-hidden", "true");
     applySkinPreviewStyles(preview, skin);
-    for (let index = 0; index < 5; index += 1) {
-      preview.append(document.createElement("i"));
+    if (skin.useImageAsset && skin.assetRef) {
+      preview.classList.add("skin-preview-image");
+      const image = document.createElement("img");
+      image.src = skin.assetRef;
+      image.alt = "";
+      preview.append(image);
+    } else {
+      for (let index = 0; index < 5; index += 1) {
+        preview.append(document.createElement("i"));
+      }
     }
 
     const meta = document.createElement("span");
     meta.className = `shop-item-meta rarity-${skin.rarity.toLowerCase()}`;
-    meta.textContent = `${skin.rarity} · ${getUnlockText(skin)}`;
+    meta.textContent = `${skin.rarity} \u00b7 ${getUnlockText(skin)}`;
 
     const title = document.createElement("strong");
     title.textContent = skin.name;
@@ -809,10 +828,10 @@ function renderShop() {
     action.type = "button";
     action.dataset.skinId = skin.id;
     if (isActive) {
-      action.textContent = "Ausgewählt";
+      action.textContent = "Ausgew\u00e4hlt";
       action.disabled = true;
     } else if (isOwned) {
-      action.textContent = "Auswählen";
+      action.textContent = "Ausw\u00e4hlen";
       action.dataset.action = "select";
     } else if (!isUnlocked) {
       action.textContent = getUnlockText(skin);
@@ -822,11 +841,127 @@ function renderShop() {
       action.dataset.action = "buy";
     } else {
       action.textContent = `Noch ${skin.price - gold} Gold`;
+      action.classList.add("shop-shortfall-button");
       action.disabled = true;
     }
 
     item.append(preview, meta, title, description, price, action);
     shopItems.append(item);
+  });
+}
+
+function renderAvatarShop() {
+  if (!avatarShopItems) return;
+
+  avatarShopItems.innerHTML = "";
+  AVATAR_SKINS.forEach((skin) => {
+    const isOwned = ownedAvatarSkins.has(skin.id);
+    const isActive = activeAvatarSkin === skin.id;
+    const canBuy = gold >= skin.price;
+    const item = document.createElement("article");
+    item.className = "shop-item avatar-shop-item";
+    item.classList.toggle("owned", isOwned);
+    item.classList.toggle("active", isActive);
+
+    const preview = document.createElement("span");
+    preview.className = "avatar-preview-frame";
+    preview.setAttribute("aria-hidden", "true");
+
+    const image = document.createElement("img");
+    image.src = skin.assetPath;
+    image.alt = "";
+    preview.append(image);
+
+    const meta = document.createElement("span");
+    meta.className = "shop-item-meta rarity-legendary";
+    meta.textContent = "Avatar \u00b7 Royal";
+
+    const title = document.createElement("strong");
+    title.textContent = skin.name;
+
+    const description = document.createElement("p");
+    description.className = "shop-item-description";
+    description.textContent = skin.description;
+
+    const price = document.createElement("span");
+    price.className = "shop-item-price";
+    price.textContent = isOwned ? "Freigeschaltet" : `${skin.price} Gold`;
+
+    const action = document.createElement("button");
+    action.type = "button";
+    action.dataset.avatarSkinId = skin.id;
+    if (isActive) {
+      action.textContent = "Ausgew\u00e4hlt";
+      action.disabled = true;
+    } else if (isOwned) {
+      action.textContent = "Ausw\u00e4hlen";
+      action.dataset.avatarAction = "select";
+    } else if (canBuy) {
+      action.textContent = "Kaufen";
+      action.dataset.avatarAction = "buy";
+    } else {
+      action.textContent = `Noch ${skin.price - gold} Gold`;
+      action.classList.add("shop-shortfall-button");
+      action.disabled = true;
+    }
+
+    item.append(preview, meta, title, description, price, action);
+    avatarShopItems.append(item);
+  });
+}
+
+function renderJukebox() {
+  if (!jukeboxItems) return;
+
+  jukeboxItems.innerHTML = "";
+  AUDIO_TRACKS.forEach((track) => {
+    const isOwned = ownedAudioTracks.has(track.id);
+    const isActive = activeAudioTrack === track.id;
+    const canBuy = gold >= track.price;
+    const item = document.createElement("article");
+    item.className = "shop-item jukebox-shop-item";
+    item.classList.toggle("owned", isOwned);
+    item.classList.toggle("active", isActive);
+
+    const preview = document.createElement("span");
+    preview.className = "jukebox-preview-frame";
+    preview.setAttribute("aria-hidden", "true");
+    preview.textContent = "\u266a";
+
+    const meta = document.createElement("span");
+    meta.className = "shop-item-meta rarity-legendary";
+    meta.textContent = "Audio \u00b7 Jukebox";
+
+    const title = document.createElement("strong");
+    title.textContent = track.name;
+
+    const description = document.createElement("p");
+    description.className = "shop-item-description";
+    description.textContent = track.description;
+
+    const price = document.createElement("span");
+    price.className = "shop-item-price";
+    price.textContent = isOwned ? "Freigeschaltet" : `${track.price} Gold`;
+
+    const action = document.createElement("button");
+    action.type = "button";
+    action.dataset.audioTrackId = track.id;
+    if (isActive) {
+      action.textContent = "Ausgew\u00e4hlt";
+      action.disabled = true;
+    } else if (isOwned) {
+      action.textContent = "Ausw\u00e4hlen";
+      action.dataset.audioAction = "select";
+    } else if (canBuy) {
+      action.textContent = "Kaufen";
+      action.dataset.audioAction = "buy";
+    } else {
+      action.textContent = `Noch ${track.price - gold} Gold`;
+      action.disabled = true;
+    }
+
+    item.append(preview, meta, title, description, price, action);
+    jukeboxItems.append(item);
   });
 }
 
@@ -843,12 +978,61 @@ function showGoldSpend(amount, skinId) {
   window.setTimeout(() => item.classList.remove("purchase-pop"), 920);
 }
 
+function showAvatarGoldSpend(amount, skinId) {
+  showGoldGain(-amount);
+
+  if (!avatarShopItems) return;
+  const item = avatarShopItems.querySelector(`[data-avatar-skin-id="${skinId}"]`)?.closest(".shop-item");
+  if (!item) return;
+
+  item.classList.remove("purchase-pop");
+  void item.offsetWidth;
+  item.classList.add("purchase-pop");
+  window.setTimeout(() => item.classList.remove("purchase-pop"), 920);
+}
+
+function showJukeboxGoldSpend(amount, trackId) {
+  showGoldGain(-amount);
+
+  if (!jukeboxItems) return;
+  const item = jukeboxItems.querySelector(`[data-audio-track-id="${trackId}"]`)?.closest(".shop-item");
+  if (!item) return;
+
+  item.classList.remove("purchase-pop");
+  void item.offsetWidth;
+  item.classList.add("purchase-pop");
+  window.setTimeout(() => item.classList.remove("purchase-pop"), 920);
+}
+
 function applyActiveSkin() {
   SHOP_SKINS.forEach((skin) => document.body.classList.remove(getSkinClassName(skin.id)));
   const skin = getSkinById(activeSkin) || getSkinById("gold");
   activeSkin = skin.id;
   document.body.classList.add(getSkinClassName(activeSkin));
   applySkinPreviewStyles(document.body, skin);
+}
+
+function applyActiveAvatar() {
+  const skin = getAvatarSkinById(activeAvatarSkin) || getAvatarSkinById(DEFAULT_AVATAR_SKIN);
+  if (!skin) return;
+
+  activeAvatarSkin = skin.id;
+  if (humanAvatarImage) {
+    humanAvatarImage.src = skin.assetPath;
+    humanAvatarImage.alt = "";
+  }
+  humanAvatarFrame?.setAttribute("title", skin.name);
+}
+
+function applyComputerAvatar() {
+  const skin = getAvatarSkinById(COMPUTER_AVATAR_SKIN_ID);
+  if (!skin) return;
+
+  if (computerAvatarImage) {
+    computerAvatarImage.src = skin.assetPath;
+    computerAvatarImage.alt = "";
+  }
+  computerAvatarFrame?.setAttribute("title", skin.name);
 }
 
 function isComboMode() {
@@ -941,7 +1125,7 @@ function renderComboMode() {
   if (comboTurnLabel) {
     comboTurnLabel.textContent =
       comboState.phase === "ready"
-        ? "Bereit zum Würfeln"
+        ? "Bereit zum WÃ¼rfeln"
         : comboState.phase === "result"
           ? "Runde beendet"
           : getComboPlayerName(comboState.currentSelector);
@@ -968,14 +1152,14 @@ function renderComboMode() {
 }
 
 function getComboStartMessage() {
-  return `Orakel: ${getComboPlayerName(comboState.currentSelector)} wählt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`;
+  return `Orakel: ${getComboPlayerName(comboState.currentSelector)} wÃ¤hlt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`;
 }
 
 function autoSelectComboForComputer() {
   if (!isComboMode() || gameMode !== "single" || comboState.phase !== "select-computer") return;
 
   state.isComputerThinking = true;
-  setMessage("KI wählt ihre Orakel-Zahlen...");
+  setMessage("KI wÃ¤hlt ihre Orakel-Zahlen...");
   render();
 
   window.clearTimeout(comboComputerTimer);
@@ -988,7 +1172,7 @@ function autoSelectComboForComputer() {
     state.isComputerThinking = false;
     completeComboSelectionIfReady();
     if (comboState.phase === "ready") {
-      setMessage("KI hat gewählt. Jetzt würfeln.");
+      setMessage("KI hat gewÃ¤hlt. Jetzt wÃ¼rfeln.");
     }
     render();
   }, 650);
@@ -1003,7 +1187,7 @@ function completeComboSelectionIfReady() {
   if (getComboSelection(nextSelector).length === required) {
     comboState.phase = "ready";
     comboState.currentSelector = startPlayer;
-    setMessage("Beide Orakel-Auswahlen stehen. Jetzt würfeln.");
+    setMessage("Beide Orakel-Auswahlen stehen. Jetzt wÃ¼rfeln.");
     return;
   }
 
@@ -1013,7 +1197,7 @@ function completeComboSelectionIfReady() {
   if (nextSelector === "computer" && gameMode === "single") {
       autoSelectComboForComputer();
   } else {
-    setMessage(`${getComboPlayerName(nextSelector)} wählt ${required} Zahl${required === 1 ? "" : "en"}.`);
+    setMessage(`${getComboPlayerName(nextSelector)} wÃ¤hlt ${required} Zahl${required === 1 ? "" : "en"}.`);
   }
 }
 
@@ -1031,7 +1215,7 @@ function selectComboNumber(value) {
     selection.sort((a, b) => a - b);
   } else {
     playInvalidSound();
-    setMessage(`Du kannst nur ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"} wählen.`, true);
+    setMessage(`Du kannst nur ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"} wÃ¤hlen.`, true);
     render();
     return;
   }
@@ -1039,9 +1223,9 @@ function selectComboNumber(value) {
   playClickSound();
   completeComboSelectionIfReady();
   if (comboState.phase === "select-human") {
-    setMessage(`${playerName} wählt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`);
+    setMessage(`${playerName} wÃ¤hlt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`);
   } else if (comboState.phase === "select-computer" && gameMode === "multi") {
-    setMessage(`${getOpponentName()} wählt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`);
+    setMessage(`${getOpponentName()} wÃ¤hlt ${getRequiredComboPickCount()} Zahl${getRequiredComboPickCount() === 1 ? "" : "en"}.`);
   }
   render();
 }
@@ -1083,7 +1267,7 @@ function finishComboRoll(values) {
     setMessage(getComboWinMessage("computer"));
   } else {
     comboState.winner = null;
-    setMessage(`Gewürfelt: ${formatRoll(values)}. Unentschieden.${humanGoldReward > 0 ? ` Dein Orakel war richtig: +${humanGoldReward} Gold.` : ""}`);
+    setMessage(`GewÃ¼rfelt: ${formatRoll(values)}. Unentschieden.${humanGoldReward > 0 ? ` Dein Orakel war richtig: +${humanGoldReward} Gold.` : ""}`);
     playDrawAnimation();
   }
 
@@ -1366,7 +1550,7 @@ async function rollWithSuspense(finalValues) {
 
   dieFace.dataset.value = String(finalValues[0]);
   dieFaceTwo.dataset.value = String(finalValues[1] ?? 1);
-  rollButton.setAttribute("aria-label", `${formatRoll(finalValues)} gewürfelt`);
+  rollButton.setAttribute("aria-label", `${formatRoll(finalValues)} gewÃ¼rfelt`);
   rollButton.classList.remove("rolling");
   rollButton.classList.remove("shake");
   void rollButton.offsetWidth;
@@ -1466,7 +1650,7 @@ async function rollForCurrentPlayer() {
   const values = Array.from({ length: getEffectiveDiceCount() }, rollDie);
   const value = values.reduce((total, nextValue) => total + nextValue, 0);
   playRollSound();
-  setMessage(`${getCurrentPlayerName()} würfelt...`);
+  setMessage(`${getCurrentPlayerName()} wÃ¼rfelt...`);
   await rollWithSuspense(values);
   state.roundScore = value;
   const currentScore = state.currentPlayer === "human" ? state.humanScore : state.computerScore;
@@ -1479,37 +1663,37 @@ async function rollForCurrentPlayer() {
     playInvalidSound();
     state.turnScore = 0;
     gambleTurnLost = true;
-    setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Gamble verloren, die Zugpunkte verfallen.`, true);
+    setMessage(`${getCurrentPlayerName()} wÃ¼rfelt ${formatRoll(values)}. Gamble verloren, die Zugpunkte verfallen.`, true);
   } else if (gambleMode) {
     const nextTurnScore = state.turnScore + value;
     if (difficulty === "hard" && currentScore + nextTurnScore > winningScore) {
       playInvalidSound();
       state.turnScore = 0;
       gambleTurnLost = true;
-      setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Zu viel für genau ${winningScore}, die Zugpunkte verfallen.`, true);
+      setMessage(`${getCurrentPlayerName()} wÃ¼rfelt ${formatRoll(values)}. Zu viel fÃ¼r genau ${winningScore}, die Zugpunkte verfallen.`, true);
     } else {
       state.turnScore = nextTurnScore;
-      setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Zugpunkte: ${state.turnScore}.`);
+      setMessage(`${getCurrentPlayerName()} wÃ¼rfelt ${formatRoll(values)}. Zugpunkte: ${state.turnScore}.`);
     }
   } else if (riskMode && values.includes(1)) {
     playInvalidSound();
     riskInvalid = true;
-    setMessage(`${getCurrentPlayerName()} würfelt ${formatRoll(values)}. Risiko! Eine 1 macht den Wurf ungültig.`, true);
+    setMessage(`${getCurrentPlayerName()} wÃ¼rfelt ${formatRoll(values)}. Risiko! Eine 1 macht den Wurf ungÃ¼ltig.`, true);
   } else if (difficulty === "hard" && nextScore > winningScore) {
     playInvalidSound();
     setMessage(
       state.currentPlayer === "human"
-        ? `${playerName} hat ${formatRoll(values)} gewürfelt. Zu viel für genau ${winningScore}, der Wurf zählt nicht.`
-        : `${getOpponentName()} würfelt ${formatRoll(values)}. Zu viel für genau ${winningScore}, der Wurf zählt nicht.`,
+        ? `${playerName} hat ${formatRoll(values)} gewÃ¼rfelt. Zu viel fÃ¼r genau ${winningScore}, der Wurf zÃ¤hlt nicht.`
+        : `${getOpponentName()} wÃ¼rfelt ${formatRoll(values)}. Zu viel fÃ¼r genau ${winningScore}, der Wurf zÃ¤hlt nicht.`,
     );
   } else if (state.currentPlayer === "human") {
     state.humanScore = nextScore;
     scoreApplied = true;
-    setMessage(`${playerName} hat ${formatRoll(values)} gewürfelt. ${getOpponentName()} ist dran.`);
+    setMessage(`${playerName} hat ${formatRoll(values)} gewÃ¼rfelt. ${getOpponentName()} ist dran.`);
   } else {
     state.computerScore = nextScore;
     scoreApplied = true;
-    setMessage(`${getOpponentName()} würfelt ${formatRoll(values)}. ${playerName} ist dran.`);
+    setMessage(`${getOpponentName()} wÃ¼rfelt ${formatRoll(values)}. ${playerName} ist dran.`);
   }
 
   triggerSpecialMoment(values, {
@@ -1658,7 +1842,7 @@ function newGame(keepRulesLocked = false) {
   dieFace.dataset.value = "1";
   dieFaceTwo.dataset.value = "1";
   rollButton.classList.remove("rolling", "shake");
-  rollButton.setAttribute("aria-label", "Würfeln");
+  rollButton.setAttribute("aria-label", "WÃ¼rfeln");
   setMessage(isComboMode() ? getComboStartMessage() : getStartMessage());
   render();
 
@@ -1799,14 +1983,14 @@ function checkCurrentPlayerRiskDeadEnd() {
   if (humanFinalScore > computerFinalScore) {
     state.humanWins += 1;
     awardHumanWinGold();
-    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. ${playerName} gewinnt mit ${humanFinalScore} zu ${computerFinalScore}.`);
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gÃ¼ltiger Siegwurf ist mÃ¶glich. ${playerName} gewinnt mit ${humanFinalScore} zu ${computerFinalScore}.`);
     playWinAnimation("human");
   } else if (computerFinalScore > humanFinalScore) {
     state.computerWins += 1;
-    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. ${getOpponentName()} gewinnt mit ${computerFinalScore} zu ${humanFinalScore}.`);
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gÃ¼ltiger Siegwurf ist mÃ¶glich. ${getOpponentName()} gewinnt mit ${computerFinalScore} zu ${humanFinalScore}.`);
     playWinAnimation("computer");
   } else {
-    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. Gleichstand mit ${humanFinalScore} zu ${computerFinalScore}.`);
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gÃ¼ltiger Siegwurf ist mÃ¶glich. Gleichstand mit ${humanFinalScore} zu ${computerFinalScore}.`);
   }
 
   saveWins();
@@ -1849,19 +2033,19 @@ function checkCurrentPlayerGambleDeadEnd(currentScore) {
   if (opponentCanStillWin) {
     const blockedName = getCurrentPlayerName();
     switchTurn();
-    setMessage(`${blockedName} braucht noch 1 Punkt. Im Gamble-Modus ist das nicht gültig möglich. ${getCurrentPlayerName()} bekommt noch die Chance.`);
+    setMessage(`${blockedName} braucht noch 1 Punkt. Im Gamble-Modus ist das nicht gÃ¼ltig mÃ¶glich. ${getCurrentPlayerName()} bekommt noch die Chance.`);
     return true;
   }
 
-  finishDeadEndByScore("Gamble-Ende: Beide können keinen gültigen Siegwurf mehr schaffen.");
+  finishDeadEndByScore("Gamble-Ende: Beide kÃ¶nnen keinen gÃ¼ltigen Siegwurf mehr schaffen.");
   return true;
 }
 
 function getStartMessage() {
   if (gambleMode) {
     return difficulty === "hard"
-      ? `Gamble: Würfle weiter oder sichere genau bei ${winningScore} Punkten.`
-      : "Gamble: Würfle weiter oder sichere deine Zugpunkte.";
+      ? `Gamble: WÃ¼rfle weiter oder sichere genau bei ${winningScore} Punkten.`
+      : "Gamble: WÃ¼rfle weiter oder sichere deine Zugpunkte.";
   }
 
   if (gameMode === "multi") {
@@ -1869,8 +2053,8 @@ function getStartMessage() {
   }
 
   return difficulty === "hard"
-    ? `Würfle einmal. Wer genau ${winningScore} Punkte erreicht, gewinnt.`
-    : `Würfle einmal. Wer zuerst ${winningScore} Punkte erreicht, gewinnt.`;
+    ? `WÃ¼rfle einmal. Wer genau ${winningScore} Punkte erreicht, gewinnt.`
+    : `WÃ¼rfle einmal. Wer zuerst ${winningScore} Punkte erreicht, gewinnt.`;
 }
 
 function canChooseStartPlayer() {
@@ -1999,9 +2183,32 @@ function shouldUseWebAudioMusic() {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 }
 
+function getActiveAudioTrack() {
+  const track = getAudioTrackById(activeAudioTrack) || getAudioTrackById(DEFAULT_AUDIO_TRACK);
+  activeAudioTrack = track.id;
+  return track;
+}
+
+function getBackgroundMusicUrl() {
+  return `${getActiveAudioTrack().assetPath}?v=${APP_VERSION}`;
+}
+
+function resetBackgroundMusicTrack() {
+  stopBackgroundMusic();
+  backgroundMusicBuffer = null;
+  backgroundMusicLoadingPromise = null;
+  htmlBackgroundMusic = null;
+}
+
 function getHtmlBackgroundMusic() {
+  const musicUrl = getBackgroundMusicUrl();
   if (!htmlBackgroundMusic) {
-    htmlBackgroundMusic = new Audio(`background-music.wav?v=${APP_VERSION}`);
+    htmlBackgroundMusic = new Audio(musicUrl);
+    htmlBackgroundMusic.loop = true;
+    htmlBackgroundMusic.preload = "auto";
+  } else if (!htmlBackgroundMusic.src.endsWith(musicUrl)) {
+    htmlBackgroundMusic.pause();
+    htmlBackgroundMusic = new Audio(musicUrl);
     htmlBackgroundMusic.loop = true;
     htmlBackgroundMusic.preload = "auto";
   }
@@ -2026,7 +2233,7 @@ function loadBackgroundMusic() {
   }
 
   if (!backgroundMusicLoadingPromise) {
-    backgroundMusicLoadingPromise = fetch(`background-music.wav?v=${APP_VERSION}`)
+    backgroundMusicLoadingPromise = fetch(getBackgroundMusicUrl())
       .then((response) => {
         if (!response.ok) {
           throw new Error("Musik konnte nicht geladen werden.");
@@ -2036,7 +2243,7 @@ function loadBackgroundMusic() {
       .then((data) => {
         const context = ensureAudioContext();
         if (!context) {
-          throw new Error("Audio wird nicht unterstützt.");
+          throw new Error("Audio wird nicht unterstÃ¼tzt.");
         }
         return context.decodeAudioData(data);
       })
@@ -2269,6 +2476,7 @@ function togglePanel(shell, trigger) {
   closePanels();
   if (shell === shopShell && shouldOpen) {
     shopSkinsCategory?.removeAttribute("open");
+    jukeboxCategory?.removeAttribute("open");
   }
   setMenuOpen(shell, trigger, shouldOpen);
 }
@@ -2278,6 +2486,8 @@ setTheme(savedTheme === "light" ? "light" : "dark");
 
 const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
+
+loadJukeboxState();
 
 const savedMusic = localStorage.getItem("wuerfelduell-music");
 setMusic(savedMusic === "on");
@@ -2308,6 +2518,7 @@ gambleMode = savedGambleMode === "on";
 
 loadGold();
 loadShopState();
+loadAvatarShopState();
 
 const savedHumanWins = Number(localStorage.getItem("wuerfelduell-human-wins"));
 const savedComputerWins = Number(localStorage.getItem("wuerfelduell-computer-wins"));
@@ -2500,6 +2711,28 @@ shopItems?.addEventListener("click", (event) => {
     buySkin(button.dataset.skinId);
   } else if (button.dataset.action === "select") {
     selectSkin(button.dataset.skinId);
+  }
+});
+avatarShopItems?.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-avatar-action]");
+  if (!button) return;
+
+  playClickSound();
+  if (button.dataset.avatarAction === "buy") {
+    buyAvatarSkin(button.dataset.avatarSkinId);
+  } else if (button.dataset.avatarAction === "select") {
+    selectAvatarSkin(button.dataset.avatarSkinId);
+  }
+});
+jukeboxItems?.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-audio-action]");
+  if (!button) return;
+
+  playClickSound();
+  if (button.dataset.audioAction === "buy") {
+    buyAudioTrack(button.dataset.audioTrackId);
+  } else if (button.dataset.audioAction === "select") {
+    selectAudioTrack(button.dataset.audioTrackId);
   }
 });
 infoTrigger?.addEventListener("click", (event) => {

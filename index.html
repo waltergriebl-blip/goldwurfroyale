@@ -146,11 +146,23 @@
                     <em class="gold-gain-toast" id="goldGainToast" hidden>+0 Gold</em>
                   </div>
                 </div>
+                <details class="shop-category" id="avatarSkinsCategory">
+                  <summary>
+                    <span>Avatar Skins</span>
+                  </summary>
+                  <div class="shop-items avatar-shop-items" id="avatarShopItems"></div>
+                </details>
                 <details class="shop-category" id="shopSkinsCategory">
                   <summary>
                     <span>Würfel-Skins</span>
                   </summary>
                   <div class="shop-items" id="shopItems"></div>
+                </details>
+                <details class="shop-category" id="jukeboxCategory">
+                  <summary>
+                    <span>Jukebox</span>
+                  </summary>
+                  <div class="shop-items jukebox-shop-items" id="jukeboxItems"></div>
                 </details>
               </div>
             </div>
@@ -198,34 +210,44 @@
 
       <section class="scoreboard" aria-label="Spielstand">
         <article class="player active" id="humanPanel">
-          <button class="label name-button" id="humanNameLabel" type="button">Du</button>
-          <div class="inline-name-editor" id="nameEditor" hidden>
-            <input id="playerNameInput" type="text" maxlength="18" value="Du" aria-label="Spielername" />
-            <button id="applyNameButton" type="button">OK</button>
+          <div class="player-avatar-frame" id="humanAvatarFrame" aria-hidden="true">
+            <img id="humanAvatarImage" alt="" />
           </div>
-          <button class="starter-button" id="humanStarterButton" type="button" hidden>Startspieler</button>
-          <strong id="humanScore">0</strong>
-          <span>Gesamtpunkte</span>
-          <div class="wins">
-            <span>Siege</span>
-            <strong id="humanWins">0</strong>
+          <div class="player-details">
+            <button class="label name-button" id="humanNameLabel" type="button">Du</button>
+            <div class="inline-name-editor" id="nameEditor" hidden>
+              <input id="playerNameInput" type="text" maxlength="18" value="Du" aria-label="Spielername" />
+              <button id="applyNameButton" type="button">OK</button>
+            </div>
+            <button class="starter-button" id="humanStarterButton" type="button" hidden>Startspieler</button>
+            <strong id="humanScore">0</strong>
+            <span>Gesamtpunkte</span>
+            <div class="wins">
+              <span>Siege</span>
+              <strong id="humanWins">0</strong>
+            </div>
           </div>
         </article>
 
         <article class="player" id="computerPanel">
-          <div class="opponent-top">
-            <button class="label name-button" id="opponentNameLabel" type="button">KI</button>
-            <div class="inline-name-editor" id="opponentNameEditor" hidden>
-              <input id="opponentNameInput" type="text" maxlength="18" value="Spieler 2" aria-label="Name Spieler 2" />
-              <button id="applyOpponentNameButton" type="button">OK</button>
-            </div>
-            <button class="starter-button" id="computerStarterButton" type="button" hidden>Startspieler</button>
+          <div class="player-avatar-frame" id="computerAvatarFrame" aria-hidden="true">
+            <img id="computerAvatarImage" alt="" />
           </div>
-          <strong id="computerScore">0</strong>
-          <span>Gesamtpunkte</span>
-          <div class="wins">
-            <span>Siege</span>
-            <strong id="computerWins">0</strong>
+          <div class="player-details">
+            <div class="opponent-top">
+              <button class="label name-button" id="opponentNameLabel" type="button">KI</button>
+              <div class="inline-name-editor" id="opponentNameEditor" hidden>
+                <input id="opponentNameInput" type="text" maxlength="18" value="Spieler 2" aria-label="Name Spieler 2" />
+                <button id="applyOpponentNameButton" type="button">OK</button>
+              </div>
+              <button class="starter-button" id="computerStarterButton" type="button" hidden>Startspieler</button>
+            </div>
+            <strong id="computerScore">0</strong>
+            <span>Gesamtpunkte</span>
+            <div class="wins">
+              <span>Siege</span>
+              <strong id="computerWins">0</strong>
+            </div>
           </div>
         </article>
       </section>
