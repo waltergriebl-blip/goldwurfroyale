@@ -5937,6 +5937,104 @@ body:not(.dark) .player-avatar-frame {
   justify-self: center;
 }
 
+/* Phone portrait gameplay: compact avatar player cards so the table stays visible */
+@media (orientation: portrait) and (max-width: 720px) {
+  .player {
+    --player-avatar-size: clamp(70px, 18vw, 88px);
+    --player-details-offset: clamp(102px, 25vw, 122px);
+    min-height: 280px;
+    padding: 9px 7px;
+  }
+
+  .player-avatar-frame {
+    width: var(--player-avatar-size);
+    height: var(--player-avatar-size);
+    top: clamp(46px, 11vw, 58px);
+  }
+
+  .player-details {
+    margin-top: var(--player-details-offset);
+    row-gap: 4px;
+  }
+
+  .label,
+  .name-button {
+    font-size: clamp(0.94rem, 4.8vw, 1.24rem);
+    letter-spacing: 0.06em;
+  }
+
+  .starter-button {
+    min-height: 30px;
+    padding: 4px 10px;
+    font-size: 0.68rem;
+  }
+
+  .player strong[id$="Score"] {
+    font-size: clamp(2.35rem, 11.5vw, 3.4rem);
+  }
+
+  .player span {
+    font-size: clamp(0.76rem, 3.5vw, 0.94rem);
+  }
+
+  .wins {
+    width: min(100%, 130px);
+    min-height: 42px;
+    padding: 6px 8px;
+  }
+
+  .wins strong {
+    font-size: clamp(1.45rem, 7.4vw, 2.15rem);
+  }
+}
+
+@media (orientation: portrait) and (max-width: 420px) {
+  .player {
+    --player-avatar-size: clamp(62px, 18vw, 78px);
+    --player-details-offset: clamp(92px, 24vw, 108px);
+    min-height: 246px;
+    padding: 7px 5px;
+  }
+
+  .player-avatar-frame {
+    top: clamp(42px, 10.5vw, 52px);
+  }
+
+  .player-details {
+    row-gap: 3px;
+  }
+
+  .label,
+  .name-button {
+    font-size: clamp(0.82rem, 4.6vw, 1.08rem);
+    letter-spacing: 0.05em;
+  }
+
+  .starter-button {
+    min-height: 27px;
+    padding: 3px 8px;
+    font-size: 0.62rem;
+  }
+
+  .player strong[id$="Score"] {
+    font-size: clamp(2.1rem, 10.6vw, 3rem);
+  }
+
+  .wins {
+    width: min(100%, 120px);
+    min-height: 38px;
+    padding: 5px 7px;
+  }
+
+  .wins span {
+    font-size: 0.64rem;
+  }
+
+  .wins strong {
+    font-size: clamp(1.28rem, 6.8vw, 1.9rem);
+  }
+}
+
 @media (orientation: landscape) and (max-height: 560px) and (pointer: coarse) {
   .player {
     --player-avatar-size: clamp(80px, 8.8vw, 100px);
