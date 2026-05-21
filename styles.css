@@ -5941,7 +5941,7 @@ body:not(.dark) .player-avatar-frame {
 @media (orientation: portrait) and (max-width: 720px) {
   .player {
     --player-avatar-size: clamp(70px, 18vw, 88px);
-    --player-details-offset: clamp(102px, 25vw, 122px);
+    --player-details-offset: clamp(110px, 26vw, 130px);
     min-height: 280px;
     padding: 9px 7px;
   }
@@ -5949,7 +5949,7 @@ body:not(.dark) .player-avatar-frame {
   .player-avatar-frame {
     width: var(--player-avatar-size);
     height: var(--player-avatar-size);
-    top: clamp(46px, 11vw, 58px);
+    top: clamp(40px, 10vw, 52px);
   }
 
   .player-details {
@@ -5991,13 +5991,13 @@ body:not(.dark) .player-avatar-frame {
 @media (orientation: portrait) and (max-width: 420px) {
   .player {
     --player-avatar-size: clamp(62px, 18vw, 78px);
-    --player-details-offset: clamp(92px, 24vw, 108px);
+    --player-details-offset: clamp(98px, 25vw, 116px);
     min-height: 246px;
     padding: 7px 5px;
   }
 
   .player-avatar-frame {
-    top: clamp(42px, 10.5vw, 52px);
+    top: clamp(36px, 9.5vw, 46px);
   }
 
   .player-details {
