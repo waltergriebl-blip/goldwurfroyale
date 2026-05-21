@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 2.23 - 2026-05-22
+
+- Standard-Musik "Classic" auf `assets/music/jazz-casino.mp3` umgestellt.
+- Alte Root-Musikdatei `background-music.wav` aus den App-Referenzen entfernt.
+- Cache-Busting-Parameter in `index.html` auf Version 2.23 aktualisiert.
+
 ## Version 2.22 - 2026-05-22
 
 - Mobile Jukebox-Karten in Hoch- und Querformat kompakter gemacht.

@@ -307,7 +307,7 @@ const AUDIO_TRACKS = [
   {
     id: "classic",
     name: "Classic",
-    assetPath: "background-music.wav",
+    assetPath: "assets/music/jazz-casino.mp3",
     price: 0,
     description: "Der klassische Hintergrundtrack von Goldwurf Royale.",
   },
