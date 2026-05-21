@@ -5937,6 +5937,98 @@ body:not(.dark) .player-avatar-frame {
   justify-self: center;
 }
 
+/* Phone portrait store: compact cards, without changing landscape store layout */
+@media (orientation: portrait) and (max-width: 720px) {
+  #shopItems .shop-item,
+  #avatarShopItems .shop-item {
+    width: min(100%, 390px);
+    grid-template-columns: 58px minmax(0, 1fr) 116px;
+    gap: 4px 8px;
+    min-height: 86px;
+    padding: 8px;
+    align-items: center;
+  }
+
+  #shopItems .shop-item > .skin-preview-die,
+  #avatarShopItems .shop-item > .avatar-preview-frame {
+    grid-column: 1 !important;
+    grid-row: 1 / span 2;
+    align-self: center;
+    justify-self: center;
+  }
+
+  #shopItems .skin-preview-die {
+    width: 38px;
+  }
+
+  #shopItems .skin-preview-die.skin-preview-image {
+    width: 52px;
+  }
+
+  #avatarShopItems .avatar-preview-frame {
+    width: 50px;
+  }
+
+  #shopItems .shop-item-meta,
+  #avatarShopItems .shop-item-meta,
+  #shopItems .shop-item-title,
+  #avatarShopItems .shop-item-title {
+    grid-column: 2;
+  }
+
+  #shopItems .shop-item-meta,
+  #avatarShopItems .shop-item-meta {
+    align-self: end;
+    font-size: clamp(0.66rem, 2.9vw, 0.78rem);
+    letter-spacing: 0.05em;
+  }
+
+  #shopItems .shop-item-title,
+  #avatarShopItems .shop-item-title {
+    align-self: start;
+    font-size: clamp(0.86rem, 4.2vw, 1rem);
+    line-height: 1.08;
+  }
+
+  #shopItems .shop-item button,
+  #avatarShopItems .shop-item button {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    width: 116px;
+    min-width: 0;
+    max-width: 116px;
+    min-height: 42px;
+    padding: 0 8px;
+    font-size: clamp(0.72rem, 3.2vw, 0.86rem);
+  }
+}
+
+@media (orientation: portrait) and (max-width: 380px) {
+  #shopItems .shop-item,
+  #avatarShopItems .shop-item {
+    grid-template-columns: 50px minmax(0, 1fr) 104px;
+    gap: 4px 6px;
+    min-height: 80px;
+    padding: 7px;
+  }
+
+  #shopItems .skin-preview-die.skin-preview-image {
+    width: 46px;
+  }
+
+  #avatarShopItems .avatar-preview-frame {
+    width: 44px;
+  }
+
+  #shopItems .shop-item button,
+  #avatarShopItems .shop-item button {
+    width: 104px;
+    max-width: 104px;
+    min-height: 38px;
+    font-size: clamp(0.66rem, 3vw, 0.78rem);
+  }
+}
+
 /* Phone portrait gameplay: compact avatar player cards so the table stays visible */
 @media (orientation: portrait) and (max-width: 720px) {
   .player {
