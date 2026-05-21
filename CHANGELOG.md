@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 2.22 - 2026-05-22
+
+- Mobile Jukebox-Karten in Hoch- und Querformat kompakter gemacht.
+- Cache-Busting-Parameter in `index.html` auf Version 2.22 aktualisiert.
+
 ## Version 2.21 - 2026-05-21
 
 - Mobile Jukebox-Karten separat optimiert, ohne Avatar- oder Würfel-Store zu verändern.
