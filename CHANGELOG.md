@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 2.21 - 2026-05-21
+
+- Mobile Jukebox-Karten separat optimiert, ohne Avatar- oder Wuerfel-Store zu veraendern.
+
 ## Version 2.20 - 2026-05-21
 
 - Jukebox-Karten an die Shop-Kartenstruktur angepasst: Icon links, Preis oben, Titel darunter, Aktion rechts.
