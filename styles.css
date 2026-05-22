@@ -2833,6 +2833,20 @@ body:not(.dark) #resetWinsButton {
 
   .copyright {
     font-size: 0.76rem;
+    grid-template-columns: minmax(72px, 0.72fr) minmax(104px, auto) minmax(72px, 0.72fr);
+    gap: 6px;
+    padding: 0 2px;
+    line-height: 1.15;
+  }
+
+  .legal-link {
+    padding: 2px 1px;
+    font-size: clamp(0.64rem, 2.8vw, 0.76rem);
+  }
+
+  .copyright-main,
+  .copyright-extra {
+    display: inline-block;
   }
 
   .rules h1 {
@@ -3313,7 +3327,39 @@ body:not(.dark) #resetWinsButton {
   }
 
   .copyright {
+    display: grid;
+    grid-template-columns: minmax(64px, 0.68fr) minmax(92px, auto) minmax(64px, 0.68fr);
+    gap: 5px;
+    font-size: 0.58rem;
+    line-height: 1.05;
+  }
+
+  .copyright-extra {
     display: none;
+  }
+
+  .legal-link {
+    font-size: 0.58rem;
+    letter-spacing: 0;
+  }
+
+  .legal-overlay {
+    padding: max(env(safe-area-inset-top, 0px), 8px) 10px max(env(safe-area-inset-bottom, 0px), 8px);
+  }
+
+  .legal-dialog {
+    max-height: min(88vh, 520px);
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .legal-content {
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .legal-primary-close {
+    min-height: 34px;
   }
 }
 
