@@ -3327,20 +3327,7 @@ body:not(.dark) #resetWinsButton {
   }
 
   .copyright {
-    display: grid;
-    grid-template-columns: minmax(64px, 0.68fr) minmax(92px, auto) minmax(64px, 0.68fr);
-    gap: 5px;
-    font-size: 0.58rem;
-    line-height: 1.05;
-  }
-
-  .copyright-extra {
     display: none;
-  }
-
-  .legal-link {
-    font-size: 0.58rem;
-    letter-spacing: 0;
   }
 
   .legal-overlay {
