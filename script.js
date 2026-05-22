@@ -1109,6 +1109,10 @@ function getComboSelection(player) {
   return player === "computer" ? comboState.computerSelection : comboState.humanSelection;
 }
 
+function countComboValue(selection, value) {
+  return selection.filter((selectedValue) => selectedValue === value).length;
+}
+
 function formatComboSelection(selection) {
   return selection.length ? selection.slice().sort((a, b) => a - b).join(" + ") : "-";
 }
@@ -1176,6 +1180,9 @@ function renderComboMode() {
     const value = Number(button.dataset.comboValue);
     const isHumanSelected = comboState.humanSelection.includes(value);
     const isComputerSelected = comboState.computerSelection.includes(value);
+    const humanPickCount = countComboValue(comboState.humanSelection, value);
+    const computerPickCount = countComboValue(comboState.computerSelection, value);
+    const maxPickCount = Math.max(humanPickCount, computerPickCount);
     const canSelect =
       !state.isGameOver &&
       !state.isRolling &&
@@ -1183,7 +1190,9 @@ function renderComboMode() {
     button.classList.toggle("selected-human", isHumanSelected);
     button.classList.toggle("selected-computer", isComputerSelected);
     button.classList.toggle("selected-both", isHumanSelected && isComputerSelected);
+    button.classList.toggle("selected-double", maxPickCount > 1);
     button.classList.toggle("current-selectable", canSelect);
+    button.dataset.pickCount = maxPickCount > 1 ? String(maxPickCount) : "";
     button.disabled = !canSelect || (gameMode === "single" && comboState.currentSelector === "computer");
     button.setAttribute("aria-pressed", String(isHumanSelected || isComputerSelected));
   });
@@ -1205,8 +1214,7 @@ function autoSelectComboForComputer() {
     comboComputerTimer = undefined;
     if (!isComboMode() || gameMode !== "single" || comboState.phase !== "select-computer") return;
 
-    const values = [1, 2, 3, 4, 5, 6].sort(() => Math.random() - 0.5);
-    comboState.computerSelection = values.slice(0, getRequiredComboPickCount()).sort((a, b) => a - b);
+    comboState.computerSelection = Array.from({ length: getRequiredComboPickCount() }, rollDie).sort((a, b) => a - b);
     state.isComputerThinking = false;
     completeComboSelectionIfReady();
     if (comboState.phase === "ready") {
@@ -1245,9 +1253,13 @@ function selectComboNumber(value) {
   if (gameMode === "single" && comboState.currentSelector === "computer") return;
 
   const selection = getComboSelection(comboState.currentSelector);
-  const selectedIndex = selection.indexOf(value);
-  if (selectedIndex >= 0) {
-    selection.splice(selectedIndex, 1);
+  const required = getRequiredComboPickCount();
+  const selectedCount = countComboValue(selection, value);
+  if (required === 2 && selectedCount === 1 && selection.length < required) {
+    selection.push(value);
+    selection.sort((a, b) => a - b);
+  } else if (selectedCount > 0) {
+    selection.splice(selection.lastIndexOf(value), 1);
   } else if (selection.length < getRequiredComboPickCount()) {
     selection.push(value);
     selection.sort((a, b) => a - b);
@@ -1271,7 +1283,10 @@ function selectComboNumber(value) {
 function selectionMatchesRoll(selection, values) {
   if (selection.length !== getRequiredComboPickCount()) return false;
   if (values.length !== getRequiredComboPickCount()) return false;
-  return selection.every((value) => values.includes(value));
+
+  const sortedSelection = selection.slice().sort((a, b) => a - b);
+  const sortedValues = values.slice().sort((a, b) => a - b);
+  return sortedSelection.every((value, index) => value === sortedValues[index]);
 }
 
 function getComboWinMessage(player) {

@@ -1839,6 +1839,30 @@ body.dark .combo-status-grid strong {
     opacity 140ms ease;
 }
 
+.combo-die-button::after {
+  content: attr(data-pick-count);
+  width: 22px;
+  height: 22px;
+  display: none;
+  place-items: center;
+  border: 1px solid rgba(255, 244, 203, 0.72);
+  border-radius: 999px;
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  z-index: 2;
+  background: linear-gradient(180deg, #fff0bd, #c58c30 58%, #5f380c);
+  color: var(--button-ink);
+  font-size: 0.76rem;
+  font-weight: 950;
+  line-height: 1;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.28);
+}
+
+.combo-die-button.selected-double::after {
+  display: grid;
+}
+
 .combo-die-button:hover:not(:disabled) {
   transform: translateY(-2px);
   border-color: var(--gold);
