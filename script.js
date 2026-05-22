@@ -23,6 +23,7 @@ let ownedAvatarSkins = new Set([DEFAULT_AVATAR_SKIN]);
 let activeAvatarSkin = DEFAULT_AVATAR_SKIN;
 const DEFAULT_AUDIO_TRACK = "classic";
 const DEFAULT_OWNED_AUDIO_TRACKS = [DEFAULT_AUDIO_TRACK];
+const DICE_ROLL_SOUND_URL = `assets/wuerfel_sound/dice-roll.mp3?v=${APP_VERSION}`;
 let ownedAudioTracks = new Set(DEFAULT_OWNED_AUDIO_TRACKS);
 let activeAudioTrack = DEFAULT_AUDIO_TRACK;
 let audioContext;
@@ -2460,6 +2461,16 @@ function playTone(frequency, startTime, duration, volume = 0.05, type = "sine") 
 }
 
 function playRollSound() {
+  if (!soundEnabled) return;
+
+  const rollAudio = new Audio(DICE_ROLL_SOUND_URL);
+  rollAudio.volume = 0.8;
+  rollAudio.play().catch(() => {
+    playSyntheticRollSound();
+  });
+}
+
+function playSyntheticRollSound() {
   if (!soundEnabled) return;
 
   const context = ensureAudioContext();

@@ -8,6 +8,7 @@ const APP_FILES = [
   "./styles.css",
   "./script.js",
   "./manifest.webmanifest",
+  "./assets/wuerfel_sound/dice-roll.mp3",
   "./assets/music/jazz-casino.mp3",
   "./assets/music/high-roller.mp3",
   "./assets/music/black-iron-sky.mp3",
