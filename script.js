@@ -468,6 +468,15 @@ const goldGainToast = document.querySelector("#goldGainToast");
 const infoShell = document.querySelector("#infoShell");
 const infoTrigger = document.querySelector("#infoTrigger");
 const appVersion = document.querySelector("#appVersion");
+const impressumLink = document.querySelector("#impressumLink");
+const privacyLink = document.querySelector("#privacyLink");
+const legalOverlay = document.querySelector("#legalOverlay");
+const legalDialog = document.querySelector(".legal-dialog");
+const legalTitle = document.querySelector("#legalTitle");
+const legalKicker = document.querySelector("#legalKicker");
+const legalContent = document.querySelector("#legalContent");
+const legalCloseButton = document.querySelector("#legalCloseButton");
+const legalPrimaryCloseButton = document.querySelector("#legalPrimaryCloseButton");
 const humanAvatarFrame = document.querySelector("#humanAvatarFrame");
 const humanAvatarImage = document.querySelector("#humanAvatarImage");
 const computerAvatarFrame = document.querySelector("#computerAvatarFrame");
@@ -2534,6 +2543,66 @@ function togglePanel(shell, trigger) {
   setMenuOpen(shell, trigger, shouldOpen);
 }
 
+const LEGAL_CONTENT = {
+  impressum: {
+    title: "Impressum",
+    kicker: "Anbieterkennzeichnung",
+    html: `
+      <h3>Angaben gemäß Impressumspflicht</h3>
+      <p><strong>Anbieter:</strong><br>Walter Griebl</p>
+      <p><strong>Anschrift:</strong><br><span class="legal-placeholder">[Adresse eintragen]</span></p>
+      <p><strong>Kontakt:</strong><br><span class="legal-placeholder">[E-Mail-Adresse eintragen]</span></p>
+      <h3>Verantwortlich für den Inhalt</h3>
+      <p>Walter Griebl</p>
+      <h3>Hinweis</h3>
+      <p>Diese Angaben sind eine Vorlage und müssen vor der Veröffentlichung mit den korrekten rechtlichen Daten ergänzt werden.</p>
+    `,
+  },
+  privacy: {
+    title: "Datenschutz",
+    kicker: "Datenschutzerklärung",
+    html: `
+      <h3>Verantwortlicher</h3>
+      <p>Walter Griebl<br><span class="legal-placeholder">[E-Mail-Adresse eintragen]</span></p>
+      <h3>Lokale Speicherung</h3>
+      <p>Goldwurf Royale speichert Spieldaten lokal in deinem Browser. Dazu gehören Einstellungen, Spielernamen, Siege, Gold, Shop-Freischaltungen, Avatar-Auswahl, Würfel-Skins und Soundauswahl.</p>
+      <h3>PWA und Offline-Nutzung</h3>
+      <p>Für die installierbare Web-App speichert ein Service Worker wichtige App-Dateien, Icons, Musik und Assets im Browser-Cache, damit das Spiel nach dem ersten Laden auch offline starten kann.</p>
+      <h3>Cloudflare Web Analytics</h3>
+      <p>Auf der Webseite ist Cloudflare Web Analytics eingebunden. Dabei können technische Zugriffsdaten verarbeitet werden, um die Nutzung der Webseite statistisch auszuwerten.</p>
+      <h3>Hinweis</h3>
+      <p>Diese Datenschutzerklärung ist eine Vorlage und sollte vor der Veröffentlichung rechtlich geprüft und mit den vollständigen Kontaktdaten ergänzt werden.</p>
+    `,
+  },
+};
+
+function openLegalDialog(type) {
+  const content = LEGAL_CONTENT[type];
+  if (!content || !legalOverlay || !legalTitle || !legalKicker || !legalContent) return;
+
+  closePanels();
+  legalTitle.textContent = content.title;
+  legalKicker.textContent = content.kicker;
+  legalContent.innerHTML = content.html;
+  legalOverlay.hidden = false;
+  legalOverlay.classList.remove("show");
+  requestAnimationFrame(() => {
+    legalOverlay.classList.add("show");
+    legalContent.focus();
+  });
+}
+
+function closeLegalDialog() {
+  if (!legalOverlay) return;
+
+  legalOverlay.classList.remove("show");
+  window.setTimeout(() => {
+    if (!legalOverlay.classList.contains("show")) {
+      legalOverlay.hidden = true;
+    }
+  }, 180);
+}
+
 const savedTheme = localStorage.getItem("wuerfelduell-theme");
 setTheme(savedTheme === "light" ? "light" : "dark");
 
@@ -2796,6 +2865,26 @@ infoTrigger?.addEventListener("click", (event) => {
 infoShell?.addEventListener("click", (event) => {
   event.stopPropagation();
 });
+impressumLink?.addEventListener("click", () => {
+  playClickSound();
+  openLegalDialog("impressum");
+});
+privacyLink?.addEventListener("click", () => {
+  playClickSound();
+  openLegalDialog("privacy");
+});
+legalCloseButton?.addEventListener("click", () => {
+  playClickSound();
+  closeLegalDialog();
+});
+legalPrimaryCloseButton?.addEventListener("click", () => {
+  playClickSound();
+  closeLegalDialog();
+});
+legalOverlay?.addEventListener("click", closeLegalDialog);
+legalDialog?.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
 document.addEventListener("click", (event) => {
   if (!menuShell?.contains(event.target) && !shopShell?.contains(event.target) && !infoShell?.contains(event.target)) {
     closePanels();
@@ -2803,6 +2892,7 @@ document.addEventListener("click", (event) => {
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
+    closeLegalDialog();
     closePanels();
   }
 });

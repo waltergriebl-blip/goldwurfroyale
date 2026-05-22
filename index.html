@@ -387,9 +387,23 @@
       </section>
 
       <footer class="copyright">
-        © 2026 Walter Griebl. Alle Rechte vorbehalten.
+        <button class="legal-link" id="impressumLink" type="button">Impressum</button>
+        <span>© 2026 Walter Griebl. Alle Rechte vorbehalten.</span>
+        <button class="legal-link" id="privacyLink" type="button">Datenschutz</button>
       </footer>
     </main>
+
+    <div class="legal-overlay" id="legalOverlay" hidden>
+      <div class="legal-dialog" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+        <div class="legal-heading">
+          <span id="legalKicker">Rechtliches</span>
+          <button class="legal-close" id="legalCloseButton" type="button" aria-label="Fenster schließen">×</button>
+        </div>
+        <h2 id="legalTitle">Impressum</h2>
+        <div class="legal-content" id="legalContent" tabindex="0"></div>
+        <button class="legal-primary-close" id="legalPrimaryCloseButton" type="button">Schließen</button>
+      </div>
+    </div>
 
     <script src="version.js?v=2.23"></script>
     <script src="script.js?v=2.23"></script>
