@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 2.25 - 2026-05-22
+
+- Bild-Preloading für Tischhintergrund, Spielerhintergrund, Würfel-Skins und Avatar-Skins ergänzt.
+- Skin- und Avatar-Wechsel warten auf vorgeladene Bildassets, damit sichtbares Nachladen reduziert wird.
+- Shop-Vorschauen verwenden eager/async Bilddekodierung und stoßen Preloads beim Öffnen des Shops an.
+- Cache-Busting-Parameter in `index.html` auf Version 2.25 aktualisiert.
+
 ## Version 2.23 - 2026-05-22
 
 - Standard-Musik "Classic" auf `assets/music/jazz-casino.mp3` umgestellt.

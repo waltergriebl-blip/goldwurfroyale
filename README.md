@@ -1,6 +1,6 @@
 # Goldwurf Royale
 
-**Version 2.21**
+**Version 2.25**
 
 Ein kleines, mobiles Würfelspiel für Web und Smartphone.
 Spiele alleine gegen die KI oder lokal zu zweit am selben Gerät.

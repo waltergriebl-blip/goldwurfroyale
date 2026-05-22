@@ -24,6 +24,7 @@ let activeAvatarSkin = DEFAULT_AVATAR_SKIN;
 const DEFAULT_AUDIO_TRACK = "classic";
 const DEFAULT_OWNED_AUDIO_TRACKS = [DEFAULT_AUDIO_TRACK];
 const DICE_ROLL_SOUND_URL = `assets/wuerfel_sound/dice-roll.mp3?v=${APP_VERSION}`;
+const DRAW_GOLD_REWARD = 25;
 let ownedAudioTracks = new Set(DEFAULT_OWNED_AUDIO_TRACKS);
 let activeAudioTrack = DEFAULT_AUDIO_TRACK;
 let audioContext;
@@ -55,6 +56,10 @@ const state = {
   hasRolled: false,
   goldAwarded: false,
   lastGoldReward: 0,
+  perfectThrowCandidatePlayer: null,
+  perfectThrowNeededValue: 0,
+  perfectThrowReady: false,
+  perfectThrowSpent: false,
 };
 
 const comboState = {
@@ -341,6 +346,61 @@ const AUDIO_TRACKS = [
     description: "Ein schwungvoller Track fuer riskante Wuerfe und grosse Gewinne.",
   },
 ];
+
+const imagePreloadPromises = new Map();
+
+function preloadImageAsset(src) {
+  if (!src || typeof Image !== "function") return Promise.resolve(src);
+  if (imagePreloadPromises.has(src)) return imagePreloadPromises.get(src);
+
+  const image = new Image();
+  image.decoding = "async";
+  image.loading = "eager";
+  image.src = src;
+
+  const loadPromise = (image.decode ? image.decode() : new Promise((resolve, reject) => {
+    image.onload = resolve;
+    image.onerror = reject;
+  }))
+    .catch(() => {})
+    .then(() => src);
+
+  imagePreloadPromises.set(src, loadPromise);
+  return loadPromise;
+}
+
+function preloadImageAssets(sources = []) {
+  sources.filter(Boolean).forEach((src) => preloadImageAsset(src));
+}
+
+function getImageSkinAssets() {
+  return SHOP_SKINS.filter((skin) => skin.useImageAsset && skin.assetRef).map((skin) => skin.assetRef);
+}
+
+function preloadStartupImageAssets() {
+  preloadImageAssets([
+    "assets/table-bg.png",
+    "assets/player-bg.png",
+    getSkinById(activeSkin)?.assetRef,
+    getAvatarSkinById(activeAvatarSkin)?.assetPath,
+    getAvatarSkinById(COMPUTER_AVATAR_SKIN_ID)?.assetPath,
+  ]);
+}
+
+function preloadShopImageAssets() {
+  preloadImageAssets([
+    ...getImageSkinAssets(),
+    ...AVATAR_SKINS.map((skin) => skin.assetPath),
+  ]);
+}
+
+function prepareImageElement(image, src) {
+  image.src = src;
+  image.alt = "";
+  image.decoding = "async";
+  image.loading = "eager";
+  preloadImageAsset(src);
+}
 
 function getSkinById(skinId) {
   return SHOP_SKINS.find((skin) => skin.id === skinId);
@@ -639,15 +699,18 @@ function showGoldGain(amount) {
   }, 1450);
 }
 
+function roundToNearest5(value) {
+  return Math.round(value / 5) * 5;
+}
+
 function calculateHumanWinGold() {
-  let reward = 10;
-  if (difficulty === "hard") reward += 10;
-  if (riskMode && !gambleMode) reward += 10;
-  if (gambleMode) reward += 15;
-  if (diceCount === 2) reward += 5;
-  // Bewusst zusätzlicher Bonus: Im schweren Modus ist jeder Sieg exakt, dieser Moment soll trotzdem extra belohnt werden.
-  if (difficulty === "hard" && state.humanScore === winningScore) reward += 10;
-  return reward;
+  const baseReward = riskMode ? 50 : 25;
+  const diceFactor = diceCount === 1 ? 1.5 : 1;
+  const targetFactor = Math.max(1, Math.floor(winningScore / 10));
+  const difficultyFactor = difficulty === "hard" ? 2 : 1;
+  const gambleBonus = gambleMode ? 25 : 0;
+
+  return roundToNearest5(baseReward * diceFactor * targetFactor * difficultyFactor + gambleBonus);
 }
 
 function awardHumanWinGold() {
@@ -664,6 +727,13 @@ function getSpecialMomentGoldReward(moment) {
   return moment.reward ?? 50;
 }
 
+function resetPerfectThrowChance() {
+  state.perfectThrowCandidatePlayer = null;
+  state.perfectThrowNeededValue = 0;
+  state.perfectThrowReady = false;
+  state.perfectThrowSpent = false;
+}
+
 function calculateHumanComboGoldReward() {
   return getRequiredComboPickCount() === 2 ? 500 : 100;
 }
@@ -676,6 +746,12 @@ function awardHumanComboGold() {
   state.lastGoldReward = reward;
   addGold(reward, "combo");
   return reward;
+}
+
+function awardDrawGold() {
+  state.lastGoldReward += DRAW_GOLD_REWARD;
+  addGold(DRAW_GOLD_REWARD, "draw");
+  return DRAW_GOLD_REWARD;
 }
 
 function loadShopState() {
@@ -697,7 +773,10 @@ function loadShopState() {
   const savedActiveSkin = localStorage.getItem("goldwurf-royale-active-skin");
   activeSkin = ownedSkins.has(savedActiveSkin) ? savedActiveSkin : "gold";
   saveShopState();
-  applyActiveSkin();
+  const skin = getSkinById(activeSkin) || getSkinById("gold");
+  preloadImageAsset(skin?.useImageAsset ? skin.assetRef : null).then(() => {
+    if (activeSkin === skin?.id) applyActiveSkin();
+  });
   renderShop();
 }
 
@@ -715,7 +794,9 @@ function buySkin(skinId) {
   activeSkin = skin.id;
   saveGold();
   saveShopState();
-  applyActiveSkin();
+  preloadImageAsset(skin.useImageAsset ? skin.assetRef : null).then(() => {
+    if (activeSkin === skin.id) applyActiveSkin();
+  });
   renderGold();
   renderShop();
   renderAvatarShop();
@@ -726,10 +807,15 @@ function buySkin(skinId) {
 function selectSkin(skinId) {
   if (!ownedSkins.has(skinId)) return;
 
+  const skin = getSkinById(skinId);
   activeSkin = skinId;
   saveShopState();
-  applyActiveSkin();
-  renderShop();
+  preloadImageAsset(skin?.useImageAsset ? skin.assetRef : null).then(() => {
+    if (activeSkin === skinId) {
+      applyActiveSkin();
+      renderShop();
+    }
+  });
 }
 
 function loadAvatarShopState() {
@@ -751,8 +837,12 @@ function loadAvatarShopState() {
   const savedActiveAvatar = localStorage.getItem("goldwurf-royale-active-avatar-skin");
   activeAvatarSkin = ownedAvatarSkins.has(savedActiveAvatar) ? savedActiveAvatar : DEFAULT_AVATAR_SKIN;
   saveAvatarShopState();
-  applyActiveAvatar();
-  applyComputerAvatar();
+  const avatarSkin = getAvatarSkinById(activeAvatarSkin) || getAvatarSkinById(DEFAULT_AVATAR_SKIN);
+  preloadImageAsset(avatarSkin?.assetPath).then(() => {
+    if (activeAvatarSkin === avatarSkin?.id) applyActiveAvatar();
+  });
+  const computerSkin = getAvatarSkinById(COMPUTER_AVATAR_SKIN_ID);
+  preloadImageAsset(computerSkin?.assetPath).then(() => applyComputerAvatar());
   renderAvatarShop();
 }
 
@@ -770,7 +860,9 @@ function buyAvatarSkin(skinId) {
   activeAvatarSkin = skin.id;
   saveGold();
   saveAvatarShopState();
-  applyActiveAvatar();
+  preloadImageAsset(skin.assetPath).then(() => {
+    if (activeAvatarSkin === skin.id) applyActiveAvatar();
+  });
   renderGold();
   renderAvatarShop();
   showAvatarGoldSpend(skin.price, skin.id);
@@ -780,10 +872,15 @@ function buyAvatarSkin(skinId) {
 function selectAvatarSkin(skinId) {
   if (!ownedAvatarSkins.has(skinId)) return;
 
+  const skin = getAvatarSkinById(skinId);
   activeAvatarSkin = skinId;
   saveAvatarShopState();
-  applyActiveAvatar();
-  renderAvatarShop();
+  preloadImageAsset(skin?.assetPath).then(() => {
+    if (activeAvatarSkin === skinId) {
+      applyActiveAvatar();
+      renderAvatarShop();
+    }
+  });
 }
 
 function loadJukeboxState() {
@@ -841,8 +938,9 @@ function selectAudioTrack(trackId) {
   }
 }
 
-function renderShop() {
+function renderShop(force = false) {
   if (!shopItems) return;
+  if (!force && !shopShell?.classList.contains("menu-open") && shopItems.childElementCount === 0) return;
 
   shopItems.innerHTML = "";
   SHOP_SKINS.forEach((skin) => {
@@ -863,8 +961,7 @@ function renderShop() {
     if (skin.useImageAsset && skin.assetRef) {
       preview.classList.add("skin-preview-image");
       const image = document.createElement("img");
-      image.src = skin.assetRef;
-      image.alt = "";
+      prepareImageElement(image, skin.assetRef);
       preview.append(image);
     } else {
       for (let index = 0; index < 5; index += 1) {
@@ -906,8 +1003,9 @@ function renderShop() {
   });
 }
 
-function renderAvatarShop() {
+function renderAvatarShop(force = false) {
   if (!avatarShopItems) return;
+  if (!force && !shopShell?.classList.contains("menu-open") && avatarShopItems.childElementCount === 0) return;
 
   avatarShopItems.innerHTML = "";
   AVATAR_SKINS.forEach((skin) => {
@@ -924,8 +1022,7 @@ function renderAvatarShop() {
     preview.setAttribute("aria-hidden", "true");
 
     const image = document.createElement("img");
-    image.src = skin.assetPath;
-    image.alt = "";
+    prepareImageElement(image, skin.assetPath);
     preview.append(image);
 
     const meta = document.createElement("span");
@@ -959,8 +1056,9 @@ function renderAvatarShop() {
   });
 }
 
-function renderJukebox() {
+function renderJukebox(force = false) {
   if (!jukeboxItems) return;
+  if (!force && !shopShell?.classList.contains("menu-open") && jukeboxItems.childElementCount === 0) return;
 
   jukeboxItems.innerHTML = "";
   AUDIO_TRACKS.forEach((track) => {
@@ -1060,8 +1158,7 @@ function applyActiveAvatar() {
 
   activeAvatarSkin = skin.id;
   if (humanAvatarImage) {
-    humanAvatarImage.src = skin.assetPath;
-    humanAvatarImage.alt = "";
+    prepareImageElement(humanAvatarImage, skin.assetPath);
   }
   humanAvatarFrame?.setAttribute("title", skin.name);
 }
@@ -1071,8 +1168,7 @@ function applyComputerAvatar() {
   if (!skin) return;
 
   if (computerAvatarImage) {
-    computerAvatarImage.src = skin.assetPath;
-    computerAvatarImage.alt = "";
+    prepareImageElement(computerAvatarImage, skin.assetPath);
   }
   computerAvatarFrame?.setAttribute("title", skin.name);
 }
@@ -1330,7 +1426,9 @@ function finishComboRoll(values) {
     setMessage(getComboWinMessage("computer"));
   } else {
     comboState.winner = null;
-    setMessage(`Gewürfelt: ${formatRoll(values)}. Unentschieden.${humanGoldReward > 0 ? ` Dein Orakel war richtig: +${humanGoldReward} Gold.` : ""}`);
+    const drawGoldReward = awardDrawGold();
+    const totalDrawReward = humanGoldReward + drawGoldReward;
+    setMessage(`Gewürfelt: ${formatRoll(values)}. Unentschieden. +${drawGoldReward} Gold.${humanGoldReward > 0 ? ` Dein Orakel war richtig: insgesamt +${totalDrawReward} Gold.` : ""}`);
     playDrawAnimation();
   }
 
@@ -1359,7 +1457,9 @@ function showDrawOverlay() {
   winnerTitle.textContent = "Unentschieden";
   winnerScoreLine.textContent = `Orakel | Wurf ${formatRoll(comboState.rollValues)}`;
   if (winnerGoldReward) {
-    winnerGoldReward.hidden = true;
+    const reward = state.lastGoldReward;
+    winnerGoldReward.hidden = reward <= 0;
+    winnerGoldReward.textContent = `+${reward} Gold`;
   }
   winnerOverlay.hidden = false;
   winnerOverlay.classList.remove("show");
@@ -1430,7 +1530,7 @@ function isRoyalMomentActive() {
 function scheduleWinnerOverlay(winner) {
   window.clearTimeout(winnerOverlayTimer);
 
-  const delay = isRoyalMomentActive() ? 900 : 0;
+  const delay = isRoyalMomentActive() ? 1600 : 0;
   if (delay === 0) {
     showWinnerOverlay(winner);
     return;
@@ -1475,9 +1575,15 @@ function detectSpecialMoment(values = [], context = {}) {
     scoreApplied = false,
     riskInvalid = false,
     gambleSecured = 0,
+    perfectThrowHit = false,
   } = context;
   const rolledValues = Array.isArray(values) ? values : [];
   const isHumanMoment = currentPlayer === "human";
+  const pointsLeft = winningScore - currentScore;
+  const rollTotal = getRollTotal(rolledValues);
+  const isRoyalRoll =
+    (rolledValues.length === 1 && rolledValues[0] === 6) ||
+    (rolledValues.length === 2 && rolledValues[0] === 6 && rolledValues[1] === 6);
 
   if (riskInvalid) {
     return { text: "RISIKO VERLOREN!", type: "dark" };
@@ -1487,25 +1593,23 @@ function detectSpecialMoment(values = [], context = {}) {
     return { text: "GROSSER GAMBLE!", type: "gold", reward: isHumanMoment ? 50 : 0 };
   }
 
-  if (rolledValues.length === 2 && rolledValues[0] === 6 && rolledValues[1] === 6) {
-    return { text: "ROYAL WURF!", type: "gold", reward: isHumanMoment ? 100 : 0 };
+  if (isRoyalRoll && rollTotal <= pointsLeft) {
+    return { text: "ROYAL WURF!", type: "gold", reward: isHumanMoment ? rolledValues.length * 50 : 0 };
   }
 
   if (
-    riskMode &&
-    difficulty === "hard" &&
+    winningScore === 10 &&
+    rolledValues.length === 2 &&
+    rollTotal === 10 &&
+    currentScore === 0 &&
     scoreApplied &&
-    nextScore === winningScore &&
-    isLastChanceWin(currentScore)
-  ) {
-    return { text: "LETZTE CHANCE GENUTZT!", type: "gold", reward: isHumanMoment ? 50 : 0 };
-  }
-
-  if (
-    difficulty === "hard" &&
-    scoreApplied &&
-    currentScore < winningScore &&
     nextScore === winningScore
+  ) {
+    return { text: "PERFEKTER WURF!", type: "gold", reward: isHumanMoment ? 50 : 0 };
+  }
+
+  if (
+    perfectThrowHit
   ) {
     return { text: "PERFEKTER WURF!", type: "gold", reward: isHumanMoment ? 50 : 0 };
   }
@@ -1600,6 +1704,73 @@ function isLastChanceWin(scoreBefore) {
   return pointsLeft === minimumValidRoll;
 }
 
+function getRollTotal(values = []) {
+  return values.reduce((total, nextValue) => total + nextValue, 0);
+}
+
+function canPerfectThrowValueBeRolled(pointsLeft) {
+  if (pointsLeft <= 0) return false;
+
+  const effectiveDiceCount = getEffectiveDiceCountForPointsLeft(pointsLeft);
+  const minimumValidRoll = riskMode ? effectiveDiceCount * 2 : effectiveDiceCount;
+  const maximumValidRoll = effectiveDiceCount * 6;
+  return pointsLeft >= minimumValidRoll && pointsLeft <= maximumValidRoll;
+}
+
+function updatePerfectThrowReadyForCurrentPlayer() {
+  if (
+    state.perfectThrowSpent ||
+    !state.perfectThrowCandidatePlayer ||
+    state.perfectThrowCandidatePlayer !== state.currentPlayer
+  ) {
+    return;
+  }
+
+  state.perfectThrowReady = true;
+}
+
+function registerPerfectThrowChance(currentPlayer, nextScore, scoreApplied) {
+  if (
+    state.perfectThrowSpent ||
+    state.perfectThrowCandidatePlayer ||
+    isComboMode() ||
+    gambleMode ||
+    difficulty !== "hard" ||
+    !scoreApplied ||
+    nextScore >= winningScore
+  ) {
+    return;
+  }
+
+  const pointsLeft = winningScore - nextScore;
+  if (canPerfectThrowValueBeRolled(pointsLeft)) {
+    state.perfectThrowCandidatePlayer = currentPlayer;
+    state.perfectThrowNeededValue = pointsLeft;
+    state.perfectThrowReady = false;
+  } else {
+    state.perfectThrowSpent = true;
+  }
+}
+
+function consumePerfectThrowChance(values, context = {}) {
+  if (
+    state.perfectThrowSpent ||
+    !state.perfectThrowReady ||
+    state.perfectThrowCandidatePlayer !== context.currentPlayer
+  ) {
+    return false;
+  }
+
+  const hit =
+    context.scoreApplied &&
+    context.nextScore === winningScore &&
+    getRollTotal(values) === state.perfectThrowNeededValue;
+
+  state.perfectThrowReady = false;
+  state.perfectThrowSpent = true;
+  return hit;
+}
+
 async function rollWithSuspense(finalValues) {
   state.isRolling = true;
   rollButton.classList.add("rolling");
@@ -1625,6 +1796,7 @@ async function rollWithSuspense(finalValues) {
 function switchTurn() {
   state.currentPlayer = state.currentPlayer === "human" ? "computer" : "human";
   state.turnScore = 0;
+  updatePerfectThrowReadyForCurrentPlayer();
   render();
 
   if (gameMode === "single" && state.currentPlayer === "computer" && !state.isGameOver) {
@@ -1710,13 +1882,14 @@ async function rollForCurrentPlayer() {
   if (checkCurrentPlayerRiskDeadEnd()) return;
 
   state.hasRolled = true;
+  const rollingPlayer = state.currentPlayer;
   const values = Array.from({ length: getEffectiveDiceCount() }, rollDie);
   const value = values.reduce((total, nextValue) => total + nextValue, 0);
   playRollSound();
   setMessage(`${getCurrentPlayerName()} würfelt...`);
   await rollWithSuspense(values);
   state.roundScore = value;
-  const currentScore = state.currentPlayer === "human" ? state.humanScore : state.computerScore;
+  const currentScore = rollingPlayer === "human" ? state.humanScore : state.computerScore;
   const nextScore = currentScore + value;
   let gambleTurnLost = false;
   let riskInvalid = false;
@@ -1749,7 +1922,7 @@ async function rollForCurrentPlayer() {
         ? `${playerName} hat ${formatRoll(values)} gewürfelt. Zu viel für genau ${winningScore}, der Wurf zählt nicht.`
         : `${getOpponentName()} würfelt ${formatRoll(values)}. Zu viel für genau ${winningScore}, der Wurf zählt nicht.`,
     );
-  } else if (state.currentPlayer === "human") {
+  } else if (rollingPlayer === "human") {
     state.humanScore = nextScore;
     scoreApplied = true;
     setMessage(`${playerName} hat ${formatRoll(values)} gewürfelt. ${getOpponentName()} ist dran.`);
@@ -1759,12 +1932,21 @@ async function rollForCurrentPlayer() {
     setMessage(`${getOpponentName()} würfelt ${formatRoll(values)}. ${playerName} ist dran.`);
   }
 
+  const perfectThrowHit = consumePerfectThrowChance(values, {
+    currentPlayer: rollingPlayer,
+    nextScore,
+    scoreApplied,
+  });
+
   triggerSpecialMoment(values, {
     currentScore,
     nextScore,
+    currentPlayer: rollingPlayer,
     scoreApplied,
     riskInvalid,
+    perfectThrowHit,
   });
+  registerPerfectThrowChance(rollingPlayer, nextScore, scoreApplied);
   checkWinner();
 
   if (gambleTurnLost && !state.isGameOver) {
@@ -1902,6 +2084,7 @@ function newGame(keepRulesLocked = false) {
   state.hasRolled = false;
   state.goldAwarded = false;
   state.lastGoldReward = 0;
+  resetPerfectThrowChance();
   dieFace.dataset.value = "1";
   dieFaceTwo.dataset.value = "1";
   rollButton.classList.remove("rolling", "shake");
@@ -2053,7 +2236,8 @@ function checkCurrentPlayerRiskDeadEnd() {
     setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. ${getOpponentName()} gewinnt mit ${computerFinalScore} zu ${humanFinalScore}.`);
     playWinAnimation("computer");
   } else {
-    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. Gleichstand mit ${humanFinalScore} zu ${computerFinalScore}.`);
+    const drawGoldReward = awardDrawGold();
+    setMessage(`Risiko-Ende: Noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"} bis zum Ziel, aber kein gültiger Siegwurf ist möglich. Gleichstand mit ${humanFinalScore} zu ${computerFinalScore}. +${drawGoldReward} Gold.`);
   }
 
   saveWins();
@@ -2080,7 +2264,8 @@ function finishDeadEndByScore(reason) {
     setMessage(`${reason} ${getOpponentName()} gewinnt mit ${state.computerScore} zu ${state.humanScore}.`);
     playWinAnimation("computer");
   } else {
-    setMessage(`${reason} Gleichstand mit ${state.humanScore} zu ${state.computerScore}.`);
+    const drawGoldReward = awardDrawGold();
+    setMessage(`${reason} Gleichstand mit ${state.humanScore} zu ${state.computerScore}. +${drawGoldReward} Gold.`);
   }
 
   saveWins();
@@ -2464,7 +2649,7 @@ function playRollSound() {
   if (!soundEnabled) return;
 
   const rollAudio = new Audio(DICE_ROLL_SOUND_URL);
-  rollAudio.volume = 0.8;
+  rollAudio.volume = 0.45;
   rollAudio.play().catch(() => {
     playSyntheticRollSound();
   });
@@ -2547,11 +2732,15 @@ function togglePanel(shell, trigger) {
 
   const shouldOpen = !shell.classList.contains("menu-open");
   closePanels();
+  setMenuOpen(shell, trigger, shouldOpen);
   if (shell === shopShell && shouldOpen) {
+    preloadShopImageAssets();
+    renderShop(true);
+    renderAvatarShop(true);
+    renderJukebox(true);
     shopSkinsCategory?.removeAttribute("open");
     jukeboxCategory?.removeAttribute("open");
   }
-  setMenuOpen(shell, trigger, shouldOpen);
 }
 
 const LEGAL_CONTENT = {
@@ -2652,6 +2841,7 @@ gambleMode = savedGambleMode === "on";
 loadGold();
 loadShopState();
 loadAvatarShopState();
+preloadStartupImageAssets();
 
 const savedHumanWins = Number(localStorage.getItem("wuerfelduell-human-wins"));
 const savedComputerWins = Number(localStorage.getItem("wuerfelduell-computer-wins"));
