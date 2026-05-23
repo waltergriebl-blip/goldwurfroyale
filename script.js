@@ -26,6 +26,7 @@ const DEFAULT_OWNED_AUDIO_TRACKS = [DEFAULT_AUDIO_TRACK];
 const DICE_ROLL_SOUND_URL = `assets/wuerfel_sound/dice-roll.mp3?v=${APP_VERSION}`;
 const PRELOADED_VERSION_KEY = "goldwurf-royale-preloaded-version";
 const PRELOAD_VERSION = APP_VERSION || "dev";
+const WELCOME_READY_TEXT = "Update erfolgreich geladen. Viel Spaß.";
 const DRAW_GOLD_REWARD = 25;
 let ownedAudioTracks = new Set(DEFAULT_OWNED_AUDIO_TRACKS);
 let activeAudioTrack = DEFAULT_AUDIO_TRACK;
@@ -711,7 +712,7 @@ function startWelcomePreload() {
   if (!shouldShowWelcomeLoader()) {
     preloadShopImageAssets();
     warmupWelcomeCacheAssets();
-    markWelcomeLoaderReady("Erfolgreich geladen. Viel Spaß.");
+    markWelcomeLoaderReady(WELCOME_READY_TEXT);
     return;
   }
 
@@ -728,7 +729,11 @@ function startWelcomePreload() {
       })
       .then(() => {
         completed += 1;
-        setWelcomeLoaderProgress(completed, total, `Lade Inhalte ${completed} von ${total}...`);
+        setWelcomeLoaderProgress(
+          completed,
+          total,
+          completed < total ? `Lade Inhalte ${completed} von ${total}...` : "Update wird abgeschlossen..."
+        );
       })
   ));
 
@@ -737,11 +742,7 @@ function startWelcomePreload() {
     .then(() => {
       rememberWelcomePreloadComplete();
       warmupWelcomeCacheAssets();
-      markWelcomeLoaderReady(
-        failed > 0
-          ? "Einige Inhalte werden bei Bedarf nachgeladen. Viel Spaß."
-          : "Erfolgreich geladen. Viel Spaß."
-      );
+      markWelcomeLoaderReady(WELCOME_READY_TEXT);
     });
 }
 
