@@ -96,6 +96,115 @@ button {
   touch-action: manipulation;
 }
 
+.welcome-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(241, 200, 106, 0.2), transparent 0 28%, transparent 52%),
+    repeating-linear-gradient(90deg, transparent 0 28px, rgba(255, 230, 150, 0.025) 29px 30px),
+    linear-gradient(135deg, #030302, #11100b 52%, #050404);
+  color: #fff3d0;
+  transition:
+    opacity 240ms ease,
+    visibility 240ms ease;
+}
+
+.welcome-loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.welcome-loader__panel {
+  width: min(420px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+  border: 1px solid rgba(241, 200, 106, 0.5);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 231, 153, 0.1), transparent 54%),
+    repeating-linear-gradient(135deg, transparent 0 13px, rgba(255, 222, 145, 0.04) 14px 15px),
+    rgba(14, 11, 7, 0.96);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 180, 0.06),
+    0 26px 70px rgba(0, 0, 0, 0.55);
+  text-align: center;
+}
+
+.welcome-loader__kicker {
+  color: #f1c86a;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.welcome-loader h1 {
+  margin: 0;
+  color: #fff7df;
+  font-size: clamp(2rem, 8vw, 3rem);
+  line-height: 0.95;
+  text-shadow:
+    0 1px 0 #8c5d19,
+    0 0 20px rgba(217, 168, 68, 0.22);
+}
+
+.welcome-loader p {
+  min-height: 44px;
+  margin: 0;
+  color: #c8b893;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.welcome-loader__track {
+  width: 100%;
+  height: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(241, 200, 106, 0.36);
+  border-radius: 999px;
+  background: rgba(3, 3, 2, 0.7);
+  box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+
+.welcome-loader__track span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, #70440d, #f1c86a 50%, #fff0bd);
+  transition: width 180ms ease;
+}
+
+.welcome-loader__percent {
+  color: #f1c86a;
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.welcome-loader__button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, #ffe29a, #c58c30 58%, #5f380c);
+  color: #120b02;
+  cursor: pointer;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.welcome-loader__button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
 .game {
   width: min(980px, calc(100vw - 24px));
   display: grid;

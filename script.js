@@ -24,6 +24,8 @@ let activeAvatarSkin = DEFAULT_AVATAR_SKIN;
 const DEFAULT_AUDIO_TRACK = "classic";
 const DEFAULT_OWNED_AUDIO_TRACKS = [DEFAULT_AUDIO_TRACK];
 const DICE_ROLL_SOUND_URL = `assets/wuerfel_sound/dice-roll.mp3?v=${APP_VERSION}`;
+const PRELOADED_VERSION_KEY = "goldwurf-royale-preloaded-version";
+const PRELOAD_VERSION = APP_VERSION || "dev";
 const DRAW_GOLD_REWARD = 25;
 let ownedAudioTracks = new Set(DEFAULT_OWNED_AUDIO_TRACKS);
 let activeAudioTrack = DEFAULT_AUDIO_TRACK;
@@ -349,10 +351,11 @@ const AUDIO_TRACKS = [
 
 const imagePreloadPromises = new Map();
 
-function preloadImageAsset(src) {
+function preloadImageAsset(src, options = {}) {
   if (!src || typeof Image !== "function") return Promise.resolve(src);
   if (imagePreloadPromises.has(src)) return imagePreloadPromises.get(src);
 
+  const { swallowErrors = true } = options;
   const image = new Image();
   image.decoding = "async";
   image.loading = "eager";
@@ -362,7 +365,9 @@ function preloadImageAsset(src) {
     image.onload = resolve;
     image.onerror = reject;
   }))
-    .catch(() => {})
+    .catch((error) => {
+      if (!swallowErrors) throw error;
+    })
     .then(() => src);
 
   imagePreloadPromises.set(src, loadPromise);
@@ -373,15 +378,67 @@ function preloadImageAssets(sources = []) {
   sources.filter(Boolean).forEach((src) => preloadImageAsset(src));
 }
 
+function preloadWelcomeImageAsset(src) {
+  if (!src || typeof Image !== "function") return Promise.resolve(src);
+  const image = new Image();
+  image.decoding = "async";
+  image.loading = "eager";
+
+  return new Promise((resolve, reject) => {
+    const timeout = window.setTimeout(() => {
+      reject(new Error(`Asset-Timeout: ${src}`));
+    }, 15000);
+    const finish = (callback) => {
+      window.clearTimeout(timeout);
+      callback(src);
+    };
+
+    image.onload = () => {
+      if (image.decode) {
+        image.decode().catch(() => {}).then(() => finish(resolve));
+      } else {
+        finish(resolve);
+      }
+    };
+    image.onerror = () => finish(() => reject(new Error(`Asset konnte nicht geladen werden: ${src}`)));
+    image.src = src;
+  });
+}
+
+function getUniqueSources(sources = []) {
+  return Array.from(new Set(sources.filter(Boolean)));
+}
+
 function getImageSkinAssets() {
   return SHOP_SKINS.filter((skin) => skin.useImageAsset && skin.assetRef).map((skin) => skin.assetRef);
 }
 
+function getWelcomePreloadImageAssets() {
+  return getUniqueSources([
+    "assets/table-bg.png",
+    "assets/player-bg.png",
+    ...getImageSkinAssets(),
+    ...AVATAR_SKINS.map((skin) => skin.assetPath),
+    "icon-192.png",
+    "icon-512.png",
+    "apple-touch-icon.png",
+    "favicon-32.png",
+  ]);
+}
+
+function getWelcomeCacheWarmupAssets() {
+  return getUniqueSources([
+    DICE_ROLL_SOUND_URL,
+    ...AUDIO_TRACKS.map((track) => `${track.assetPath}?v=${APP_VERSION}`),
+  ]);
+}
+
 function preloadStartupImageAssets() {
+  const activeDiceSkin = getSkinById(activeSkin);
   preloadImageAssets([
     "assets/table-bg.png",
     "assets/player-bg.png",
-    getSkinById(activeSkin)?.assetRef,
+    activeDiceSkin?.useImageAsset ? activeDiceSkin.assetRef : null,
     getAvatarSkinById(activeAvatarSkin)?.assetPath,
     getAvatarSkinById(COMPUTER_AVATAR_SKIN_ID)?.assetPath,
   ]);
@@ -393,6 +450,28 @@ function preloadShopImageAssets() {
     ...AVATAR_SKINS.map((skin) => skin.assetPath),
   ]);
 }
+
+function warmupCacheAsset(src) {
+  if (!src || typeof fetch !== "function") return Promise.resolve(src);
+  return fetch(src, { cache: "force-cache" })
+    .then((response) => {
+      if (!response.ok) throw new Error(`Asset konnte nicht geladen werden: ${src}`);
+      return src;
+    });
+}
+
+function registerAppServiceWorker() {
+  if (!("serviceWorker" in navigator)) return Promise.resolve(null);
+  return navigator.serviceWorker
+    .register(`service-worker.js?v=${APP_VERSION}`)
+    .then((registration) => {
+      registration.update().catch(() => {});
+      return registration;
+    })
+    .catch(() => null);
+}
+
+const serviceWorkerRegistrationPromise = registerAppServiceWorker();
 
 function prepareImageElement(image, src) {
   image.src = src;
@@ -542,6 +621,11 @@ const humanAvatarFrame = document.querySelector("#humanAvatarFrame");
 const humanAvatarImage = document.querySelector("#humanAvatarImage");
 const computerAvatarFrame = document.querySelector("#computerAvatarFrame");
 const computerAvatarImage = document.querySelector("#computerAvatarImage");
+const welcomeLoader = document.querySelector("#welcomeLoader");
+const welcomeLoaderStatus = document.querySelector("#welcomeLoaderStatus");
+const welcomeLoaderProgress = document.querySelector("#welcomeLoaderProgress");
+const welcomeLoaderPercent = document.querySelector("#welcomeLoaderPercent");
+const welcomeLoaderButton = document.querySelector("#welcomeLoaderButton");
 if (appVersion && APP_VERSION) {
   appVersion.textContent = APP_VERSION;
 }
@@ -561,6 +645,106 @@ const lockedRuleControls = [
   oneDieButton,
   twoDiceButton,
 ].filter(Boolean);
+
+function setWelcomeLoaderProgress(completed, total, statusText) {
+  const progress = total > 0 ? Math.round((completed / total) * 100) : 100;
+  if (welcomeLoaderProgress) {
+    welcomeLoaderProgress.style.width = `${progress}%`;
+  }
+  if (welcomeLoaderPercent) {
+    welcomeLoaderPercent.textContent = `${progress}%`;
+  }
+  if (welcomeLoaderStatus && statusText) {
+    welcomeLoaderStatus.textContent = statusText;
+  }
+}
+
+function hideWelcomeLoader() {
+  if (!welcomeLoader) return;
+  welcomeLoader.classList.add("is-hidden");
+  welcomeLoader.setAttribute("aria-hidden", "true");
+  window.setTimeout(() => {
+    welcomeLoader.hidden = true;
+  }, 260);
+}
+
+function markWelcomeLoaderReady(statusText) {
+  setWelcomeLoaderProgress(1, 1, statusText);
+  if (welcomeLoaderButton) {
+    welcomeLoaderButton.disabled = false;
+    welcomeLoaderButton.textContent = "Jetzt spielen";
+    welcomeLoaderButton.focus({ preventScroll: true });
+  }
+}
+
+function shouldShowWelcomeLoader() {
+  try {
+    return localStorage.getItem(PRELOADED_VERSION_KEY) !== PRELOAD_VERSION;
+  } catch {
+    return true;
+  }
+}
+
+function rememberWelcomePreloadComplete() {
+  try {
+    localStorage.setItem(PRELOADED_VERSION_KEY, PRELOAD_VERSION);
+  } catch {
+    // Private Browser-Modi koennen localStorage blockieren.
+  }
+}
+
+function warmupWelcomeCacheAssets() {
+  getWelcomeCacheWarmupAssets().forEach((src) => {
+    warmupCacheAsset(src).catch(() => {});
+  });
+}
+
+function startWelcomePreload() {
+  if (!welcomeLoader) {
+    preloadShopImageAssets();
+    warmupWelcomeCacheAssets();
+    return;
+  }
+
+  welcomeLoaderButton?.addEventListener("click", hideWelcomeLoader, { once: true });
+
+  if (!shouldShowWelcomeLoader()) {
+    preloadShopImageAssets();
+    warmupWelcomeCacheAssets();
+    markWelcomeLoaderReady("Erfolgreich geladen. Viel Spaß.");
+    return;
+  }
+
+  const imageAssets = getWelcomePreloadImageAssets();
+  const total = imageAssets.length || 1;
+  let completed = 0;
+  let failed = 0;
+  setWelcomeLoaderProgress(0, total, "Lade Spielgrafiken und Skins...");
+
+  const imageLoads = imageAssets.map((src) => (
+    preloadWelcomeImageAsset(src)
+      .catch(() => {
+        failed += 1;
+      })
+      .then(() => {
+        completed += 1;
+        setWelcomeLoaderProgress(completed, total, `Lade Inhalte ${completed} von ${total}...`);
+      })
+  ));
+
+  Promise.all(imageLoads)
+    .then(() => serviceWorkerRegistrationPromise.catch(() => null))
+    .then(() => {
+      rememberWelcomePreloadComplete();
+      warmupWelcomeCacheAssets();
+      markWelcomeLoaderReady(
+        failed > 0
+          ? "Einige Inhalte werden bei Bedarf nachgeladen. Viel Spaß."
+          : "Erfolgreich geladen. Viel Spaß."
+      );
+    });
+}
+
 const rollDie = () => Math.floor(Math.random() * 6) + 1;
 
 function render() {
@@ -2842,6 +3026,7 @@ loadGold();
 loadShopState();
 loadAvatarShopState();
 preloadStartupImageAssets();
+startWelcomePreload();
 
 const savedHumanWins = Number(localStorage.getItem("wuerfelduell-human-wins"));
 const savedComputerWins = Number(localStorage.getItem("wuerfelduell-computer-wins"));
@@ -3101,9 +3286,3 @@ document.addEventListener("pointerdown", unlockMusicAfterGesture, { capture: tru
 document.addEventListener("touchstart", unlockMusicAfterGesture, { capture: true, passive: true });
 
 render();
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register(`service-worker.js?v=${APP_VERSION}`).then((registration) => registration.update()).catch(() => {});
-  });
-}

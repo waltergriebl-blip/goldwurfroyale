@@ -14,6 +14,19 @@
     <link rel="stylesheet" href="styles.css?v=2.25" />
   </head>
   <body class="dark">
+    <div class="welcome-loader" id="welcomeLoader" role="status" aria-live="polite" aria-label="Goldwurf Royale wird vorbereitet">
+      <div class="welcome-loader__panel">
+        <span class="welcome-loader__kicker">Goldwurf Royale</span>
+        <h1>Willkommen</h1>
+        <p id="welcomeLoaderStatus">Bereite Skins und Spielgrafiken vor...</p>
+        <div class="welcome-loader__track" aria-hidden="true">
+          <span id="welcomeLoaderProgress"></span>
+        </div>
+        <span class="welcome-loader__percent" id="welcomeLoaderPercent">0%</span>
+        <button class="welcome-loader__button" id="welcomeLoaderButton" type="button" disabled>Jetzt spielen</button>
+      </div>
+    </div>
+
     <main class="game">
       <section class="topbar" aria-label="Spielmenü">
         <div class="top-actions">
