@@ -1805,36 +1805,40 @@ function detectSpecialMoment(values = [], context = {}) {
   const pointsLeft = winningScore - currentScore;
   const rollTotal = getRollTotal(rolledValues);
   const isRoyalRoll =
-    (rolledValues.length === 1 && rolledValues[0] === 6) ||
-    (rolledValues.length === 2 && rolledValues[0] === 6 && rolledValues[1] === 6);
-
-  if (riskInvalid) {
-    return { text: "RISIKO VERLOREN!", type: "dark" };
-  }
-
-  if (gambleSecured >= 20) {
-    return { text: "GROSSER GAMBLE!", type: "gold", reward: isHumanMoment ? 50 : 0 };
-  }
-
-  if (isRoyalRoll && rollTotal <= pointsLeft) {
-    return { text: "ROYAL WURF!", type: "gold", reward: isHumanMoment ? rolledValues.length * 50 : 0 };
-  }
-
-  if (
+    (
+      (rolledValues.length === 1 && rolledValues[0] === 6) ||
+      (rolledValues.length === 2 && rolledValues[0] === 6 && rolledValues[1] === 6)
+    ) &&
+    rollTotal <= pointsLeft;
+  const royalReward = isRoyalRoll ? rolledValues.length * 50 : 0;
+  const isStartPerfectMoment =
     winningScore === 10 &&
     rolledValues.length === 2 &&
     rollTotal === 10 &&
     currentScore === 0 &&
     scoreApplied &&
-    nextScore === winningScore
-  ) {
-    return { text: "PERFEKTER WURF!", type: "gold", reward: isHumanMoment ? 50 : 0 };
+    nextScore === winningScore;
+  const isPerfectMoment = isStartPerfectMoment || perfectThrowHit;
+  const perfectReward = isPerfectMoment ? 50 : 0;
+
+  if (riskInvalid) {
+    return { text: "RISIKO VERLOREN!", type: "dark" };
   }
 
-  if (
-    perfectThrowHit
-  ) {
-    return { text: "PERFEKTER WURF!", type: "gold", reward: isHumanMoment ? 50 : 0 };
+  if (isPerfectMoment && isRoyalRoll) {
+    return { text: "PERFEKTER ROYAL!", type: "gold", reward: isHumanMoment ? perfectReward + royalReward : 0 };
+  }
+
+  if (isPerfectMoment) {
+    return { text: "PERFEKTER WURF!", type: "gold", reward: isHumanMoment ? perfectReward : 0 };
+  }
+
+  if (isRoyalRoll) {
+    return { text: "ROYAL WURF!", type: "gold", reward: isHumanMoment ? royalReward : 0 };
+  }
+
+  if (gambleSecured >= 20) {
+    return { text: "GROSSER GAMBLE!", type: "gold", reward: isHumanMoment ? 50 : 0 };
   }
 
   return null;
@@ -1958,7 +1962,6 @@ function registerPerfectThrowChance(currentPlayer, nextScore, scoreApplied) {
     state.perfectThrowCandidatePlayer ||
     isComboMode() ||
     gambleMode ||
-    difficulty !== "hard" ||
     !scoreApplied ||
     nextScore >= winningScore
   ) {
@@ -2353,11 +2356,11 @@ function getEffectiveDiceCount() {
 }
 
 function getEffectiveDiceCountForPointsLeft(pointsLeft) {
-  if (gambleMode && difficulty === "hard" && diceCount === 2 && pointsLeft > 0 && pointsLeft <= 6) {
+  if (difficulty === "hard" && diceCount === 2 && pointsLeft > 0 && pointsLeft <= 6) {
     return 1;
   }
 
-  return difficulty === "hard" && diceCount === 2 && pointsLeft === 1 ? 1 : diceCount;
+  return diceCount;
 }
 
 function formatRoll(values) {
@@ -2438,12 +2441,36 @@ function hasRiskDeadEnd(score) {
   return pointsLeft > 0 && pointsLeft < minimumValidRoll;
 }
 
+function passTurnAfterRiskDeadEnd(messageText) {
+  state.currentPlayer = state.currentPlayer === "human" ? "computer" : "human";
+  state.turnScore = 0;
+  updatePerfectThrowReadyForCurrentPlayer();
+  setMessage(messageText);
+  render();
+
+  if (gameMode === "single" && state.currentPlayer === "computer" && !state.isGameOver) {
+    window.setTimeout(() => {
+      if (!state.isGameOver && state.currentPlayer === "computer") {
+        computerTurn();
+      }
+    }, 900);
+  }
+}
+
 function checkCurrentPlayerRiskDeadEnd() {
   const currentScore = getCurrentScore() + (gambleMode ? state.turnScore : 0);
   if (checkCurrentPlayerGambleDeadEnd(currentScore)) return true;
   if (!hasRiskDeadEnd(currentScore)) return false;
 
   const pointsLeft = winningScore - currentScore;
+  const blockedName = getCurrentPlayerName();
+  const opponentScore = state.currentPlayer === "human" ? state.computerScore : state.humanScore;
+  if (!hasRiskDeadEnd(opponentScore)) {
+    const nextName = state.currentPlayer === "human" ? getOpponentName() : playerName;
+    passTurnAfterRiskDeadEnd(`${blockedName} braucht noch ${pointsLeft} Punkt${pointsLeft === 1 ? "" : "e"}, kann im Risiko-Modus nicht gültig gewinnen. ${nextName} bekommt noch die Chance.`);
+    return true;
+  }
+
   const humanFinalScore = state.currentPlayer === "human" ? currentScore : state.humanScore;
   const computerFinalScore = state.currentPlayer === "computer" ? currentScore : state.computerScore;
   state.isGameOver = true;
