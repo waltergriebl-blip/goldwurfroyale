@@ -27,6 +27,7 @@ const DICE_ROLL_SOUND_URL = `assets/wuerfel_sound/dice-roll.mp3?v=${APP_VERSION}
 const PRELOADED_VERSION_KEY = "goldwurf-royale-preloaded-version";
 const PRELOAD_VERSION = APP_VERSION || "dev";
 const WELCOME_READY_TEXT = "Update erfolgreich geladen. Viel Spaß.";
+const WELCOME_READY_HTML = '<span class="welcome-status-line">Update erfolgreich geladen.</span><span class="welcome-status-line">Viel Spaß.</span>';
 const DRAW_GOLD_REWARD = 25;
 let ownedAudioTracks = new Set(DEFAULT_OWNED_AUDIO_TRACKS);
 let activeAudioTrack = DEFAULT_AUDIO_TRACK;
@@ -671,6 +672,9 @@ function hideWelcomeLoader() {
 
 function markWelcomeLoaderReady(statusText) {
   setWelcomeLoaderProgress(1, 1, statusText);
+  if (welcomeLoaderStatus && statusText === WELCOME_READY_TEXT) {
+    welcomeLoaderStatus.innerHTML = WELCOME_READY_HTML;
+  }
   if (welcomeLoaderButton) {
     welcomeLoaderButton.disabled = false;
     welcomeLoaderButton.textContent = "Jetzt spielen";
