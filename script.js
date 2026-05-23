@@ -24,7 +24,7 @@ let activeAvatarSkin = DEFAULT_AVATAR_SKIN;
 const DEFAULT_AUDIO_TRACK = "classic";
 const DEFAULT_OWNED_AUDIO_TRACKS = [DEFAULT_AUDIO_TRACK];
 const DICE_ROLL_SOUND_URL = `assets/wuerfel_sound/dice-roll.mp3?v=${APP_VERSION}`;
-const PRELOADED_VERSION_KEY = "goldwurf-royale-preloaded-version";
+const PRELOADED_VERSION_KEY = "goldwurf-royale-preloaded-version-v2";
 const PRELOAD_VERSION = APP_VERSION || "dev";
 const WELCOME_READY_TEXT = "Update erfolgreich. Viel Spaß.";
 const WELCOME_READY_HTML = '<span class="welcome-status-line">Update erfolgreich.</span><span class="welcome-status-line">Viel Spaß.</span>';
@@ -462,6 +462,31 @@ function warmupCacheAsset(src) {
     });
 }
 
+function preloadWelcomeAudioAsset(src) {
+  if (!src || typeof fetch !== "function") return Promise.resolve(src);
+
+  const controller = typeof AbortController === "function" ? new AbortController() : null;
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = window.setTimeout(() => {
+      controller?.abort();
+      reject(new Error(`Audio-Timeout: ${src}`));
+    }, 20000);
+  });
+  const load = fetch(src, {
+    cache: "force-cache",
+    signal: controller?.signal,
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error(`Audio konnte nicht geladen werden: ${src}`);
+      return response.arrayBuffer();
+    })
+    .then(() => src);
+
+  return Promise.race([load, timeout])
+    .finally(() => window.clearTimeout(timeoutId));
+}
+
 function registerAppServiceWorker() {
   if (!("serviceWorker" in navigator)) return Promise.resolve(null);
   return navigator.serviceWorker
@@ -720,14 +745,23 @@ function startWelcomePreload() {
     return;
   }
 
-  const imageAssets = getWelcomePreloadImageAssets();
-  const total = imageAssets.length || 1;
+  const preloadTasks = [
+    ...getWelcomePreloadImageAssets().map((src) => ({
+      src,
+      load: () => preloadWelcomeImageAsset(src),
+    })),
+    ...getWelcomeCacheWarmupAssets().map((src) => ({
+      src,
+      load: () => preloadWelcomeAudioAsset(src),
+    })),
+  ];
+  const total = preloadTasks.length || 1;
   let completed = 0;
   let failed = 0;
-  setWelcomeLoaderProgress(0, total, "Lade Spielgrafiken und Skins...");
+  setWelcomeLoaderProgress(0, total, "Lade Spielgrafiken und Audio...");
 
-  const imageLoads = imageAssets.map((src) => (
-    preloadWelcomeImageAsset(src)
+  const assetLoads = preloadTasks.map((task) => (
+    task.load()
       .catch(() => {
         failed += 1;
       })
@@ -741,7 +775,7 @@ function startWelcomePreload() {
       })
   ));
 
-  Promise.all(imageLoads)
+  Promise.all(assetLoads)
     .then(() => serviceWorkerRegistrationPromise.catch(() => null))
     .then(() => {
       rememberWelcomePreloadComplete();
