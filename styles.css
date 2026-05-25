@@ -6410,7 +6410,7 @@ body:not(.dark) .player-avatar-frame {
   #shopItems .shop-item,
   #avatarShopItems .shop-item {
     width: min(100%, 390px);
-    grid-template-columns: 58px minmax(0, 1fr) 116px;
+    grid-template-columns: 58px minmax(0, 1fr) 108px;
     gap: 4px 8px;
     min-height: 86px;
     padding: 8px;
@@ -6451,6 +6451,16 @@ body:not(.dark) .player-avatar-frame {
     letter-spacing: 0.05em;
   }
 
+  #shopItems .shop-item.owned .shop-item-meta,
+  #avatarShopItems .shop-item.owned .shop-item-meta {
+    max-width: 100%;
+    font-size: clamp(0.56rem, 2.35vw, 0.68rem);
+    line-height: 1.05;
+    letter-spacing: 0.035em;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
   #shopItems .shop-item-title,
   #avatarShopItems .shop-item-title {
     align-self: start;
@@ -6462,9 +6472,9 @@ body:not(.dark) .player-avatar-frame {
   #avatarShopItems .shop-item button {
     grid-column: 3;
     grid-row: 1 / span 2;
-    width: 116px;
+    width: 108px;
     min-width: 0;
-    max-width: 116px;
+    max-width: 108px;
     min-height: 42px;
     padding: 0 8px;
     font-size: clamp(0.72rem, 3.2vw, 0.86rem);
@@ -6496,6 +6506,12 @@ body:not(.dark) .player-avatar-frame {
     max-width: 104px;
     min-height: 38px;
     font-size: clamp(0.66rem, 3vw, 0.78rem);
+  }
+
+  #shopItems .shop-item.owned .shop-item-meta,
+  #avatarShopItems .shop-item.owned .shop-item-meta {
+    font-size: clamp(0.5rem, 2.4vw, 0.6rem);
+    letter-spacing: 0.025em;
   }
 }
 
