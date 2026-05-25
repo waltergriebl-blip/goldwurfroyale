@@ -1,6 +1,9 @@
 ﻿const APP_VERSION = String(globalThis.APP_VERSION || "");
 
-let winningScore = 50;
+const VALID_WINNING_SCORES = [10, 25, 50];
+const DEFAULT_WINNING_SCORE = 50;
+
+let winningScore = DEFAULT_WINNING_SCORE;
 let difficulty = "normal";
 let playerName = "Du";
 let opponentName = "Spieler 2";
@@ -28,6 +31,11 @@ const PRELOADED_VERSION_KEY = "goldwurf-royale-preloaded-version-v2";
 const PRELOAD_VERSION = APP_VERSION || "dev";
 const WELCOME_READY_TEXT = "Update erfolgreich. Viel Spaß.";
 const WELCOME_READY_HTML = '<span class="welcome-status-line">Update erfolgreich.</span><span class="welcome-status-line">Viel Spaß.</span>';
+const REWARD_TIERS = {
+  10: { win: 1, special: 1 },
+  25: { win: 2, special: 1.5 },
+  50: { win: 4, special: 2 },
+};
 const DRAW_GOLD_REWARD = 25;
 let ownedAudioTracks = new Set(DEFAULT_OWNED_AUDIO_TRACKS);
 let activeAudioTrack = DEFAULT_AUDIO_TRACK;
@@ -96,7 +104,7 @@ const SHOP_SKINS = [
     id: "starfrost",
     name: "Sternenfrost",
     rarity: "Legendary",
-    price: 150,
+    price: 900,
     description: "Gefrorenes Sternenlicht in blauem Kristall.",
     unlockCondition: { type: "none" },
     preview: {
@@ -112,7 +120,7 @@ const SHOP_SKINS = [
     id: "glutkern",
     name: "Glutkern",
     rarity: "Legendary",
-    price: 150,
+    price: 900,
     description: "Ein feuriger Kristallwürfel mit flüssiger Lava-Aura.",
     unlockCondition: { type: "none" },
     preview: {
@@ -128,7 +136,7 @@ const SHOP_SKINS = [
     id: "kronenglut",
     name: "Kronenglut",
     rarity: "Legendary",
-    price: 150,
+    price: 1100,
     description: "Goldene Dornen, Sternenfunken und königliche Glut.",
     unlockCondition: { type: "none" },
     preview: {
@@ -144,7 +152,7 @@ const SHOP_SKINS = [
     id: "drachenasche",
     name: "Drachenasche",
     rarity: "Legendary",
-    price: 150,
+    price: 1200,
     description: "Schwarze Drachenschuppen und brodelnde Lava-Risse.",
     unlockCondition: { type: "none" },
     preview: {
@@ -160,7 +168,7 @@ const SHOP_SKINS = [
     id: "astrallicht",
     name: "Astrallicht",
     rarity: "Legendary",
-    price: 150,
+    price: 1300,
     description: "Kosmisches Eis mit goldenen Sternenflammen.",
     unlockCondition: { type: "none" },
     preview: {
@@ -176,7 +184,7 @@ const SHOP_SKINS = [
     id: "himmelskrone",
     name: "Himmelskrone",
     rarity: "Legendary",
-    price: 150,
+    price: 1500,
     description: "Strahlender Diamantglanz in königlichem Gold.",
     unlockCondition: { type: "none" },
     preview: {
@@ -192,7 +200,7 @@ const SHOP_SKINS = [
     id: "meereskrone",
     name: "Meereskrone",
     rarity: "Legendary",
-    price: 150,
+    price: 1600,
     description: "Tiefsee-Kristall mit goldener Krone und Wasserwirbeln.",
     unlockCondition: { type: "none" },
     preview: {
@@ -208,7 +216,7 @@ const SHOP_SKINS = [
     id: "goldmatrix",
     name: "Goldmatrix",
     rarity: "Legendary",
-    price: 250,
+    price: 2200,
     description: "Schwarzer Goldrahmen mit funkelnden Matrix-Kristallen.",
     unlockCondition: { type: "none" },
     preview: {
@@ -224,7 +232,7 @@ const SHOP_SKINS = [
     id: "smaragdzahn",
     name: "Smaragdzahn",
     rarity: "Legendary",
-    price: 250,
+    price: 2400,
     description: "Smaragdschlangen, goldene Fassung und lebendige Wasserfunken.",
     unlockCondition: { type: "none" },
     preview: {
@@ -250,63 +258,63 @@ const AVATAR_SKINS = [
     id: "sun-king",
     name: "Sonnenk\u00f6nig",
     assetPath: "assets/avatars/avatar_sun_king.png",
-    price: 150,
+    price: 1200,
     description: "Ein erhabener Herrscher aus Licht, Gold und göttlicher Glut.",
   },
   {
     id: "demon",
     name: "D\u00e4monenf\u00fcrst",
     assetPath: "assets/avatars/avatar_demon.png",
-    price: 250,
+    price: 1600,
     description: "Ein finsterer Royal-Avatar im goldenen Höllenfeuer.",
   },
   {
     id: "ice-skeleton",
     name: "Eisskelett",
     assetPath: "assets/avatars/avatar_ice_skeleton.png",
-    price: 250,
+    price: 1600,
     description: "Ein frostiger Knochenkönig aus Eis, Schatten und blauer Magie.",
   },
   {
     id: "card-master",
     name: "Kartenbaron",
     assetPath: "assets/avatars/avatar_card_master.png",
-    price: 250,
+    price: 1700,
     description: "Ein eleganter Glücksritter mit Karten, Würfeln und goldener Aura.",
   },
   {
     id: "fortune-dealer",
     name: "Gl\u00fccksdealer",
     assetPath: "assets/avatars/avatar_fortune_dealer.png",
-    price: 250,
+    price: 1800,
     description: "Ein charmanter Spieltisch-Meister mit Karten, Chips und sicherem Blick.",
   },
   {
     id: "dice-dealer",
     name: "W\u00fcrfeldealer",
     assetPath: "assets/avatars/avatar_dice_dealer.png",
-    price: 250,
+    price: 1900,
     description: "Der KI-Gegner am goldenen Spieltisch, mit Würfeln und Siegesblick.",
   },
   {
     id: "demon-gambler",
     name: "D\u00e4monenspieler",
     assetPath: "assets/avatars/avatar_demon_gambler.png",
-    price: 250,
+    price: 2200,
     description: "Ein finsterer Würfelherr mit roten Augen, Feuer und dämonischem Glück.",
   },
   {
     id: "meerjungfrauen",
     name: "Meeresköniginnen",
     assetPath: "assets/avatars/avatar_meerjungfrauen.png",
-    price: 250,
+    price: 2600,
     description: "Zwei royale Sirenen aus Gold, Smaragdlicht und Tiefseezauber.",
   },
   {
     id: "lichtkoenigin",
     name: "Lichtkönigin",
     assetPath: "assets/avatars/avatar_lichtkoenigin.png",
-    price: 250,
+    price: 3000,
     description: "Eine strahlende Königin aus Gold, Licht und eisblauen Kristallen.",
   },
 ];
@@ -325,28 +333,28 @@ const AUDIO_TRACKS = [
     id: "black-iron-sky",
     name: "Black Iron Sky",
     assetPath: "assets/music/black-iron-sky.mp3",
-    price: 100,
+    price: 350,
     description: "Dunkle Spannung fuer dramatische Runden am Spieltisch.",
   },
   {
     id: "black-velvet-rain",
     name: "Black Velvet Rain",
     assetPath: "assets/music/black-velvet-rain.mp3",
-    price: 100,
+    price: 450,
     description: "Ein samtiger Regen aus Casino-Stimmung und Nachtglanz.",
   },
   {
     id: "ashen-oath",
     name: "Ashen Oath",
     assetPath: "assets/music/ashen-oath.mp3",
-    price: 100,
+    price: 550,
     description: "Ein dunkler Schwur aus Asche, Spannung und Spieltisch-Drama.",
   },
   {
     id: "high-roller",
     name: "High Roller",
     assetPath: "assets/music/high-roller.mp3",
-    price: 100,
+    price: 650,
     description: "Ein schwungvoller Track fuer riskante Wuerfe und grosse Gewinne.",
   },
 ];
@@ -580,8 +588,6 @@ const overlayNewGameButton = document.querySelector("#overlayNewGameButton");
 const newGameButton = document.querySelector("#newGameButton");
 const resetWinsButton = document.querySelector("#resetWinsButton");
 const bankButton = document.querySelector("#bankButton");
-const lightModeButton = document.querySelector("#lightModeButton");
-const darkModeButton = document.querySelector("#darkModeButton");
 const soundOnButton = document.querySelector("#soundOnButton");
 const soundOffButton = document.querySelector("#soundOffButton");
 const musicOnButton = document.querySelector("#musicOnButton");
@@ -590,8 +596,7 @@ const riskOnButton = document.querySelector("#riskOnButton");
 const riskOffButton = document.querySelector("#riskOffButton");
 const gambleOnButton = document.querySelector("#gambleOnButton");
 const gambleOffButton = document.querySelector("#gambleOffButton");
-const winningScoreInput = document.querySelector("#winningScoreInput");
-const applyScoreButton = document.querySelector("#applyScoreButton");
+const scoreGoalButtons = Array.from(document.querySelectorAll("[data-score-goal]"));
 const rulesWinningScore = document.querySelector("#rulesWinningScore");
 const rulesDifficultyText = document.querySelector("#rulesDifficultyText");
 const normalModeButton = document.querySelector("#normalModeButton");
@@ -635,6 +640,8 @@ const goldGainToast = document.querySelector("#goldGainToast");
 const infoShell = document.querySelector("#infoShell");
 const infoTrigger = document.querySelector("#infoTrigger");
 const appVersion = document.querySelector("#appVersion");
+const infoImpressumButton = document.querySelector("#infoImpressumButton");
+const infoPrivacyButton = document.querySelector("#infoPrivacyButton");
 const impressumLink = document.querySelector("#impressumLink");
 const privacyLink = document.querySelector("#privacyLink");
 const legalOverlay = document.querySelector("#legalOverlay");
@@ -665,8 +672,7 @@ const lockedRuleControls = [
   riskOffButton,
   gambleOnButton,
   gambleOffButton,
-  winningScoreInput,
-  applyScoreButton,
+  ...scoreGoalButtons,
   normalModeButton,
   hardModeButton,
   oneDieButton,
@@ -786,6 +792,19 @@ function startWelcomePreload() {
 
 const rollDie = () => Math.floor(Math.random() * 6) + 1;
 
+function normalizeWinningScore(value) {
+  const score = Number(value);
+  return VALID_WINNING_SCORES.includes(score) ? score : DEFAULT_WINNING_SCORE;
+}
+
+function renderScoreGoalButtons() {
+  scoreGoalButtons.forEach((button) => {
+    const isActive = Number(button.dataset.scoreGoal) === winningScore;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
 function render() {
   const comboMode = isComboMode();
   humanScore.textContent = comboMode ? formatComboSelection(comboState.humanSelection) : state.humanScore;
@@ -803,6 +822,7 @@ function render() {
   document.body.classList.toggle("combo-mode", comboMode);
   document.body.classList.toggle("combo-roll-ready", comboMode && (comboState.phase === "ready" || comboState.phase === "result"));
   rulesWinningScore.textContent = winningScore;
+  renderScoreGoalButtons();
   rulesDifficultyText.textContent =
     difficulty === "normal" ? "Erreiche zuerst" : "Erreiche genau";
 
@@ -926,14 +946,22 @@ function roundToNearest5(value) {
   return Math.round(value / 5) * 5;
 }
 
+function getRewardTier() {
+  return REWARD_TIERS[winningScore] || REWARD_TIERS[DEFAULT_WINNING_SCORE];
+}
+
 function calculateHumanWinGold() {
   const baseReward = riskMode ? 50 : 25;
   const diceFactor = diceCount === 1 ? 1.5 : 1;
-  const targetFactor = Math.max(1, Math.floor(winningScore / 10));
+  const targetFactor = getRewardTier().win;
   const difficultyFactor = difficulty === "hard" ? 2 : 1;
   const gambleBonus = gambleMode ? 25 : 0;
 
   return roundToNearest5(baseReward * diceFactor * targetFactor * difficultyFactor + gambleBonus);
+}
+
+function calculateSpecialGold(baseAmount) {
+  return roundToNearest5(baseAmount * getRewardTier().special);
 }
 
 function awardHumanWinGold() {
@@ -1413,8 +1441,7 @@ function updateRuleControlsLock() {
       riskOffButton,
       gambleOnButton,
       gambleOffButton,
-      winningScoreInput,
-      applyScoreButton,
+      ...scoreGoalButtons,
       normalModeButton,
       hardModeButton,
     ].includes(control);
@@ -1810,7 +1837,7 @@ function detectSpecialMoment(values = [], context = {}) {
       (rolledValues.length === 2 && rolledValues[0] === 6 && rolledValues[1] === 6)
     ) &&
     rollTotal <= pointsLeft;
-  const royalReward = isRoyalRoll ? rolledValues.length * 50 : 0;
+  const royalReward = isRoyalRoll ? calculateSpecialGold(rolledValues.length * 50) : 0;
   const isStartPerfectMoment =
     winningScore === 10 &&
     rolledValues.length === 2 &&
@@ -1819,7 +1846,7 @@ function detectSpecialMoment(values = [], context = {}) {
     scoreApplied &&
     nextScore === winningScore;
   const isPerfectMoment = isStartPerfectMoment || perfectThrowHit;
-  const perfectReward = isPerfectMoment ? 50 : 0;
+  const perfectReward = isPerfectMoment ? calculateSpecialGold(50) : 0;
 
   if (riskInvalid) {
     return { text: "RISIKO VERLOREN!", type: "dark" };
@@ -1838,7 +1865,7 @@ function detectSpecialMoment(values = [], context = {}) {
   }
 
   if (gambleSecured >= 20) {
-    return { text: "GROSSER GAMBLE!", type: "gold", reward: isHumanMoment ? 50 : 0 };
+    return { text: "GROSSER GAMBLE!", type: "gold", reward: isHumanMoment ? calculateSpecialGold(50) : 0 };
   }
 
   return null;
@@ -2372,12 +2399,10 @@ function formatRoll(values) {
   return `${values.join(" + ")} = ${total}`;
 }
 
-function applyWinningScore() {
+function applyWinningScore(nextScore) {
   if (areRuleControlsLocked()) return;
 
-  const nextScore = Number(winningScoreInput.value);
-  winningScore = Math.min(999, Math.max(10, Number.isFinite(nextScore) ? nextScore : 50));
-  winningScoreInput.value = winningScore;
+  winningScore = normalizeWinningScore(nextScore);
   localStorage.setItem("wuerfelduell-winning-score", String(winningScore));
   newGame();
 }
@@ -2646,15 +2671,10 @@ function setGambleMode(isEnabled) {
   newGame();
 }
 
-function setTheme(theme) {
-  const isDark = theme === "dark";
-  document.documentElement.classList.toggle("dark", isDark);
-  document.body.classList.toggle("dark", isDark);
-  lightModeButton.classList.toggle("active", !isDark);
-  darkModeButton.classList.toggle("active", isDark);
-  lightModeButton.setAttribute("aria-pressed", String(!isDark));
-  darkModeButton.setAttribute("aria-pressed", String(isDark));
-  localStorage.setItem("wuerfelduell-theme", theme);
+function setTheme() {
+  document.documentElement.classList.add("dark");
+  document.body.classList.add("dark");
+  localStorage.setItem("wuerfelduell-theme", "dark");
 }
 
 function setSound(isEnabled) {
@@ -3053,8 +3073,7 @@ function closeLegalDialog() {
   }, 180);
 }
 
-const savedTheme = localStorage.getItem("wuerfelduell-theme");
-setTheme(savedTheme === "light" ? "light" : "dark");
+setTheme();
 
 const savedSound = localStorage.getItem("wuerfelduell-sound");
 setSound(savedSound === "off" ? false : true);
@@ -3104,10 +3123,8 @@ if (Number.isFinite(savedComputerWins) && savedComputerWins >= 0) {
 }
 
 const savedWinningScore = Number(localStorage.getItem("wuerfelduell-winning-score"));
-if (Number.isFinite(savedWinningScore) && savedWinningScore >= 10) {
-  winningScore = Math.min(999, savedWinningScore);
-}
-winningScoreInput.value = winningScore;
+winningScore = normalizeWinningScore(savedWinningScore);
+localStorage.setItem("wuerfelduell-winning-score", String(winningScore));
 rulesWinningScore.textContent = winningScore;
 
 const savedDifficulty = localStorage.getItem("wuerfelduell-difficulty");
@@ -3156,19 +3173,16 @@ overlayNewGameButton?.addEventListener("click", () => {
   playClickSound();
   newGame();
 });
-applyScoreButton.addEventListener("click", () => {
-  playClickSound();
-  applyWinningScore();
+scoreGoalButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    playClickSound();
+    applyWinningScore(button.dataset.scoreGoal);
+  });
 });
 applyNameButton.addEventListener("click", applyPlayerName);
 applyOpponentNameButton.addEventListener("click", applyOpponentName);
 humanNameLabel.addEventListener("click", openNameEditor);
 opponentNameLabel.addEventListener("click", openOpponentNameEditor);
-winningScoreInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    applyWinningScore();
-  }
-});
 playerNameInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     applyPlayerName();
@@ -3186,14 +3200,6 @@ opponentNameInput.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeOpponentNameEditor();
   }
-});
-lightModeButton.addEventListener("click", () => {
-  playClickSound();
-  setTheme("light");
-});
-darkModeButton.addEventListener("click", () => {
-  playClickSound();
-  setTheme("dark");
 });
 soundOnButton?.addEventListener("click", () => {
   setSound(true);
@@ -3322,6 +3328,14 @@ impressumLink?.addEventListener("click", () => {
   openLegalDialog("impressum");
 });
 privacyLink?.addEventListener("click", () => {
+  playClickSound();
+  openLegalDialog("privacy");
+});
+infoImpressumButton?.addEventListener("click", () => {
+  playClickSound();
+  openLegalDialog("impressum");
+});
+infoPrivacyButton?.addEventListener("click", () => {
   playClickSound();
   openLegalDialog("privacy");
 });

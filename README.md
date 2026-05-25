@@ -1,6 +1,6 @@
 # Goldwurf Royale
 
-**Version 2.25**
+**Version 2.28**
 
 Ein kleines, mobiles Würfelspiel für Web und Smartphone.
 Spiele alleine gegen die KI oder lokal zu zweit am selben Gerät.
@@ -12,7 +12,7 @@ Spiele alleine gegen die KI oder lokal zu zweit am selben Gerät.
 - Singleplayer gegen KI
 - Multiplayer am selben Gerät
 - Startspieler auswählbar
-- frei wählbare Zielpunkte von 10 bis 999
+- feste Zielpunkte mit Auswahl 10, 25 oder 50
 - 1 oder 2 Würfel
 - Normal- und Schwer-Modus
 - Risiko-Modus

@@ -11,7 +11,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-    <link rel="stylesheet" href="styles.css?v=2.25" />
+    <link rel="stylesheet" href="styles.css?v=2.28" />
   </head>
   <body class="dark">
     <div class="welcome-loader" id="welcomeLoader" role="status" aria-live="polite" aria-label="Goldwurf Royale wird vorbereitet">
@@ -37,18 +37,6 @@
 
             <div class="menu-panel">
               <div class="menu-options">
-                <div class="setting">
-                  <span>Ansicht</span>
-                  <div class="theme-switcher" role="group" aria-label="Hell oder dunkel wählen">
-                    <button class="theme-option active" id="darkModeButton" type="button" aria-pressed="true">
-                      Dunkel
-                    </button>
-                    <button class="theme-option" id="lightModeButton" type="button" aria-pressed="false">
-                      Hell
-                    </button>
-                  </div>
-                </div>
-
                 <div class="setting">
                   <span>Sound</span>
                   <div class="theme-switcher" role="group" aria-label="Sound ein oder aus">
@@ -122,10 +110,11 @@
                 </div>
 
                 <div class="setting score-goal-setting">
-                  <label for="winningScoreInput">Zielpunkte</label>
-                  <div class="score-setting">
-                    <input id="winningScoreInput" type="number" min="10" max="999" step="5" value="50" />
-                    <button id="applyScoreButton" type="button">Festlegen</button>
+                  <span>Zielpunkte</span>
+                  <div class="score-setting" role="group" aria-label="Zielpunkte wählen">
+                    <button class="theme-option" type="button" data-score-goal="10" aria-pressed="false">10</button>
+                    <button class="theme-option" type="button" data-score-goal="25" aria-pressed="false">25</button>
+                    <button class="theme-option active" type="button" data-score-goal="50" aria-pressed="true">50</button>
                   </div>
                 </div>
 
@@ -193,27 +182,83 @@
                   <strong>V.<span id="appVersion"></span></strong>
                 </div>
                 <div class="info-content">
-                  <p>Würfle einmal pro Zug. Wer die Zielpunkte erreicht, gewinnt die Runde.</p>
-                  <ul>
-                    <li><strong>Würfeln:</strong> Klicke oder tippe auf den Würfel, um zu würfeln.</li>
-                    <li><strong>Ansicht:</strong> Hell oder Dunkel.</li>
-                    <li><strong>Sound:</strong> Effekte für Würfeln, Gewinnen und ungültige Würfe.</li>
-                    <li><strong>Musik:</strong> Optionale Hintergrundmusik.</li>
-                    <li><strong>Spieler:</strong> Single gegen KI oder Multiplayer am selben Gerät.</li>
-                    <li><strong>Name ändern:</strong> Tippe auf den Spielernamen und bestätige mit OK.</li>
-                    <li><strong>Zielpunkte:</strong> Legt fest, bis wie viele Punkte gespielt wird.</li>
-                    <li><strong>Schwer:</strong> Die Zielpunkte müssen genau getroffen werden.</li>
-                    <li><strong>Risiko:</strong> Wenn eine 1 fällt, zählt der aktuelle Wurf nicht. Im schweren Modus endet das Spiel, wenn kein gültiger Siegwurf mehr möglich ist. Dann gewinnt die höhere Punktzahl.</li>
-                    <li><strong>Gamble:</strong> Würfle mehrfach und sammle Zugpunkte. Mit Sichern werden sie übernommen. Bei einer 1 verfallen die Zugpunkte und der Zug endet. Im schweren Modus muss die Zielpunktzahl genau getroffen werden. Ist kein gültiger Siegwurf mehr möglich, bekommt der Gegner noch seine Chance.</li>
-                    <li><strong>Orakel:</strong> Beide Spieler wählen Zahlen. Danach wird gewürfelt. Nur eine vollständig getroffene Auswahl gewinnt, sonst endet die Runde unentschieden.</li>
-                    <li><strong>Würfel:</strong> Wähle 1 oder 2 Würfel.</li>
-                    <li><strong>Startspieler:</strong> Vor dem ersten Wurf auswählbar. Im Singleplayer kann auch die KI beginnen.</li>
-                    <li><strong>Siege:</strong> Zählen gewonnene Runden bis zum Zurücksetzen.</li>
-                    <li><strong>Gold und Shop:</strong> Gold erhältst du bei eigenen Siegen. Mehr Zielpunkte, Risiko, 1 Würfel, schwerer Modus und Gamble erhöhen die Belohnung. Im Shop kannst du kosmetische Items oder Sounds freischalten.</li>
-                    <li><strong>Home-Bildschirm:</strong> Für ein optimales Spielerlebnis speichern. iOS: Teilen und „Zum Home-Bildschirm“. Android: Browser-Menü und „Zum Startbildschirm“.</li>
-                    <li><strong>Breitbild:</strong> Drehe dein Handy ins Querformat, um die optimierte breite Ansicht zu nutzen.</li>
-                    <li><strong>Unterstützen:</strong> Wenn dir das Spiel gefällt, kannst du mich mit einer freiwilligen Spende per <a href="https://paypal.me/WalterGriebl" target="_blank" rel="noopener noreferrer">PayPal</a> unterstützen. Vielen Dank <span aria-hidden="true">♥</span></li>
-                  </ul>
+                  <details class="info-section" open>
+                    <summary>Spielablauf</summary>
+                    <div class="info-section-body">
+                      <p>Würfle pro Zug und erreiche die Zielpunkte vor deinem Gegner.</p>
+                      <ul>
+                        <li><strong>Würfeln:</strong> Klicke oder tippe auf den Würfel.</li>
+                        <li><strong>Normal:</strong> Wer zuerst die Zielpunkte erreicht oder überschreitet, gewinnt.</li>
+                        <li><strong>Schwer:</strong> Die Zielpunkte müssen genau getroffen werden.</li>
+                        <li><strong>Risiko:</strong> Fällt eine 1, zählt der aktuelle Wurf nicht. Im schweren Modus gewinnt bei einem blockierten Siegwurf die höhere Punktzahl.</li>
+                        <li><strong>Gamble:</strong> Würfle mehrfach, sammle Zugpunkte und sichere sie. Bei einer 1 verfallen die Zugpunkte.</li>
+                        <li><strong>Orakel:</strong> Beide Spieler wählen Zahlen. Nur eine vollständig getroffene Auswahl gewinnt die Runde.</li>
+                        <li><strong>Würfel:</strong> Spiele mit 1 oder 2 Würfeln.</li>
+                        <li><strong>Startspieler:</strong> Vor dem ersten Wurf auswählbar. Im Singleplayer kann auch die KI beginnen.</li>
+                        <li><strong>Siege:</strong> Gewonnene Runden werden bis zum Zurücksetzen gezählt.</li>
+                      </ul>
+                    </div>
+                  </details>
+
+                  <details class="info-section">
+                    <summary>Menü & Einstellungen</summary>
+                    <div class="info-section-body">
+                      <ul>
+                        <li><strong>Ansicht:</strong> Wechsel zwischen Hell und Dunkel.</li>
+                        <li><strong>Sound:</strong> Effekte für Würfeln, Gewinnen, Klicks und ungültige Würfe.</li>
+                        <li><strong>Musik:</strong> Optionale Hintergrundmusik.</li>
+                        <li><strong>Spieler:</strong> Single gegen KI oder Multiplayer am selben Gerät.</li>
+                        <li><strong>Name ändern:</strong> Tippe auf den Spielernamen und bestätige mit OK.</li>
+                        <li><strong>Zielpunkte:</strong> Legt fest, bis wie viele Punkte gespielt wird.</li>
+                        <li><strong>Home-Bildschirm:</strong> iOS: Teilen und „Zum Home-Bildschirm“. Android: Browser-Menü und „Zum Startbildschirm“.</li>
+                        <li><strong>Breitbild:</strong> Drehe dein Handy ins Querformat, um die optimierte breite Ansicht zu nutzen.</li>
+                      </ul>
+                    </div>
+                  </details>
+
+                  <details class="info-section">
+                    <summary>Shop & Belohnungen</summary>
+                    <div class="info-section-body">
+                      <ul>
+                        <li><strong>Gold:</strong> Du erhältst Gold bei eigenen Siegen und Sonderwürfen.</li>
+                        <li><strong>Bonus:</strong> Mehr Zielpunkte erhöhen Siege und Sondermomente; Risiko, 1 Würfel, schwerer Modus und Gamble steigern die Sieg-Belohnung zusätzlich.</li>
+                        <li><strong>Shop:</strong> Schalte kosmetische Items oder Sounds frei.</li>
+                        <li><strong>Avatar-Skins:</strong> Verändern dein Spielerfeld.</li>
+                        <li><strong>Würfel-Skins:</strong> Verändern die Würfeloptik.</li>
+                        <li><strong>Jukebox:</strong> Schalte Hintergrundsounds frei und wähle deinen aktiven Track.</li>
+                      </ul>
+                    </div>
+                  </details>
+
+                  <details class="info-section">
+                    <summary>Unterstützung</summary>
+                    <div class="info-section-body">
+                      <p>Wenn dir das Spiel gefällt, kannst du mich freiwillig per <a href="https://paypal.me/WalterGriebl" target="_blank" rel="noopener noreferrer">PayPal</a> unterstützen. Alternativ kannst du später Werbung ansehen, sobald diese Funktion verfügbar ist. Vielen Dank <span aria-hidden="true">♥</span></p>
+                    </div>
+                  </details>
+
+                  <details class="info-section">
+                    <summary>Werbung</summary>
+                    <div class="info-section-body">
+                      <p>Werbung ansehen soll später eine freiwillige Möglichkeit werden, Goldwurf Royale zu unterstützen.</p>
+                      <div class="info-ad-action">
+                        <button type="button" disabled>Werbung ansehen</button>
+                        <span>Bald verfügbar</span>
+                      </div>
+                      <p class="info-note">Aktuell ist noch keine Werbeplattform eingebunden.</p>
+                    </div>
+                  </details>
+
+                  <details class="info-section">
+                    <summary>Rechtliches</summary>
+                    <div class="info-section-body">
+                      <p>Datenschutz und Impressum öffnen sich in einem eigenen Fenster.</p>
+                      <div class="info-legal-actions">
+                        <button id="infoImpressumButton" type="button">Impressum</button>
+                        <button id="infoPrivacyButton" type="button">Datenschutz</button>
+                      </div>
+                    </div>
+                  </details>
                 </div>
               </div>
             </div>
@@ -418,8 +463,8 @@
       </div>
     </div>
 
-    <script src="version.js?v=2.25"></script>
-    <script src="script.js?v=2.25"></script>
+    <script src="version.js?v=2.28"></script>
+    <script src="script.js?v=2.28"></script>
     <!-- Cloudflare Web Analytics -->
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"1603d1edbcff4645b15d8dd7f364bf60"}'></script>
     <!-- End Cloudflare Web Analytics -->

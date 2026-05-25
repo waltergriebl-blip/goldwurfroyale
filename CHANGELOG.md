@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 2.28 - 2026-05-25
+
+- Aktive Zielpunkte-Auswahl optisch stärker hervorgehoben.
+- Nicht ausgewählte Zielpunkte im Menü dunkler dargestellt.
+- Cache-Busting-Parameter in `index.html` auf Version 2.28 aktualisiert.
+
+## Version 2.27 - 2026-05-25
+
+- Zielpunkte im Menü auf die festen Auswahlwerte 10, 25 und 50 umgestellt.
+- Alte gespeicherte Zielpunkte außerhalb dieser Auswahl werden auf 50 zurückgesetzt.
+- Cache-Busting-Parameter in `index.html` auf Version 2.27 aktualisiert.
+
 ## Version 2.25 - 2026-05-22
 
 - Bild-Preloading für Tischhintergrund, Spielerhintergrund, Würfel-Skins und Avatar-Skins ergänzt.
