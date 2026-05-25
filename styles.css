@@ -897,6 +897,12 @@ button {
   font-style: italic;
 }
 
+.info-legal-copy {
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-align: center;
+}
+
 .info-content strong {
   color: var(--ink);
 }
@@ -2356,45 +2362,6 @@ body:not(.dark) #resetWinsButton {
   pointer-events: none;
 }
 
-.copyright {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: minmax(72px, 1fr) auto minmax(72px, 1fr);
-  align-items: center;
-  gap: 10px;
-  color: var(--muted);
-  font-size: 0.82rem;
-  text-align: center;
-}
-
-.legal-link {
-  min-width: 0;
-  border: 0;
-  padding: 0 4px;
-  background: transparent;
-  color: var(--gold);
-  cursor: pointer;
-  font: inherit;
-  font-weight: 800;
-  line-height: 1.2;
-  text-decoration: none;
-  text-shadow: 0 0 12px rgba(241, 200, 106, 0.18);
-}
-
-.legal-link:first-child {
-  justify-self: start;
-}
-
-.legal-link:last-child {
-  justify-self: end;
-}
-
-.legal-link:hover,
-.legal-link:focus-visible {
-  color: #fff0b8;
-  text-decoration: underline;
-}
-
 .legal-overlay {
   position: fixed;
   inset: 0;
@@ -3056,24 +3023,6 @@ body:not(.dark) #resetWinsButton {
     padding: 14px;
   }
 
-  .copyright {
-    font-size: 0.76rem;
-    grid-template-columns: minmax(72px, 0.72fr) minmax(104px, auto) minmax(72px, 0.72fr);
-    gap: 6px;
-    padding: 0 2px;
-    line-height: 1.15;
-  }
-
-  .legal-link {
-    padding: 2px 1px;
-    font-size: clamp(0.64rem, 2.8vw, 0.76rem);
-  }
-
-  .copyright-main,
-  .copyright-extra {
-    display: inline-block;
-  }
-
   .rules h1 {
     font-size: clamp(0.95rem, 4.4vw, 1.4rem);
     white-space: nowrap;
@@ -3548,10 +3497,6 @@ body:not(.dark) #resetWinsButton {
   }
 
   .rules {
-    display: none;
-  }
-
-  .copyright {
     display: none;
   }
 
@@ -4866,8 +4811,7 @@ body:not(.dark) .table {
     grid-template-areas:
       "topbar topbar topbar"
       "human table computer"
-      "rules rules rules"
-      "copyright copyright copyright";
+      "rules rules rules";
     align-items: stretch;
   }
 
@@ -4895,10 +4839,6 @@ body:not(.dark) .table {
 
   .rules {
     grid-area: rules;
-  }
-
-  .copyright {
-    grid-area: copyright;
   }
 
   .player {
@@ -5320,7 +5260,7 @@ body.gamble-mode .message {
 
   .table,
   .player {
-    min-height: clamp(520px, calc(100vh - 385px), 620px);
+    min-height: clamp(540px, calc(100vh - 365px), 640px);
   }
 
   .table {

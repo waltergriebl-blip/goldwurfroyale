@@ -642,8 +642,6 @@ const infoTrigger = document.querySelector("#infoTrigger");
 const appVersion = document.querySelector("#appVersion");
 const infoImpressumButton = document.querySelector("#infoImpressumButton");
 const infoPrivacyButton = document.querySelector("#infoPrivacyButton");
-const impressumLink = document.querySelector("#impressumLink");
-const privacyLink = document.querySelector("#privacyLink");
 const legalOverlay = document.querySelector("#legalOverlay");
 const legalDialog = document.querySelector(".legal-dialog");
 const legalTitle = document.querySelector("#legalTitle");
@@ -3322,14 +3320,6 @@ infoTrigger?.addEventListener("click", (event) => {
 });
 infoShell?.addEventListener("click", (event) => {
   event.stopPropagation();
-});
-impressumLink?.addEventListener("click", () => {
-  playClickSound();
-  openLegalDialog("impressum");
-});
-privacyLink?.addEventListener("click", () => {
-  playClickSound();
-  openLegalDialog("privacy");
 });
 infoImpressumButton?.addEventListener("click", () => {
   playClickSound();

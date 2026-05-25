@@ -23,6 +23,9 @@ Spiele alleine gegen die KI oder lokal zu zweit am selben Gerät.
 - Würfel-Skins mit Bild-Assets
 - Jukebox mit freischaltbaren Hintergrundsounds
 - optimierte Shop-Karten für Avatar-Skins, Würfel-Skins und Jukebox
+- sauber gegliederter Info-Bereich mit Unterkategorien
+- Impressum und Datenschutz als Popups im Info-Bereich
+- vorbereiteter Werbe-Hinweis als freiwillige Unterstützung
 - Soundeffekte und optionale Hintergrundmusik
 - Hell-/Dunkelmodus
 - gespeicherte Einstellungen, Spielernamen, Siege, Gold, Avatar, Würfel-Skins, Sounds und Shop-Freischaltungen
