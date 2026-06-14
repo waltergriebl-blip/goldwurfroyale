@@ -6,7 +6,7 @@
     <title>Android-Test anmelden | Goldwurf Royale</title>
     <meta
       name="description"
-      content="Melde dich fuer den geschlossenen Android-Test von Goldwurf Royale an."
+      content="Hilf beim geschlossenen Android-Test von Goldwurf Royale und melde dich mit deiner Google-Play-E-Mail an."
     />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
@@ -118,6 +118,23 @@
         line-height: 1.55;
       }
 
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0 0 24px;
+      }
+
+      .badge {
+        padding: 9px 12px;
+        border: 1px solid rgba(245, 196, 76, 0.3);
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.26);
+        color: var(--gold-bright);
+        font-size: 0.88rem;
+        font-weight: 900;
+      }
+
       .steps {
         position: relative;
         z-index: 1;
@@ -137,6 +154,28 @@
         font-weight: 700;
       }
 
+      .mini-card {
+        position: relative;
+        z-index: 1;
+        margin-top: 18px;
+        padding: 16px;
+        border: 1px solid rgba(245, 196, 76, 0.24);
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      .mini-card strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--gold-bright);
+      }
+
+      .mini-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
       .form-card {
         padding: clamp(22px, 5vw, 40px);
       }
@@ -152,6 +191,37 @@
         margin: 0 0 26px;
         color: var(--muted);
         line-height: 1.55;
+      }
+
+      .test-note {
+        margin: 0 0 22px;
+        padding: 14px 16px;
+        border: 1px solid rgba(245, 196, 76, 0.28);
+        border-radius: 8px;
+        background: rgba(245, 196, 76, 0.08);
+        color: var(--text);
+        line-height: 1.5;
+        font-weight: 700;
+      }
+
+      .checklist {
+        display: grid;
+        gap: 8px;
+        margin: 0 0 24px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .checklist li {
+        color: var(--muted);
+        line-height: 1.4;
+      }
+
+      .checklist li::before {
+        content: "✓";
+        margin-right: 8px;
+        color: var(--gold);
+        font-weight: 900;
       }
 
       form {
@@ -236,6 +306,13 @@
         box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.42), 0 12px 30px rgba(0, 0, 0, 0.35);
       }
 
+      .share-button {
+        width: 100%;
+        margin-top: 12px;
+        color: var(--text);
+        background: rgba(0, 0, 0, 0.32);
+      }
+
       .mail-fallback {
         color: var(--text);
         background: rgba(0, 0, 0, 0.32);
@@ -290,24 +367,47 @@
         <div class="hero">
           <img class="brand-mark" src="icon-192.png" alt="Goldwurf Royale Logo" />
           <span class="kicker">Geschlossener Android-Test</span>
-          <h1>Tester gesucht</h1>
+          <h1>Hilf beim Play-Store-Start</h1>
           <p class="lead">
-            Hilf mit, Goldwurf Royale vor dem offiziellen Start auf echten Android-Geräten zu prüfen.
+            Ich suche Android-Tester für Goldwurf Royale. Die Anmeldung dauert nur kurz und hilft mir sehr,
+            das Spiel offiziell in den Google Play Store zu bringen.
           </p>
+          <div class="badges" aria-label="Kurzinfo">
+            <span class="badge">Dauert ca. 2 Minuten</span>
+            <span class="badge">Android-Gerät nötig</span>
+            <span class="badge">Kostenloser Test</span>
+          </div>
           <ul class="steps" aria-label="So läuft es ab">
-            <li>Trage deine Google-Play-E-Mail ein.</li>
-            <li>Ich füge dich zur Tester-Liste in Google Play hinzu.</li>
-            <li>Danach bekommst du den Link zum Installieren der Testversion.</li>
+            <li>Trage die E-Mail ein, die du im Google Play Store nutzt.</li>
+            <li>Ich füge dich zur geschlossenen Tester-Liste hinzu.</li>
+            <li>Du installierst die Testversion und öffnest sie in der Testphase ein paar Mal.</li>
           </ul>
+          <div class="mini-card">
+            <strong>Warum das wichtig ist</strong>
+            <p>
+              Google verlangt für neue Entwickler einen geschlossenen Test mit echten Testern.
+              Jeder Tester bringt Goldwurf Royale einen Schritt näher zur Veröffentlichung.
+            </p>
+          </div>
         </div>
 
         <div class="form-card">
           <span class="kicker">Goldwurf Royale</span>
-          <h2>Für den Test anmelden</h2>
+          <h2>Als Tester eintragen</h2>
           <p class="form-intro">
-            Wichtig ist die E-Mail-Adresse, mit der du auf deinem Android-Gerät im Google Play Store
-            angemeldet bist. Nur diese Adresse kann ich für den geschlossenen Test freischalten.
+            Danke, dass du helfen möchtest. Du musst keine perfekte Rückmeldung schreiben:
+            kurz installieren, spielen und sagen, wenn etwas auffällt, reicht völlig.
           </p>
+
+          <p class="test-note">
+            Bitte verwende genau die Google-Adresse, mit der du auf deinem Android-Gerät im Play Store angemeldet bist.
+          </p>
+
+          <ul class="checklist" aria-label="Was du brauchst">
+            <li>Ein Android-Handy oder Android-Tablet</li>
+            <li>Deine Google-Play-E-Mail-Adresse</li>
+            <li>Ein paar kurze Teststarts innerhalb der Testphase</li>
+          </ul>
 
           <form id="testerForm">
             <label for="testerEmail">
@@ -335,10 +435,12 @@
             </p>
 
             <div class="actions">
-              <button type="submit">Anmeldung per E-Mail senden</button>
+              <button type="submit">In 2 Minuten eintragen</button>
               <a class="mail-fallback" href="mailto:waltergriebl@gmail.com">Direkt mailen</a>
             </div>
           </form>
+
+          <button class="share-button" id="shareButton" type="button">Einladungstext kopieren</button>
 
           <p class="copy-status" id="copyStatus" aria-live="polite"></p>
 
@@ -353,7 +455,9 @@
     <script>
       const form = document.querySelector("#testerForm");
       const status = document.querySelector("#copyStatus");
+      const shareButton = document.querySelector("#shareButton");
       const contactEmail = "waltergriebl@gmail.com";
+      const testerPageUrl = "https://waltergriebl-blip.github.io/goldwurfroyale/tester.html";
 
       function fieldValue(id) {
         return document.querySelector(id).value.trim();
@@ -388,6 +492,24 @@
 
         status.textContent = "Dein Mailprogramm wird geöffnet. Bitte die E-Mail dort noch absenden.";
         window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      });
+
+      shareButton.addEventListener("click", async () => {
+        const text = [
+          "Hey, ich suche Android-Tester für mein Spiel Goldwurf Royale.",
+          "",
+          "Die Anmeldung dauert nur kurz und hilft mir sehr, das Spiel offiziell in den Google Play Store zu bringen.",
+          "",
+          "Hier kannst du dich eintragen:",
+          testerPageUrl
+        ].join("\n");
+
+        try {
+          await navigator.clipboard.writeText(text);
+          status.textContent = "Einladungstext kopiert. Den kannst du jetzt direkt verschicken.";
+        } catch {
+          status.textContent = "Kopieren hat nicht geklappt. Du kannst den Link oben aus der Adresszeile kopieren.";
+        }
       });
     </script>
   </body>
